@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "cross-env nodemon --watch '**/*.ts' --ignore '**/*.test.ts' --exec 'ts-node --files -r tsconfig-paths/register' app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "shenger",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mongoose": "^5.7.36",
+    "cross-env": "^7.0.2",
+    "mongoose": "^5.10.0",
+    "nodemon": "^2.0.4",
+    "ts-node": "^8.10.2",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/koa": "^2.11.4",
+    "axios": "^0.19.2",
+    "koa": "^2.13.0"
+  }
+}

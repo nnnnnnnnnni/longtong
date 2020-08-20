@@ -1,0 +1,9 @@
+.vscode/
+node_modules/
+backend/config.js
+backend/config.ts
+dist/
+dist-ts/
+apidoc/
+yarn*
+.idea
