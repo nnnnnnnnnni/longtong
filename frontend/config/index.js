@@ -20,7 +20,17 @@ module.exports = {
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
-    
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8000/',
+        secure: false,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
+
     /**
      * Source Maps
      */
