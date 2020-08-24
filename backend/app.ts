@@ -1,12 +1,7 @@
-import koa from 'koa'
-import path from 'path'
-import fs from 'fs'
+import koa, {Context} from 'koa'
 const app = new koa()
 
-
-const filepath = path.resolve(__dirname, '../', 'static', '2.jpg')
-
-app.use(async () => {
+app.use(async (ctx: Context) => {
     
 })
 

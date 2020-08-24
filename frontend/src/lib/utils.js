@@ -20,3 +20,12 @@ export const downImg = async () => {
     let res = await axios.get('https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1')
     console.log(res)
 }
+
+export const isPhoneNumber = (phones) => {
+    var regex = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+    if (!regex.test(phones)) {
+        return false;
+    } else {
+        return true;
+    }
+}
