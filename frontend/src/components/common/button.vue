@@ -1,8 +1,8 @@
 <template>
   <div class="lt-button">
-    <div class="button-container">
-      <button>{{title}}</button>
-    </div>
+    <button>
+      <span>{{title}}</span>
+    </button>
   </div>
 </template>
 
@@ -18,26 +18,25 @@ export default {
 
 
 <style scoped>
-.button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.lt-button {
   width: 95%;
+  height: 100%;
 }
-.button-container button {
-  flex: 1;
+button {
+  width: 100%;
+  height: 100%;
   border: none;
   outline: none;
-  background-color: #69c0ff;
+  background-color: #1890ff;
   transition: all 0.2s;
-  height: 45px;
+  height: inherit;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 18px;
-  letter-spacing: 3px;
+  font-size: inherit;
+  letter-spacing: inherit;
   color: #ffffff;
 }
-.button-container button:hover {
-  background-color: #1890ff;
+button:hover {
+  background-color: #69c0ff;
 }
 </style>

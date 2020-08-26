@@ -21,9 +21,18 @@ export const downImg = async () => {
     console.log(res)
 }
 
-export const isPhoneNumber = (phones) => {
+export const isPhoneNumber = (phone) => {
     var regex = /^[1][3,4,5,7,8,9][0-9]{9}$/;
-    if (!regex.test(phones)) {
+    if (!regex.test(phone)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+export const ismail = (mail) => {
+    var regex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+    if (!regex.test(mail)) {
         return false;
     } else {
         return true;
