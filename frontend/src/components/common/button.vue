@@ -1,6 +1,12 @@
 <template>
   <div class="lt-button">
-    <button>
+    <button :class="{
+      'normal': type == 'normal' || !type, 
+      'warning': type == 'warning', 
+      'success': type == 'success', 
+      'danger': type == 'danger',
+      'circle': !!circle
+    }">
       <span>{{title}}</span>
     </button>
   </div>
@@ -9,7 +15,7 @@
 <script>
 export default {
   name: "ltButton",
-  props: ["title", "loading"],
+  props: ["title", "loading", "type", 'circle'],
   data() {
     return {};
   },
@@ -27,16 +33,39 @@ button {
   height: 100%;
   border: none;
   outline: none;
-  background-color: #1890ff;
   transition: all 0.2s;
   height: inherit;
-  border-radius: 5px;
+  border-radius: 1px;
   cursor: pointer;
   font-size: inherit;
   letter-spacing: inherit;
   color: #ffffff;
 }
-button:hover {
+.normal {
+  background-color: #1890ff;
+}
+.normal:hover {
   background-color: #69c0ff;
+}
+.warning {
+  background-color: #faad14;
+}
+.warning:hover {
+  background-color: #ffd666;
+}
+.success {
+  background-color: #a0d911;
+}
+.success:hover {
+  background-color: #d3f261;
+}
+.danger {
+  background-color: #f5222d;
+}
+.danger:hover {
+  background-color: #ff7875;
+}
+.circle{
+  border-radius: 5px;
 }
 </style>

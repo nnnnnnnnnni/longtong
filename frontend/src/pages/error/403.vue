@@ -321,7 +321,7 @@ export default {
 .backBtn {
   margin-top: 20px;
   font-size: 14px;
-  width: 101px;
+  width: 100px;
   height: 30px;
 }
 </style>

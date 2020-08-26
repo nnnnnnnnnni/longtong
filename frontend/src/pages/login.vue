@@ -36,7 +36,7 @@
               </lt-input>
             </div>
             <div class="form-input-item item-button">
-              <lt-button title="确定" :loading='buttonLoading'></lt-button>
+              <lt-button circle='true' title="确定" :loading='buttonLoading'></lt-button>
             </div>
           </div>
         </div>

@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: Shenger
+ * @Date: 2020-08-26 21:01:00
+ * @LastEditors: Shenger
+ * @LastEditTime: 2020-08-26 21:24:22
+ */ 
 import Vue from 'vue'
 import Router from 'vue-router'
 
@@ -30,7 +38,6 @@ export default new Router({
       path: '/',
       name: 'index',
       component: () => import('@/pages/index'),
-      redirect: '/chat',
       children: [
         {
           path: '/calendar',
@@ -48,6 +55,11 @@ export default new Router({
           component: () => import('@/pages/workbench'),
         },
       ]
+    },
+    {
+      path: '*',
+      name: 'err404',
+      component: () => import('@/pages/error/404')
     }
   ]
 })
