@@ -6,7 +6,9 @@
       'success': type == 'success', 
       'danger': type == 'danger',
       'circle': !!circle
-    }">
+      }"
+      @click="handleClick"
+    >
       <span>{{title}}</span>
     </button>
   </div>
@@ -15,10 +17,15 @@
 <script>
 export default {
   name: "ltButton",
-  props: ["title", "loading", "type", 'circle'],
+  props: ["title", "type", 'circle'],
   data() {
     return {};
   },
+  methods: {
+    handleClick: function(event){
+      this.$emit('click', event)
+    }
+  }
 };
 </script>
 

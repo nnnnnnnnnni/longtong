@@ -77,7 +77,7 @@
       </div>
     </div>
     <div class="profiles">
-      <div class="profile-item" @click="jumpPage('help')">
+      <div class="profile-item">
         <svg
           viewBox="64 64 896 896"
           focusable="false"
@@ -96,7 +96,7 @@
           />
         </svg>
       </div>
-      <div class="profile-item" @click="jumpPage('prfile')">
+      <div class="profile-item">
         <div class="item-avator item-info">
           <img :src="avator" alt />
         </div>
@@ -104,7 +104,7 @@
           <span>Ni yongsheng</span>
         </div>
       </div>
-      <div class="profile-item" @click="jumpPage('setting')">
+      <div class="profile-item">
         <svg
           viewBox="64 64 896 896"
           focusable="false"
@@ -152,6 +152,7 @@ export default {
     };
   },
   created() {
+    console.log(this.$router)
   },
   mounted() {
     this.currentDate = new Date().getDate();
@@ -236,14 +237,10 @@ export default {
 .profiles .profile-item:hover {
   background-color: #ececec;
 }
-.profiles .profile-item svg
-{
+.profiles .profile-item svg,
+img {
   height: 14px;
   width: 14px;
-}
-.profiles .profile-item  img{
-  height: 28px;
-  width: 28px;
 }
 .item-info {
   margin-left: 5px;

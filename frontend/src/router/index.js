@@ -30,11 +30,6 @@ export default new Router({
       component: () => import('@/pages/login')
     },
     {
-      path: '/setting',
-      name: 'setting',
-      component: () => import('@/pages/setting')
-    },
-    {
       path: '/',
       name: 'index',
       component: () => import('@/pages/index'),
@@ -53,6 +48,14 @@ export default new Router({
           path: '/workbench',
           name: 'workbench',
           component: () => import('@/pages/workbench'),
+        },
+        {
+          path: '/setting',
+          name: 'setting',
+          component: () => import('@/pages/setting'),
+          children: [
+            
+          ]
         },
       ]
     },
