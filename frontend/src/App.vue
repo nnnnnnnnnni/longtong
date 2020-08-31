@@ -11,6 +11,7 @@ export default {
 </script>
 
 <style>
+@import url('./assets/scroll.css');
 html,
 body {
   padding: 0;

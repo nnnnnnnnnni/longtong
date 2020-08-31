@@ -5,7 +5,7 @@
  * @Date: 2020-08-26 21:01:00
  * @LastEditors: Shenger
  * @LastEditTime: 2020-08-26 21:24:22
- */ 
+ */
 import Vue from 'vue'
 import Router from 'vue-router'
 
@@ -28,6 +28,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: () => import('@/pages/login')
+    },
+    {
+      path: '/help',
+      name: 'help',
+      component: () => import('@/pages/help')
     },
     {
       path: '/',
@@ -54,7 +59,11 @@ export default new Router({
           name: 'setting',
           component: () => import('@/pages/setting'),
           children: [
-            
+            {
+              path: '/setting/index',
+              name: 'setting',
+              component: () => import('@/pages/setting'),
+            }
           ]
         },
       ]

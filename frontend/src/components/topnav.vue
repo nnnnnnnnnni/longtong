@@ -77,7 +77,7 @@
       </div>
     </div>
     <div class="profiles">
-      <div class="profile-item">
+      <div class="profile-item" @click="jumpPage('help')" >
         <svg
           viewBox="64 64 896 896"
           focusable="false"
@@ -96,15 +96,15 @@
           />
         </svg>
       </div>
-      <div class="profile-item">
+      <div class="profile-item" @click="jumpPage('profile')">
         <div class="item-avator item-info">
           <img :src="avator" alt />
         </div>
         <div class="item-name item-info">
-          <span>Ni yongsheng</span>
+          <span>{{this.$store.state.user.name}}</span>
         </div>
       </div>
-      <div class="profile-item">
+      <div class="profile-item" @click="jumpPage('setting')">
         <svg
           viewBox="64 64 896 896"
           focusable="false"
@@ -146,8 +146,7 @@ export default {
   data() {
     return {
       currentDate: "",
-      avator:
-        "https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png",
+      avator: this.$store.state.user.avator,
       activeRouter: "",
     };
   },
@@ -237,10 +236,13 @@ export default {
 .profiles .profile-item:hover {
   background-color: #ececec;
 }
-.profiles .profile-item svg,
-img {
+.profiles .profile-item svg{
   height: 14px;
   width: 14px;
+}
+img {
+  height: 26px;
+  width: 26px;
 }
 .item-info {
   margin-left: 5px;
