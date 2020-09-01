@@ -4,8 +4,13 @@
       <img :src="this.$store.state.user.avator" alt />
     </div>
     <div class="name info-item">{{this.$store.state.user.name}}</div>
-    <div class="edit info-item" :class="{'edit_active': mode == 'edit'}">
-      <lt-btutton circle="true" title="Edit Profile" @click="changeMode"/>
+    <div class="item-group">
+      <div class="edit info-item" :class="{edit_active: mode == 'edit'}">
+        <lt-btutton circle="true" title="Edit Profile" @click="changeMode"/>
+      </div>
+      <div class="info-item _edit quit" :class="{quit_active: mode == 'edit'}">
+        <lt-btutton circle="true" title="Exit Editing" @click="changeMode"/>
+      </div>
     </div>
     <!-- <div class="division info-item" :class="{division_active: mode == 'edit'}">
       <i class="line"></i>
@@ -33,7 +38,7 @@
         </svg>
         <span class="info-item-text">{{this.$store.state.user.job}}</span>
       </div>
-      <div class="info-item _edit base" :class="{base_active: mode == 'edit'}">
+      <div class="info-item _edit base" :class="{base_active: mode == 'edit', checked_active: editActive == 'base'}" @click="changeTab('base')">
         <div class="info-item-text">基本设置</div>
       </div>
     </div>
@@ -57,7 +62,7 @@
         </svg>
         <span class="info-item-text">{{this.$store.state.user.department}}</span>
       </div>
-      <div class="info-item _edit safe" :class="{safe_active: mode == 'edit'}">
+      <div class="info-item _edit safe" :class="{safe_active: mode == 'edit', checked_active: editActive == 'safe'}" @click="changeTab('safe')">
         <div class="info-item-text">安全设置</div>
       </div>
     </div>
@@ -84,7 +89,7 @@
         </svg>
         <div class="info-item-text">{{this.$store.state.user.mail}}</div>
       </div>
-      <div class="info-item _edit bind" :class="{bind_active: mode == 'edit'}">
+      <div class="info-item _edit bind" :class="{bind_active: mode == 'edit', checked_active: editActive == 'bind'}" @click="changeTab('bind')">
         <div class="info-item-text">绑定设置</div>
       </div>
     </div>
@@ -142,6 +147,7 @@ export default {
   data() {
     return {
       mode: "profile", //profile or edit
+      editActive: ''
     };
   },
   components: {
@@ -149,8 +155,18 @@ export default {
   },
   methods: {
     changeMode: function(){
-      console.log(this.mode)
+      if(this.mode == 'edit'){
+        this.editActive = '';
+      }
       this.mode = this.mode == 'edit'? 'profile' : 'edit'
+    },
+    changeTab: function(tab){
+      if(this.editActive == tab){
+        return;
+      } else {
+        this.editActive = tab;
+        this.$router.push({name: tab})
+      }
     }
   }
 };
@@ -225,25 +241,6 @@ export default {
 .edit {
   font-size: 16px;
   height: 34px;
-  transition-delay: 0s;
-}
-.job {
-  transition-delay: 0.1s;
-}
-.division {
-  transition-delay: 0.2s;
-}
-.department {
-  transition-delay: 0.3s;
-}
-.mail {
-  transition-delay: 0.4s;
-}
-.phone {
-  transition-delay: 0.5s;
-}
-.line {
-  transition-delay: 0.6s;
 }
 .edit_active, .job_active, .division_active, .department_active, .mail_active, .phone_active, .line_active  {
   left: -100%;
@@ -252,18 +249,24 @@ export default {
   position: absolute;
   top: 0;
   left: 100%;
+  width: 90%;
+  margin: 0 5%;
+  text-align: center;
+  height: 24px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 5px;
 }
-.base {
-  transition-delay: 0s;
+.quit{
+  font-size: 16px;
+  height: 34px;
+  width: 95% !important;
 }
-.safe {
-  transition-delay: 0.4s;
-}
-.bind {
-  transition-delay: 0.6s;
-}
-.base_active, .safe_active, .bind_active {
+.quit_active, .base_active, .safe_active, .bind_active {
   left: 0;
   top: 0;
+}
+.checked_active{
+  background-color: rgba(0, 0, 0, 0.12);
 }
 </style>

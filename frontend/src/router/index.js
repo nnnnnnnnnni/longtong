@@ -60,9 +60,19 @@ export default new Router({
           component: () => import('@/pages/setting'),
           children: [
             {
-              path: '/setting/index',
-              name: 'setting',
-              component: () => import('@/pages/setting'),
+              path: '/setting/base',
+              name: 'base',
+              component: () => import('@/components/settings/baseSetting'),
+            },
+            {
+              path: '/setting/safe',
+              name: 'safe',
+              component: () => import('@/components/settings/safeSetting'),
+            },
+            {
+              path: '/setting/bind',
+              name: 'bind',
+              component: () => import('@/components/settings/bindSetting'),
             }
           ]
         },
