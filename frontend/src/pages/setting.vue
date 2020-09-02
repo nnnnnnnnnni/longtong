@@ -32,9 +32,10 @@ export default {
   overflow-x: hidden;
 }
 .setting .menu {
-  position: fixed;
+  position: absolute;
   width: 300px;
-  height: 100%;
+  top: 60px;
+  bottom: 0;
   box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.12);
 }
 .setting-container{

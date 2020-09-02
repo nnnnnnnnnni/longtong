@@ -151,6 +151,11 @@ export default {
 
 
 <style scoped>
+*,
+*::before,
+*::after {
+  box-sizing: content-box;
+}
 .login {
   height: 100%;
   width: 100%;

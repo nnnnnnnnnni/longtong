@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="item-group">
-      <div class="department info-item" :class="{department_active: mode == 'edit'}" :title="this.$store.state.user.department">
+      <div class="department info-item ellipsis" :class="{department_active: mode == 'edit'}" :title="this.$store.state.user.department">
         <svg
           t="1598858673672"
           class="icon"
@@ -60,7 +60,7 @@
           />
           <path d="M400 300m-40 0a40 40 0 1 0 80 0 40 40 0 1 0-80 0Z" p-id="8643" />
         </svg>
-        <span class="info-item-text">{{this.$store.state.user.department}}</span>
+        <span class="info-item-text ellipsis">{{this.$store.state.user.department}}</span>
       </div>
       <div class="info-item _edit safe" :class="{safe_active: mode == 'edit', checked_active: editActive == 'safe'}" @click="changeTab('safe')">
         <div class="info-item-text">安全设置</div>
@@ -137,6 +137,12 @@
         <div class="info-item-text">{{this.$store.state.user.timeLine}}</div>
       </div>
     </div>
+    <div class="item-group">
+      <div class="introduction info-item" :class="{introduction_active: mode == 'edit'}" :title="this.$store.state.user.introduction">
+        <svg t="1599029993891" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8394" width="200" height="200"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3-7.7 16.2-7.7 35.2 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766z" p-id="8395"></path><path d="M508 336c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176z m0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z" p-id="8396"></path></svg>
+        <div class="info-item-text">{{this.$store.state.user.introduction}}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -147,11 +153,20 @@ export default {
   data() {
     return {
       mode: "profile", //profile or edit
-      editActive: ''
+      editActive: this.$route.name
     };
   },
   components: {
     ltBtutton,
+  },
+  created() {
+    console.log(this.$route.path.toString())
+    if(this.$route.path.toString().includes('/setting')){
+      this.mode = 'edit';
+    }
+  },
+  mounted() {
+    console.log(this.$route)
   },
   methods: {
     changeMode: function(){
@@ -168,12 +183,17 @@ export default {
         this.$router.push({name: tab})
       }
     }
-  }
+  },
 };
 </script>
 
 
 <style scoped>
+*,
+*::before,
+*::after {
+  box-sizing: content-box;
+}
 .setting-menu {
   width: 100%;
   height: 100%;
@@ -208,7 +228,6 @@ export default {
   display: flex;
   align-items: center;
   color: #666;
-  height: 24px;
   width: 90%;
   cursor: default;
   user-select: none;
@@ -217,11 +236,12 @@ export default {
 .info-item .info-item-text {
   width: calc(100% - 28px);
   margin-left: 10px;
+}
+.ellipsis{
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-all;
   white-space: nowrap;
-  letter-spacing: 2px;
 }
 .info-item svg {
   display: block;
@@ -242,7 +262,7 @@ export default {
   font-size: 16px;
   height: 34px;
 }
-.edit_active, .job_active, .division_active, .department_active, .mail_active, .phone_active, .line_active  {
+.edit_active, .job_active, .division_active, .department_active, .mail_active, .phone_active, .line_active, .introduction_active  {
   left: -100%;
 }
 ._edit {
