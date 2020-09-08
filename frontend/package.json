@@ -12,6 +12,7 @@
   "dependencies": {
     "ant-design-vue": "^1.6.5",
     "axios": "^0.20.0",
+    "tui-calendar": "^1.12.13",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.5.1"

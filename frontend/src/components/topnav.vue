@@ -77,7 +77,7 @@
       </div>
     </div>
     <div class="profiles">
-      <div class="profile-item" @click="jumpPage('help')" >
+      <div class="profile-item" @click="jumpPage('help')">
         <svg
           viewBox="64 64 896 896"
           focusable="false"
@@ -150,9 +150,7 @@ export default {
       activeRouter: "",
     };
   },
-  created() {
-    console.log(this.$router)
-  },
+  created() {},
   mounted() {
     this.currentDate = new Date().getDate();
     this.activeRouter = this.$route.name;
@@ -236,7 +234,7 @@ export default {
 .profiles .profile-item:hover {
   background-color: #ececec;
 }
-.profiles .profile-item svg{
+.profiles .profile-item svg {
   height: 14px;
   width: 14px;
 }

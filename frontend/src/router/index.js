@@ -1,17 +1,10 @@
-/*
- * @Descripttion: 
- * @version: 
- * @Author: Shenger
- * @Date: 2020-08-26 21:01:00
- * @LastEditors: Shenger
- * @LastEditTime: 2020-08-26 21:24:22
- */
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store'
 
 Vue.use(Router)
 
-export default new Router({
+const routerConfig = new Router({
   mode: 'history',
   routes: [
     {
@@ -85,3 +78,5 @@ export default new Router({
     }
   ]
 })
+
+export default routerConfig

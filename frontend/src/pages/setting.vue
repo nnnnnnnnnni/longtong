@@ -25,7 +25,7 @@ export default {
 
 <style scoped>
 .setting{
-  width: 1250px;
+  width: 1550px;
   margin: 0 auto;
   height: 100%;
   overflow-y: auto;
