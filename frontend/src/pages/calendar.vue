@@ -1,8 +1,10 @@
 <template>
   <div class="calendar">
+    <div class="add">
+      <a-icon type="plus" />
+    </div>
     <div class="btn-group">
       <a-button-group>
-        <a-button size='small' type="danger" icon="plus"></a-button>
         <a-button size='small' @click="changeView('day')">日</a-button>
         <a-button size='small' @click="changeView('week')">周</a-button>
         <a-button size='small' @click="changeView('month')">月</a-button>
@@ -12,6 +14,7 @@
         <a-date-picker
           size='small'
           v-model="defaultDate"
+          :allowClear="false"
           v-if="defaultView == 'day'"
           placeholder="Select day"
           @change="onChange"
@@ -19,6 +22,7 @@
         <a-week-picker
           size='small'
           v-model="defaultDate"
+          :allowClear="false"
           v-if="defaultView == 'week'"
           placeholder="Select week"
           @change="onChange"
@@ -26,6 +30,7 @@
         <a-month-picker
           size='small'
           v-model="defaultDate"
+          :allowClear="false"
           v-if="defaultView == 'month'"
           placeholder="Select month"
           @change="onChange"
@@ -44,6 +49,7 @@ import moment from "moment";
 import locale from "ant-design-vue/es/date-picker/locale/zh_CN";
 import Calendar from "tui-calendar";
 import "tui-calendar/dist/tui-calendar.css";
+import { fail } from 'assert';
 export default {
   name: "calendar",
   data() {
@@ -100,7 +106,7 @@ export default {
       scheduleView: true, // Can be also ['allday', 'time']
       template: {},
       theme: this.themeConfig,
-      useCreationPopup: false,
+      useCreationPopup: true,
       useDetailPopup: false,
       month: {
         daynames: ["日", "一", "二", "三", "四", "五", "六"],
@@ -133,9 +139,6 @@ export default {
 
       this.calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
       console.log(event);
-    });
-    this.calendar.on("clickMore", function (event) {
-      console.log("clickMore", event.date, event.target);
     });
   },
   methods: {
@@ -191,5 +194,24 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.add {
+  position: absolute;
+  bottom: 60px;
+  right: 60px;
+  background-color: rgb(24,144,255);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 26px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.add:hover {
+  transform: rotate(120deg);
 }
 </style>

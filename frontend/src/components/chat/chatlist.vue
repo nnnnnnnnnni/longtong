@@ -2,7 +2,7 @@
   <div class="chatlist">
     <div class="filter-input-container">
       <div class="filter-input">
-        <a-input v-model="filterVal"></a-input>
+        <a-input placeholder="输入即搜索" v-model="filterVal"></a-input>
       </div>
       <div class="filter-btn">
         <a-button icon="search" type="primary"></a-button>

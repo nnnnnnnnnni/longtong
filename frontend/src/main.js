@@ -9,7 +9,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$bus = new Vue()
 
-import { Button, Input, FormModel, Card, Icon, Tooltip, Avatar, DatePicker } from 'ant-design-vue'
+import { Button, Input, FormModel, Card, Icon, Tooltip, Avatar, DatePicker, Upload } from 'ant-design-vue'
 Vue.use(FormModel)
 Vue.use(Button)
 Vue.use(Input)
@@ -18,6 +18,7 @@ Vue.use(Icon)
 Vue.use(Tooltip)
 Vue.use(Avatar)
 Vue.use(DatePicker)
+Vue.use(Upload)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
