@@ -4,41 +4,33 @@
       <a-icon type="plus" />
     </div>
     <div class="btn-group">
-      <a-button-group>
-        <a-button size='small' @click="changeView('day')">日</a-button>
-        <a-button size='small' @click="changeView('week')">周</a-button>
-        <a-button size='small' @click="changeView('month')">月</a-button>
-      </a-button-group>
-      <a-button-group>
-        <a-button size='small' icon="arrow-left" @click="changeShow('prev')"></a-button>
-        <a-date-picker
-          size='small'
-          v-model="defaultDate"
-          :allowClear="false"
-          v-if="defaultView == 'day'"
-          placeholder="Select day"
-          @change="onChange"
-        />
-        <a-week-picker
-          size='small'
-          v-model="defaultDate"
-          :allowClear="false"
-          v-if="defaultView == 'week'"
-          placeholder="Select week"
-          @change="onChange"
-        />
-        <a-month-picker
-          size='small'
-          v-model="defaultDate"
-          :allowClear="false"
-          v-if="defaultView == 'month'"
-          placeholder="Select month"
-          @change="onChange"
-        />
-        <a-button size='small' icon="arrow-right" @click="changeShow('next')"></a-button>
-      </a-button-group>
+      <a-calendar :fullscreen='false' v-model='defaultDate' @change="onChange">
+        <template slot="headerRender">
+          <div>
+            <div class="calendar-header">
+              <a-button class="header-item header-btn" size='small' :type="defaultView == 'day'? 'primary' : ''" @click="changeView('day')">日</a-button>
+              <a-button class="header-item header-btn" size='small' :type="defaultView == 'week'? 'primary' : ''" @click="changeView('week')">周</a-button>
+              <a-button class="header-item header-btn" size='small' :type="defaultView == 'month'? 'primary' : ''" @click="changeView('month')">月</a-button>
+            </div>
+            <div class="calendar-header">
+              <div class="header-item header-time">{{defaultDateFormat}}</div>
+              <div class="header-item">
+                <a-button type="link" @click="today"> today </a-button>
+              </div>
+              <div class="header-item">
+                <div class="header-item-span">
+                  <a-icon type="left" @click="changeShow('prev')" />
+                </div>
+                <div class="header-item-span">
+                  <a-icon type="right" @click="changeShow('next')" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </a-calendar>
     </div>
-    <div id="calendar" style="height: 100%; width: 100%"></div>
+    <div id="calendar" style="height: 100%; flex: 1"></div>
   </div>
 </template>
 
@@ -46,10 +38,10 @@
 // https://nhn.github.io/tui.calendar/latest/Calendar
 import { themeConfig } from "../lib/calendar";
 import moment from "moment";
-import locale from "ant-design-vue/es/date-picker/locale/zh_CN";
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 import Calendar from "tui-calendar";
-import "tui-calendar/dist/tui-calendar.css";
-import { fail } from 'assert';
+import "../assets/calendar.css";
 export default {
   name: "calendar",
   data() {
@@ -98,13 +90,82 @@ export default {
       ],
     };
   },
+  computed: {
+    defaultDateFormat: function(){
+      return moment(this.defaultDate).format('YYYY-MM-DD');
+    },
+  },
+  created() {
+    window.addEventListener('resize', ()=> {
+      this.calendar.render();
+    });
+  },
   mounted() {
     // 初始化日历组件
     this.calendar = new Calendar("#calendar", {
       defaultView: this.defaultView,
       taskView: false, // Can be also ['milestone', 'task']
       scheduleView: true, // Can be also ['allday', 'time']
-      template: {},
+      template: {
+    popupIsAllDay: function() {
+      return 'All Day';
+    },
+    popupStateFree: function() {
+      return 'Free';
+    },
+    popupStateBusy: function() {
+      return 'Busy';
+    },
+    titlePlaceholder: function() {
+      return 'Subject';
+    },
+    locationPlaceholder: function() {
+      return 'Location';
+    },
+    startDatePlaceholder: function() {
+      return 'Start date';
+    },
+    endDatePlaceholder: function() {
+      return 'End date';
+    },
+    popupSave: function() {
+      return 'Save';
+    },
+    popupUpdate: function() {
+      return 'Update';
+    },
+    popupDetailDate: function(isAllDay, start, end) {
+      var isSameDate = moment(start).isSame(end);
+      var endFormat = (isSameDate ? '' : 'YYYY.MM.DD ') + 'hh:mm a';
+
+      if (isAllDay) {
+        return moment(start).format('YYYY.MM.DD') + (isSameDate ? '' : ' - ' + moment(end).format('YYYY.MM.DD'));
+      }
+
+      return (moment(start).format('YYYY.MM.DD hh:mm a') + ' - ' + moment(end).format(endFormat));
+    },
+    popupDetailLocation: function(schedule) {
+      return 'Location : ' + schedule.location;
+    },
+    popupDetailUser: function(schedule) {
+      return 'User : ' + (schedule.attendees || []).join(', ');
+    },
+    popupDetailState: function(schedule) {
+      return 'State : ' + schedule.state || 'Busy';
+    },
+    popupDetailRepeat: function(schedule) {
+      return 'Repeat : ' + schedule.recurrenceRule;
+    },
+    popupDetailBody: function(schedule) {
+      return 'Body : ' + schedule.body;
+    },
+    popupEdit: function() {
+      return 'Edit';
+    },
+    popupDelete: function() {
+      return 'Delete';
+    }
+  },
       theme: this.themeConfig,
       useCreationPopup: true,
       useDetailPopup: false,
@@ -171,9 +232,13 @@ export default {
     },
     // 改变时间选择框
     onChange: function (date) {
-      console.log(this.defaultDate);
       this.calendar.setDate(new Date(moment(date)));
     },
+    // 跳到今日
+    today: function() {
+      this.defaultDate = moment(new Date(), "YYYY-MM-DD HH:mm:ss")
+      this.calendar.setDate(new Date(moment(new Date())));
+    }
   },
 };
 </script>
@@ -183,26 +248,46 @@ export default {
 .calendar {
   height: 100%;
   width: 100%;
+  display: flex;
+  user-select: none;
 }
 .btn-group {
-  position: absolute;
-  z-index: 9999;
-  top: 0px;
-  height: 60px;
-  left: 10px;
+  height: 100%;
+  width: 299px;
+  border-right: 1px solid #e3e3e3;
+}
+.calendar-header{
+  line-height: 35px;
+  height: 35px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+}
+.calendar-header .header-item {
+  text-align: center;
+}
+.header-item .header-item-span {
+  text-align: center;
+  margin: 0 10px;
+  cursor: pointer;
+  display: inline-block;
+}
+.calendar-header .header-btn {
+  width: 25%;
+}
+.calendar-header .header-time {
+  font-size: 16px;
+  font-weight: 600;
 }
 .add {
   position: absolute;
   bottom: 60px;
-  right: 60px;
+  left: 125px;
   background-color: rgb(24,144,255);
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  z-index: 99999;
   display: flex;
   justify-content: center;
   align-items: center;

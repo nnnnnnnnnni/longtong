@@ -3,7 +3,7 @@
     <div class="tabs">
       <div
         class="tab-item"
-        :class="{'tab_active': activeRouter == 'calendar'}"
+        :class="{'tab_active': this.$store.state.route == 'calendar'}"
         @click="jumpPage('calendar')"
       >
         <svg
@@ -25,7 +25,7 @@
       </div>
       <div
         class="tab-item"
-        :class="{'tab_active': activeRouter == 'chat'}"
+        :class="{'tab_active': this.$store.state.route == 'chat'}"
         @click="jumpPage('chat')"
       >
         <svg
@@ -50,7 +50,7 @@
       </div>
       <div
         class="tab-item"
-        :class="{'tab_active': activeRouter == 'workbench'}"
+        :class="{'tab_active': this.$store.state.route == 'workbench'}"
         @click="jumpPage('workbench')"
       >
         <svg
@@ -150,18 +150,15 @@ export default {
     return {
       currentDate: "",
       avator: this.$store.state.user.avator,
-      activeRouter: "",
     };
   },
   created() {},
   mounted() {
     this.currentDate = new Date().getDate();
-    this.activeRouter = this.$route.name;
   },
   methods: {
     jumpPage: function (name) {
-      if (name != this.activeRouter) {
-        this.activeRouter = name;
+      if (name != this.$store.state.route) {
         this.$router.push({ name: name });
       }
     },

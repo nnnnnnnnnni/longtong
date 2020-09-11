@@ -91,7 +91,6 @@ export default {
   display: flex;
   cursor: pointer;
   transition: all 0.3s;
-  animation: fly-in 0.6s;
 }
 .user-container .user-item:hover {
   background-color: #f5f5f5;
@@ -140,10 +139,5 @@ export default {
   text-overflow: ellipsis;
   overflow: hidden;
   word-wrap: none;
-}
-@keyframes fly-in {
-  0% { margin-bottom: 100%; }
-  80% { margin-bottom: -10px; }
-  100% { margin-bottom: 0px; }
 }
 </style>

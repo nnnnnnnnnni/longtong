@@ -32,7 +32,7 @@ export default {
   display: flex;
 }
 .left {
-  width: 399px;
+  width: 349px;
   border-right: 1px solid #e4e4e4;
 }
 .right {
