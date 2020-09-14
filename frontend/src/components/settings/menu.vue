@@ -160,7 +160,6 @@ export default {
     ltBtutton,
   },
   created() {
-    console.log(this.$route.path.toString())
     if(this.$route.path.toString().includes('/setting')){
       this.mode = 'edit';
     }

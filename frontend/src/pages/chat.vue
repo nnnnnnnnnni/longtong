@@ -32,11 +32,12 @@ export default {
   display: flex;
 }
 .left {
-  width: 349px;
+  width: 30%;
+  min-width: 299px;
+  max-width: 349px;
   border-right: 1px solid #e4e4e4;
 }
 .right {
   flex: 1;
-  min-width: 1150px;
 }
 </style>

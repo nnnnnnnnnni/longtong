@@ -175,7 +175,8 @@ export default {
   position: relative;
 }
 .tabs {
-  width: 750px;
+  width: 40%;
+  max-width: 750px;
   height: inherit;
   margin: 0 auto;
   font-size: 20px;

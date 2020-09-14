@@ -26,7 +26,7 @@ export default {
 <style scoped>
 .workbench{
   width: 90%;
-  max-width: 1700px;
+  max-width: 1600px;
   min-width: 800px;
   height: 100%;
   margin: 0 auto;
@@ -34,12 +34,13 @@ export default {
   overflow: hidden;
 }
 .bench-menu {
-  width: 300px;
+  width: 200px;
   height: 100%;
-  margin-right: 60px;
 }
 .bench-container {
   flex: 1;
+  padding: 20px 0px 0px 50px;
+  box-sizing: border-box;
   height: 100%;
 }
 </style>

@@ -64,6 +64,28 @@ const routerConfig = new Router({
             }
           ]
         },
+        {
+          path: '/workbench',
+          name: 'workbench',
+          component: () => import('@/pages/workbench'),
+          children: [
+            {
+              path: '/workbench/home',
+              name: 'home',
+              component: () => import('@/components/workbench/home'),
+            },
+            {
+              path: '/workbench/mission',
+              name: 'mission',
+              component: () => import('@/components/workbench/missions'),
+            },
+            {
+              path: '/workbench/project',
+              name: 'project',
+              component: () => import('@/components/workbench/projects'),
+            }
+          ]
+        },
       ]
     },
     {

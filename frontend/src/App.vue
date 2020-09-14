@@ -19,7 +19,7 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
-  min-width: 1250px;
+  min-width: 800px;
 }
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
