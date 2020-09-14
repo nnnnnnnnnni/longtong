@@ -25,7 +25,7 @@ export default {
 
 <style scoped>
 .setting{
-  width: 1550px;
+  width: 1250px;
   margin: 0 auto;
   height: 100%;
   overflow-y: auto;
@@ -36,13 +36,12 @@ export default {
   width: 300px;
   top: 60px;
   bottom: 0;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.12);
 }
 .setting-container{
   margin-left: 300px;
   height: 100%;
   width: 950px;
   box-sizing: border-box;
-  padding: 10px 15px;
+  padding: 10px 15px 10px 100px;
 }
 </style>

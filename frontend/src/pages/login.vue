@@ -176,7 +176,7 @@ export default {
 }
 .login .login-form {
   width: 370px;
-  height: 500px;
+  height: 450px;
   padding: 25px 40px;
   box-shadow: 0 4px 14px 0 rgba(206, 207, 209, 0.28);
   border-radius: 12px;
@@ -262,7 +262,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 150px;
+  margin-top: 50px;
 }
 .third-platform .third-platform-item{
   height: 40px;
@@ -277,7 +277,7 @@ export default {
   transition: all 0.2s;
 }
 .third-platform .third-platform-item svg:hover{
-  filter: drop-shadow(0 0 5px );
+  filter: drop-shadow(0 0 5px);
 }
 .qr-container{
   position: absolute;

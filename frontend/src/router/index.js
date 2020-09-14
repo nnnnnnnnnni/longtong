@@ -13,11 +13,6 @@ const routerConfig = new Router({
       component: () => import('@/pages/error/403')
     },
     {
-      path: '/404',
-      name: 'err404',
-      component: () => import('@/pages/error/404')
-    },
-    {
       path: '/login',
       name: 'login',
       component: () => import('@/pages/login')

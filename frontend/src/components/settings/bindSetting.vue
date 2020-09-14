@@ -108,9 +108,11 @@ h2 {
   padding-left: 20px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
 }
 .form-item {
+  flex: 1;
   margin: 20px 10px;
 }
 </style>

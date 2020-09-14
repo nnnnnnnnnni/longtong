@@ -169,7 +169,7 @@ export default {
 
 <style scoped>
 #topnav {
-  height: 60px;
+  height: 54px;
   width: 100%;
   box-shadow: 0 2px 8px #f0f1f2;
   position: relative;
