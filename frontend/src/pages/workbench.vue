@@ -39,7 +39,7 @@ export default {
 }
 .bench-container {
   flex: 1;
-  padding: 20px 0px 0px 50px;
+  padding-left: 50px;
   box-sizing: border-box;
   height: 100%;
 }
