@@ -26,7 +26,7 @@ export default {
 <style scoped>
 .workbench{
   width: 90%;
-  max-width: 1600px;
+  max-width: 1500px;
   min-width: 800px;
   height: 100%;
   margin: 0 auto;

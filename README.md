@@ -4,10 +4,28 @@
 
 <hr/>
 
-### appreciation
+### Appreciation
 
 |name|url|
 |---|---|
 |calendar|https://nhn.github.io/tui.calendar/latest/Calendar|
 |css-platfrom|https://www.antdv.com/docs/vue/introduce-cn/|
 |axios|https://github.com/axios/axios|
+|chart|https://www.highcharts.com/|
+
+## Contributor
+
+me
+
+# Usage
+
+> git clone 
+
+> cd backend && npm install --save
+
+> npm start
+
+> cd ../frontend && npm install --save
+
+> npm run dev
+

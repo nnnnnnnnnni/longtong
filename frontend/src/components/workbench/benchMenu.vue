@@ -1,18 +1,18 @@
 <template>
   <div class='bench-menu'>
-    <div class="menu-item" @click="jump('home')">
+    <div class="menu-item" :class="{'menu-active': this.$store.state.route == 'home'}" @click="jump('home')">
       <span class="item-icon">
         <a-icon type='home'></a-icon>
       </span>
       <span class="item-title">首页</span>
     </div>
-    <div class="menu-item" @click="jump('mission')">
+    <div class="menu-item" :class="{'menu-active': this.$store.state.route == 'mission'}" @click="jump('mission')">
       <span class="item-icon">
         <a-icon type='bars'></a-icon>
       </span>
       <span class="item-title">我的任务</span>
     </div>
-    <div class="menu-item" @click="jump('project')">
+    <div class="menu-item" :class="{'menu-active': this.$store.state.route == 'project'}" @click="jump('project')">
       <span class="item-icon">
         <a-icon type='appstore'></a-icon>
       </span>
@@ -26,7 +26,7 @@ export default {
   name: 'benchMenu',
   data() {
     return {
-
+      avitveMenu: this.$store.state.route
     };
   },
   methods: {
@@ -65,6 +65,6 @@ export default {
   background-color: rgba(0, 0, 0, 0.08);
 }
 .menu-active {
-  background-color: #91d5ff;
+  background-color: #6bc2f8;
 }
 </style>

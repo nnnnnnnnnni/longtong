@@ -97,6 +97,7 @@ const routerConfig = new Router({
 })
 
 routerConfig.beforeEach((to, from, next) => {
+  console.log(to)
   store.commit('CHANGE_ROUTE', to.name)
   next()
 }) 
