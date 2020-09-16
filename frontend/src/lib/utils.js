@@ -38,3 +38,15 @@ export const ismail = (mail) => {
         return true;
     }
 }
+
+export const debounce = (fnc, wait) => {
+    let timer = null;
+    return function () {
+        if (timer) {
+            clearTimeout(timer)
+        }
+        timer = setTimeout(() => {
+            fnc()
+        }, wait);
+    }
+}
