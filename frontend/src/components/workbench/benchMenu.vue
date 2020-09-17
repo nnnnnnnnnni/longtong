@@ -65,6 +65,6 @@ export default {
   background-color: rgba(0, 0, 0, 0.08);
 }
 .menu-active {
-  background-color: #6bc2f8;
+  background-color: #76c7fa !important;
 }
 </style>
