@@ -1,8 +1,8 @@
-export interface Config {
+export interface Iconfig {
     port: number;
     mongo: {
         host: string;
-        port: number;
+        port: string;
         name: string;
         username: string;
         password: string;
