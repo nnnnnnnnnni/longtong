@@ -1,18 +1,18 @@
 <template>
-  <div class='setting'>
-      <div class="menu">
-        <setting-menu />
-      </div>
-      <div class="setting-container">
-        <router-view />
-      </div> 
+  <div class="setting">
+    <div class="menu">
+      <setting-menu />
+    </div>
+    <div class="setting-container">
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
-import settingMenu from '@/components/settings/menu.vue'
+import settingMenu from "@/components/settings/menu.vue";
 export default {
-  name: 'setting',
+  name: "setting",
   data() {
     return {};
   },
@@ -22,9 +22,8 @@ export default {
 };
 </script>
 
-
 <style scoped>
-.setting{
+.setting {
   width: 1250px;
   margin: 0 auto;
   height: 100%;
@@ -37,7 +36,7 @@ export default {
   top: 60px;
   bottom: 0;
 }
-.setting-container{
+.setting-container {
   margin-left: 300px;
   height: 100%;
   width: 950px;

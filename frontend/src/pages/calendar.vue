@@ -4,7 +4,7 @@
       <a-icon type="plus" />
     </div>
     <div class="btn-group">
-      <a-calendar :fullscreen='false' v-model='defaultDate' @change="onChange">
+      <a-calendar :fullscreen="false" v-model="defaultDate" @change="onChange">
         <template slot="headerRender">
           <div>
             <div class="calendar-header">
@@ -13,7 +13,7 @@
               <a-button class="header-item header-btn" size='small' :type="defaultView == 'month'? 'primary' : ''" @click="changeView('month')">月</a-button>
             </div>
             <div class="calendar-header">
-              <div class="header-item header-time">{{defaultDateFormat}}</div>
+              <div class="header-item header-time">{{ defaultDateFormat }}</div>
               <div class="header-item">
                 <a-button type="link" @click="today"> today </a-button>
               </div>
@@ -38,8 +38,10 @@
 // https://nhn.github.io/tui.calendar/latest/Calendar
 import { themeConfig } from "../lib/calendar";
 import moment from "moment";
-import 'moment/locale/zh-cn';
-moment.locale('zh-cn', {weekdaysMin: ["日", "一", "二", "三", "四", "五", "六"]});
+import "moment/locale/zh-cn";
+moment.locale("zh-cn", {
+  weekdaysMin: ["日", "一", "二", "三", "四", "五", "六"]
+});
 import Calendar from "tui-calendar";
 import "../assets/calendar.css";
 export default {
@@ -58,7 +60,7 @@ export default {
           category: "allday",
           dueDateClass: "",
           start: "2020-09-05T22:30:00+09:00",
-          end: "2020-09-08T12:30:00+09:00",
+          end: "2020-09-08T12:30:00+09:00"
         },
         {
           id: "2",
@@ -67,7 +69,7 @@ export default {
           category: "allday",
           dueDateClass: "",
           start: "2020-09-07T16:30:00+09:00",
-          end: "2020-09-08T22:31:00+09:00",
+          end: "2020-09-08T22:31:00+09:00"
         },
         {
           id: "3",
@@ -76,7 +78,7 @@ export default {
           category: "time",
           dueDateClass: "",
           start: "2020-09-07T16:30:00+09:00",
-          end: "2020-09-07T22:31:00+09:00",
+          end: "2020-09-07T22:31:00+09:00"
         },
         {
           id: "4",
@@ -85,18 +87,18 @@ export default {
           category: "time",
           dueDateClass: "",
           start: "2020-09-07T18:30:00+09:00",
-          end: "2020-09-07T22:31:00+09:00",
-        },
-      ],
+          end: "2020-09-07T22:31:00+09:00"
+        }
+      ]
     };
   },
   computed: {
-    defaultDateFormat: function(){
-      return moment(this.defaultDate).format('YYYY-MM-DD');
-    },
+    defaultDateFormat: function() {
+      return moment(this.defaultDate).format("YYYY-MM-DD");
+    }
   },
   created() {
-    window.addEventListener('resize', ()=> {
+    window.addEventListener("resize", () => {
       this.calendar.render();
     });
   },
@@ -113,13 +115,13 @@ export default {
       month: {
         daynames: ["日", "一", "二", "三", "四", "五", "六"],
         startDayOfWeek: 1,
-        narrowWeekend: true,
+        narrowWeekend: true
       },
       week: {
         daynames: ["日", "一", "二", "三", "四", "五", "六"],
         startDayOfWeek: 1,
-        narrowWeekend: true,
-      },
+        narrowWeekend: true
+      }
     });
     // 注册 活动
     this.calendar.createSchedules(this.schedules, false);
@@ -131,11 +133,11 @@ export default {
     //   dragBgColor: "#585858",
     // });
     // 点击日程
-    this.calendar.on("clickSchedule", (event) => {
+    this.calendar.on("clickSchedule", event => {
       console.log(event.schedule);
     });
     // 拖动修改
-    this.calendar.on("beforeUpdateSchedule", (event) => {
+    this.calendar.on("beforeUpdateSchedule", event => {
       var schedule = event.schedule;
       var changes = event.changes;
 
@@ -145,12 +147,12 @@ export default {
   },
   methods: {
     // 切换视图显示单位
-    changeView: function (mode) {
+    changeView: function(mode) {
       this.defaultView = mode;
       this.calendar.changeView(mode, true);
     },
     // 切换显示日期
-    changeShow: function (type) {
+    changeShow: function(type) {
       if (type == "prev") {
         if (this.defaultView == "day") {
           this.defaultDate = moment(this.defaultDate).add("-1", "days");
@@ -172,18 +174,17 @@ export default {
       }
     },
     // 改变时间选择框
-    onChange: function (date) {
+    onChange: function(date) {
       this.calendar.setDate(new Date(moment(date)));
     },
     // 跳到今日
     today: function() {
-      this.defaultDate = moment(new Date(), "YYYY-MM-DD HH:mm:ss")
+      this.defaultDate = moment(new Date(), "YYYY-MM-DD HH:mm:ss");
       this.calendar.setDate(new Date(moment(new Date())));
     }
-  },
+  }
 };
 </script>
-
 
 <style scoped>
 .calendar {
@@ -197,7 +198,7 @@ export default {
   width: 299px;
   border-right: 1px solid #e3e3e3;
 }
-.calendar-header{
+.calendar-header {
   line-height: 35px;
   height: 35px;
   display: flex;
@@ -224,7 +225,7 @@ export default {
   position: absolute;
   bottom: 60px;
   left: 125px;
-  background-color: rgb(24,144,255);
+  background-color: rgb(24, 144, 255);
   width: 50px;
   height: 50px;
   border-radius: 50%;

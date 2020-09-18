@@ -18,11 +18,11 @@ export default {
     return {};
   },
   components: {
-    chatlist,chatcontainer
-  },
+    chatlist,
+    chatcontainer
+  }
 };
 </script>
-
 
 <style scoped>
 .chat {

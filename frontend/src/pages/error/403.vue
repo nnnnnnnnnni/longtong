@@ -292,11 +292,10 @@ export default {
     return {};
   },
   components: {
-    ltButton,
-  },
+    ltButton
+  }
 };
 </script>
-
 
 <style scoped>
 #err403 {

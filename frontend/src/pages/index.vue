@@ -2,13 +2,13 @@
   <div class="main">
     <top-nav></top-nav>
     <div class="container">
-      <router-view/>
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import topNav from '@/components/topnav'
+import topNav from "@/components/topnav";
 export default {
   name: "index",
   data() {
@@ -20,15 +20,14 @@ export default {
 };
 </script>
 
-
 <style scoped>
-.main{
+.main {
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
 }
-.container{
+.container {
   box-sizing: border-box;
   overflow: hidden;
   flex: 1;

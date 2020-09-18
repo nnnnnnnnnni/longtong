@@ -1,12 +1,9 @@
 <template>
-  <div class='chatcontainer'>
+  <div class="chatcontainer">
     <div class="chat-nav">
-      <div class="nav-name">{{user.name}}</div>
+      <div class="nav-name">{{ user.name }}</div>
     </div>
-    <div class="chat-content">
-      <p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p>
-      <p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p>
-    </div>
+    <div class="chat-content"></div>
     <div class="chat-box">
       <div class="mutifn">
         <div class="mutifn-item" v-if="mutifn == 'edit'" @click="changeMutifnType('image')">
@@ -38,48 +35,45 @@
 
 <script>
 export default {
-  name: 'chatcontainer',
+  name: "chatcontainer",
   data() {
     return {
       user: {
-        name: 'niyongsehng'
+        name: "niyongsehng"
       },
-      mutifn: 'edit',
-      sendMessage: '',
+      mutifn: "edit",
+      sendMessage: "",
       headers: {}
     };
   },
   created() {
-    this.$bus.$on('get', (data)=> {
-      console.log(data)
-    })
+    this.$bus.$on("get", data => {
+      console.log(data);
+    });
   },
   methods: {
     changeMutifnType: function(type) {
-      this.mutifn = type
+      this.mutifn = type;
     },
-    clickEmoji: function () {
-      console.log('ok')
+    clickEmoji: function() {
+      console.log("ok");
     },
-    handleUploadChange: function() {
-
-    }
+    handleUploadChange: function() {}
   },
   beforeDestory() {
-    this.$bus.$off()
+    this.$bus.$off();
   }
 };
 </script>
 
-
 <style scoped>
-.chatcontainer{
+.chatcontainer {
   height: 100%;
   width: 100%;
   overflow-y: hidden;
   position: relative;
 }
-.chat-nav{
+.chat-nav {
   width: 100%;
   height: 70px;
   box-shadow: 0 2px 8px #f0f1f2;
@@ -113,7 +107,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.chat-box .mutifn  .mutifn-item {
+.chat-box .mutifn .mutifn-item {
   width: 30px;
   height: 30px;
   cursor: pointer;

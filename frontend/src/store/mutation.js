@@ -1,5 +1,5 @@
 export default {
-    CHANGE_ROUTE: (state, route) => {
-        state.route = route
-    }
-}
+  CHANGE_ROUTE: (state, route) => {
+    state.route = route;
+  }
+};

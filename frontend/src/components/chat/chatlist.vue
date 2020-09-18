@@ -15,10 +15,10 @@
         </div>
         <div class="item-info">
           <div class="item-info-user">
-            <div class="item-name">{{item.name}}</div>
-            <div class="item-time">{{item.time}}</div>
+            <div class="item-name">{{ item.name }}</div>
+            <div class="item-time">{{ item.time }}</div>
           </div>
-          <div class="item-msg">{{item.msg}}</div>
+          <div class="item-msg">{{ item.msg }}</div>
         </div>
       </div>
     </div>
@@ -32,27 +32,26 @@ export default {
   data() {
     return {
       filterVal: "",
-      dataList: data,
+      dataList: data
     };
   },
   created() {},
   computed: {
-    dataListFilter: function () {
+    dataListFilter: function() {
       return this.dataList.filter(
-        (item) =>
+        item =>
           item.name.indexOf(this.filterVal) != -1 ||
           item.msg.indexOf(this.filterVal) != -1
       );
-    },
+    }
   },
   methods: {
-    send: function () {
+    send: function() {
       this.$bus.$emit("get", "ok");
-    },
-  },
+    }
+  }
 };
 </script>
-
 
 <style scoped>
 .chatlist {

@@ -1,17 +1,14 @@
 <template>
-  <div class='help'>help</div>
+  <div class="help">help</div>
 </template>
 
 <script>
 export default {
-  name: 'help',
+  name: "help",
   data() {
     return {};
-  },
+  }
 };
 </script>
 
-
-<style scoped>
-
-</style>
+<style scoped></style>

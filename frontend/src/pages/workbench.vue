@@ -1,18 +1,18 @@
 <template>
-  <div class='workbench'>
-      <div class="bench-menu">
-        <benchMenu />
-      </div>
-      <div class="bench-container">
-        <router-view />
-      </div> 
+  <div class="workbench">
+    <div class="bench-menu">
+      <benchMenu />
+    </div>
+    <div class="bench-container">
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
-import benchMenu from '@/components/workbench/benchMenu'
+import benchMenu from "@/components/workbench/benchMenu";
 export default {
-  name: 'workbench',
+  name: "workbench",
   data() {
     return {};
   },
@@ -22,9 +22,8 @@ export default {
 };
 </script>
 
-
 <style scoped>
-.workbench{
+.workbench {
   width: 85%;
   height: 100%;
   margin: 0 auto;
