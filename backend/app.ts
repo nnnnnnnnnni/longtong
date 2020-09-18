@@ -1,15 +1,15 @@
-import koa, { Context } from 'koa'
-import { Config } from './config';
+import koa from "koa";
+import bodyParser from "koa-bodyparser";
+import { Config } from "./config";
 const app = new koa();
-import connection from './mongo';
-import { user } from './mongo/user';
+import connection from "./mongo";
+import applyRouter from "./routers";
 
-connection(Config.mongo.host, Config.mongo.port, Config.mongo.name)
+connection(Config.mongo.host, Config.mongo.port, Config.mongo.name);
 
-app.use(async (ctx: Context) => {
-    const count = await user.find().count().lean().exec()
-    ctx.body = count
-})
+app.use(bodyParser());
+
+app.use(applyRouter);
 
 console.log(`APP HAS STARTING AT PORT: ${Config.port}`);
 app.listen(Config.port);

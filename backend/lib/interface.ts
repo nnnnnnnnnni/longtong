@@ -1,4 +1,4 @@
 export interface IParams {
-    url: string,
-    data?: any
+  url: string;
+  data?: any;
 }

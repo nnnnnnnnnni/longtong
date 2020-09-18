@@ -9,18 +9,10 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "*": [
-        "node_modules/*",
-      ],
-      "@/*": [
-        "*"
-      ]
+      "*": ["node_modules/*"],
+      "@/*": ["*"]
     }
   },
-  "include": [
-    "**/*"
-  ],
-  "exclude": [
-    "**/*/config.ts"
-  ]
+  "include": ["**/*"],
+  "exclude": ["**/*/config.ts"]
 }
