@@ -16,6 +16,14 @@ export default {
   },
   components: {
     topNav
+  },
+  created() {
+    const token = localStorage.getItem('token');
+    // if(!token) {
+    //   this.$router.push({name: 'login'})
+    // } else {
+    //   this.$router.push({name: 'calendar'})
+    // }
   }
 };
 </script>

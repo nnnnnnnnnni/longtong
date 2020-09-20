@@ -1,47 +1,66 @@
 <template>
   <div class="login">
-    <img class="login-img" :src="imgSrc" />
-    <div class="login-container">
-      <div class="login-form">
-        <div class="login-title">
+    <img class="img" :src="imgSrc" />
+    <div class="container" v-if="loginMode">
+      <div class="form">
+        <div class="title">
           <span>登录 笼统</span>
-          <span class="small">去注册 <a-icon type="arrow-right" /></span>
+          <span class="small" @click="changeMode(1)">去注册 <a-icon type="arrow-right" /></span>
         </div>
-        <div class="login-step">
+        <div class="step">
           <a-tabs :tabBarStyle="tabBarStyle" size="small" :tabBarGutter="0">
             <a-tab-pane key="1" tab="邮箱">
-              <div class="login-item">
+              <div class="item">
                 <a-input v-model="account" size="large" placeholder="请输入邮箱"></a-input>
               </div>
-              <div class="login-item">
-                <a-input v-model="password" size="large" placeholder="请输入密码" type='password'/>
+              <div class="item">
+                <a-input-password v-model="password" size="large" placeholder="请输入密码" type='password'/>
               </div>
-              <div class="login-item">
-                <a-button size='large' type='primary' shape="round" icon='arrow-right'>登录</a-button>
+              <div class="item">
+                <a-button size='large' type='primary' :disabled='!bindLogin' shape="round" icon='arrow-right' @click="login">登录</a-button>
               </div>
             </a-tab-pane>
             <a-tab-pane key="2" tab="手机">
-              <div class="login-item">
+              <div class="item">
                 <a-input v-model="phone" size="large" placeholder="请输入手机号">
                   <template slot="suffix">
                     <a-button @click="sendCode" size="small" :disabled="bindSendCode" type="link" >{{codeText}}</a-button>
                   </template>
                 </a-input>
               </div>
-              <div class="login-item">
-                <a-input v-model="code" size="large" placeholder="请输入验证码"/>
+              <div class="item">
+                <a-input v-model="code" maxLength='6' size="large" placeholder="请输入验证码"/>
               </div>
-              <div class="login-item">
-                <a-button size='large' type='primary' shape="round" icon='arrow-right'>登录</a-button>
+              <div class="item">
+                <a-button size='large' type='primary' :disabled='!bindLogin' shape="round" icon='arrow-right' @click="login">登录</a-button>
               </div>
             </a-tab-pane>
             <a-tab-pane key="3" tab="微信">
-              <div class="login-item">
+              <div class="item">
                 <img src="https://bkimg.cdn.bcebos.com/pic/2934349b033b5bb571dc8c5133d3d539b600bc12?x-bce-process=image/resize,m_lfit,w_268,limit_1/format,f_jpg" alt="">
               </div>
-              <div class="login-sub">请使用“笼统小程序”扫码</div>
+              <div class="sub">请使用“笼统小程序”扫码</div>
             </a-tab-pane>
           </a-tabs>
+        </div>
+      </div>
+    </div>
+    <div class="container" v-else>
+      <div class="form">
+        <div class="title">
+          <span>注册 笼统</span>
+          <span class="small" @click="changeMode(2)"><a-icon type="arrow-left" /> 返回登陆</span>
+        </div>
+        <div class="register-step">
+          <div class="register-item">
+            <a-input v-model="registerMaill" size="large" placeholder="请输入邮箱"></a-input>
+          </div>
+          <div class="register-item">
+            <a-input v-model="registerPassword" size="large" placeholder="请输入至少6位数的密码" type='password'/>
+          </div>
+          <div class="register-item">
+            <a-button size='large' type='primary' :disabled='!bindRegister' shape="round" icon='arrow-right' @click="register">注册</a-button>
+          </div>
         </div>
       </div>
     </div>
@@ -49,23 +68,50 @@
 </template>
 
 <script>
+import {ismail, isPhone, isCode} from '../lib/utils';
 export default {
   name: "login",
   data() {
     return {
+      loginMode: true,
       tabBarStyle: { border: "none", "user-select": "none", "margin-bottom": '0'},
       codeText: "发送验证码",
       bindSendCode: false,
+      bindLogin: false,
+      bindRegister: false,
       imgSrc: "https://www.bing.com/th?id=OHR.Schrecksee_ZH-CN8548752524_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp",
       account: '',
       phone: '',
       password: '',
       code: '',
+      registerMaill: '',
+      registerPassword: ''
     };
   },
   components: {},
   created() {},
   mounted() {},
+  watch: {
+    account: function() {
+      this.bindLogin = ismail(this.account) && this.password != '';
+    },
+    password: function() {
+      this.bindLogin = ismail(this.account) && this.password != '';
+    },
+    phone: function() {
+      this.bindLogin = isPhone(this.phone) && isCode(this.code);
+    },
+    code: function() {
+      this.bindLogin = isPhone(this.phone) && isCode(this.code);
+    },
+    registerMaill: function() {
+      this.bindRegister = ismail(this.registerMaill) && this.registerPassword.length >=6;
+    },
+    registerPassword: function() {
+      this.bindRegister = ismail(this.registerMaill) && this.registerPassword.length >=6;
+    }
+
+  },
   methods: {
     sendCode: function() {
       this.bindSendCode = true;
@@ -76,10 +122,24 @@ export default {
         this.codeText = `${time} S后重试`;
         if(time == 0) {
           clearInterval(timer)
-          this.codeText = '发送验证码'
-          this.bindSendCode = false
+          this.codeText = '发送验证码';
+          this.bindSendCode = false;
         }
       }, 1000);
+    },
+    changeMode: function(type) {
+      this.account = this.password = this.phone = this.code = this.registerMaill = this.registerPassword = '';
+      this.loginMode = type != 1;
+    },
+    register: function() {
+
+    },
+    login: async function() {
+      await this.$post('/user/register', {
+        data: '12312313'
+      }).then(res =>{
+        console.log(res)
+      })
     }
   }
 };
@@ -94,12 +154,12 @@ export default {
   width: 100%;
   display: flex;
 }
-.login .login-img {
+.login .img {
   display: block;
   height: 100%;
   width: 40%;
 }
-.login .login-container {
+.login .container {
   height: 100%;
   flex: 1;
   display: flex;
@@ -107,7 +167,7 @@ export default {
   align-items: center;
   position: relative;
 }
-.login-container .login-form {
+.container .form {
   width: 400px;
   box-sizing: border-box;
   padding: 25px;
@@ -118,8 +178,9 @@ export default {
   position: relative;
   overflow: hidden;
 }
-.login-form .login-title {
+.form .title {
   margin-bottom: 6px;
+  user-select: none;
   font-size: 22px;
   color: #1f2329;
   font-weight: 600;
@@ -128,28 +189,40 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-.login-form .login-title .small {
+.form .title .small {
   font-size: 0.45em;
   font-weight: normal;
   cursor: pointer;
 }
-.login-form .login-title .small:hover {
+.form .title .small:hover {
   text-decoration: underline;
 }
-.login-item {
+.item {
   margin-top: 30px;
   width: 100%;
   text-align: center;
 }
-.login-item img {
+.item img {
   width: 200px;
   height: 200px;
 }
-.login-sub {
+.sub {
   margin-top: 20px;
   font-size: 14px;
   color: #333333;
   font-weight: 600;
+  text-align: center;
+}
+
+.form .register-step {
+  width: 100%;
+  padding-top: 35px;
+  box-sizing: border-box;
+  height: calc(100% - 36px);
+}
+.register-step .register-item {
+  margin-top: 30px;
+  width: 100%;
   text-align: center;
 }
 </style>

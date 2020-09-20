@@ -42,7 +42,7 @@ const applyRouter = async (ctx: Context, next: Function): Promise<any> => {
       status: 404,
       msg: "Not Found!",
       data: {},
-      tmp: new Date().getTime(),
+      timestamp: new Date().getTime(),
     });
   }
   if (_router.method.toUpperCase() != method.toUpperCase()) {
@@ -50,23 +50,23 @@ const applyRouter = async (ctx: Context, next: Function): Promise<any> => {
       status: 404,
       msg: "The Method Is Illegal!",
       data: {},
-      tmp: new Date().getTime(),
+      timestamp: new Date().getTime(),
     });
   }
   _router.middleware.forEach(async (fn: Function) => {
     try {
       const data = await fn(ctx);
-      return (ctx.body = {
-        status: 200,
+      return (ctx.body = Object.assign({
         msg: "success",
-        data: data,
-      });
+        timestamp: new Date().getTime(),
+      }, data));
     } catch (error) {
+      console.log(error)
       return (ctx.body = {
         status: 500,
         msg: error,
         data: {},
-        tmp: new Date().getTime(),
+        timestamp: new Date().getTime(),
       });
     }
   });

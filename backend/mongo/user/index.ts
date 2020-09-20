@@ -6,45 +6,70 @@ const userSchema: Schema = new Schema(
     name: {
       type: String,
       index: true,
-    }, // 姓名
+    },
     userName: {
       type: String,
-    }, // 昵称
-    avator: String, // 头像
-    job: String, // 担任职务
+    },
+    avator: String,
+    job: String,
     department: {
       type: SchemaTypes.ObjectId,
       ref: "department",
-    }, // 部门
-    introduction: String, // 简介
+    },
+    introduction: String,
     mail: {
       type: String,
       unique: true,
-    }, // 邮箱
-    password: String, // 密码
+    },
+    password: String,
     wechat: {
       type: String,
       unique: true,
-    }, // 绑定微信
-    miniProgram: String, // 绑定小程序
+    },
+    miniProgram: {
+      type: String,
+      unique: true,
+    },
     phone: {
       type: String,
       unique: true,
-    }, // 手机
+    },
+    company: {
+      type: SchemaTypes.ObjectId,
+      ref: 'company'
+    },
+    role: [
+      {
+        project: {
+          type: SchemaTypes.ObjectId,
+          ref: "project",
+          unique: true,
+        },
+        role: {
+          type: String,
+          enum: ["creater", "admin", "user"],
+        },
+      },
+    ],
     createTime: {
       type: Date,
       default: Date.now(),
-    }, // 创建时间
-    lastLoginTime: Date, // 最后登录时间
-    timeLine: String, // 工作时长
+    },
+    updateTime: {
+      type: Date,
+      default: Date.now(),
+    },
+    lastLoginTime: Date,
+    timeLine: String,
     mfa: {
       type: String,
       unique: true,
-    }, // MFA绑定
+    },
   },
   {
     timestamps: {
       createdAt: "createTime",
+      updatedAt: "updateTime",
     },
   }
 );

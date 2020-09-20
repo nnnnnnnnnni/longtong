@@ -1,32 +1,30 @@
-import { Icompany } from "./interface";
+import { Iproject } from "./interface";
 import { Schema, model, SchemaTypes } from "mongoose";
 
-const companySchema: Schema = new Schema(
+const projectSchema = new Schema(
   {
     name: String,
+    introduction: String,
     creater: {
       type: SchemaTypes.ObjectId,
       ref: "user",
     },
-    users: [
-      {
-        type: SchemaTypes.ObjectId,
-        ref: "user",
-      },
-    ],
     admins: [
       {
         type: SchemaTypes.ObjectId,
         ref: "user",
       },
     ],
-    projects: [
+    users: [
       {
         type: SchemaTypes.ObjectId,
-        ref: "project",
+        ref: "user",
       },
     ],
-    introduction: String,
+    company: {
+      type: SchemaTypes.ObjectId,
+      ref: "company",
+    },
     createTime: {
       type: Date,
       default: Date.now(),
@@ -44,4 +42,4 @@ const companySchema: Schema = new Schema(
   }
 );
 
-export const company = model<Icompany>("company", companySchema);
+export const project = model<Iproject>("project", projectSchema);

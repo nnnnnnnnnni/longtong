@@ -5,9 +5,12 @@ import App from './App'
 import router from './router'
 import store from './store'
 import './components'
+import http from './lib/http';
 
-Vue.config.productionTip = false
-Vue.prototype.$bus = new Vue()
+Vue.config.productionTip = false;
+Vue.prototype.$bus = new Vue();
+Vue.prototype.$post = http.post;
+Vue.prototype.$get = http.get;
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,0 +1,34 @@
+export default [{
+  icon: 'laptop',
+  title: '会议'
+}, {
+  icon: 'audio',
+  title: '直播'
+}, {
+  icon: 'file',
+  title: '文档'
+}, {
+  icon: 'hdd',
+  title: '云盘',
+}, {
+  icon: 'mail',
+  title: '邮箱',
+}, {
+  icon: 'notification',
+  title: '通知'
+}, {
+  icon: 'team',
+  title: '通讯录',
+}, {
+  icon: 'audit',
+  title: '审批'
+}, {
+    icon: 'solution',
+    title: '绩效'
+}, {
+    icon: 'user-add',
+    title: '面试'
+}, {
+    icon: 'setting',
+    title: '设置'
+}]

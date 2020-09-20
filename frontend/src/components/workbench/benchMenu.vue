@@ -18,21 +18,33 @@
       </span>
       <span class="item-title">我的项目</span>
     </div>
+    <div class="menu-item" @click="isDrawerOpen = true">
+      <span class="item-icon">
+        <a-icon type="apartment" />
+      </span>
+      <span class="item-title">更多 MORE</span>
+    </div>
+    <drawer :status ='isDrawerOpen' @drawerClosed='isDrawerOpen = false' />
   </div>
 </template>
 
 <script>
+import drawer from './drawer';
 export default {
   name: 'benchMenu',
   data() {
     return {
-      avitveMenu: this.$store.state.route
+      avitveMenu: this.$store.state.route,
+      isDrawerOpen: false,
     };
+  },
+  components: {
+    drawer
   },
   methods: {
     jump: function(pathName) {
       this.$router.push({name: pathName})
-    }
+    },
   }
 };
 </script>
@@ -52,6 +64,7 @@ export default {
   line-height: 40px;
   display: flex;
   transition: all 0.3s;
+  user-select: none;
 }
 .menu-item .item-icon {
   height: 40px;
