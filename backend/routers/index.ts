@@ -69,50 +69,47 @@ const applyRouter = async (ctx: Context, next: Function): Promise<any> => {
   if (!_allowAnonymous) {
     // 未登录
     if (_token == null) {
-      return (ctx.body = {
+      ctx.body = {
         status: 403,
         msg: "Need Login!",
         data: {},
         timestamp: new Date().getTime(),
-      });
-    }
-  } else {
-    let _user: Iuser = (await redis.get(0, `TOKEN:${_token}`)) as Iuser;
-    // redis内没有该用户, 则让用户重新登录
-    if (!_user) {
-      return (ctx.body = {
-        status: 401,
-        msg: "Relogin Please!",
-        data: {},
-        timestamp: new Date().getTime(),
-      });
+      };
     } else {
-      ctx.user = _user;
+      let _user: Iuser = (await redis.get(0, `TOKEN:${_token}`)) as Iuser;
+      // redis内没有该用户, 则让用户重新登录
+      if (!_user) {
+        ctx.body = {
+          status: 401,
+          msg: "Relogin Please!",
+          data: {},
+          timestamp: new Date().getTime(),
+        };
+      } else {
+        ctx.user = _user;
+      }
     }
   }
 
-  _router.middleware.forEach(async (fn: Function) => {
-    try {
-      const data = await fn(ctx);
-      return (ctx.body = Object.assign(
-        {
-          status: 200,
-          data: {},
-          msg: "success",
-          timestamp: new Date().getTime(),
-        },
-        data
-      ));
-    } catch (error) {
-      console.log(error);
-      return (ctx.body = {
-        status: 500,
-        msg: error,
-        data: {},
+  try {
+    const data = await _router.middleware(ctx);
+    ctx.body = Object.assign(
+      {
+        status: 200,
+        msg: "success",
         timestamp: new Date().getTime(),
-      });
-    }
-  });
+      },
+      data
+    );
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      status: 500,
+      msg: error.toString(),
+      data: {},
+      timestamp: new Date().getTime(),
+    };
+  }
   next();
 };
 

@@ -1,12 +1,5 @@
 import axios from 'axios'
 
-axios.interceptors.request.use(config => {
-  // loading
-  return config
-}, error => {
-  return Promise.reject(error)
-})
-
 axios.interceptors.response.use(response => {
   return Promise.resolve(response.data)
 }, error => {
@@ -32,7 +25,6 @@ export default {
         data: data,
         timeout: 10000,
         headers: {
-          // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
           'Authorization': authorization
         }
       }).then(response => {

@@ -6,11 +6,14 @@ import router from './router'
 import store from './store'
 import './components'
 import http from './lib/http';
+import { message } from 'ant-design-vue';
+Vue.prototype.$message = message
 
 Vue.config.productionTip = false;
 Vue.prototype.$bus = new Vue();
 Vue.prototype.$post = http.post;
 Vue.prototype.$get = http.get;
+
 
 /* eslint-disable no-new */
 new Vue({

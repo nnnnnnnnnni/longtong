@@ -1,6 +1,6 @@
 import axios from "axios";
 export const isEmpty = val => {
-  return val == "" || val == null || val == undefined || val == [] || val == {};
+  return val === "" || val === null || val === undefined || val === [] || val === {};
 };
 
 export const downImg = async () => {

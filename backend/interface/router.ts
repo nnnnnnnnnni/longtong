@@ -1,6 +1,6 @@
 export interface Iroute {
   method: string;
-  middleware: Function[];
+  middleware: Function;
   allowAnonymous: boolean;
 }
 

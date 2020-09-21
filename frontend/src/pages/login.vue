@@ -59,7 +59,7 @@
             <a-input v-model="registerMaill" size="large" placeholder="请输入邮箱"></a-input>
           </div>
           <div class="register-item">
-            <a-input v-model="registerPassword" size="large" placeholder="请输入至少6位数的密码" type='password'/>
+            <a-input-password v-model="registerPassword" size="large" placeholder="请输入至少6位数的密码"/>
           </div>
           <div class="register-item">
             <a-button size='large' type='primary' :disabled='!bindRegister' shape="round" icon='arrow-right' @click="register">注册</a-button>
@@ -135,15 +135,19 @@ export default {
       this.account = this.password = this.phone = this.code = this.registerMaill = this.registerPassword = '';
       this.loginMode = type != 1;
     },
-    register: function() {
-
+    register: async function() {
+      await this.$post('/user/register', {
+        mail: this.registerMaill,
+        pass: this.registerPassword,
+      }).then(res =>{
+        console.log(res);
+        if(res.status == 200) {
+          localStorage.setItem('token',res.data.token)
+        }
+      })
     },
     login: async function() {
-      await this.$post('/user/register', {
-        data: '12312313'
-      }).then(res =>{
-        console.log(res)
-      })
+      
     }
   }
 };

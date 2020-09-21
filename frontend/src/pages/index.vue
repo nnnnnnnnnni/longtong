@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import {isEmpty} from '../lib/utils';
 import topNav from "@/components/topnav";
 export default {
   name: "index",
@@ -19,11 +20,13 @@ export default {
   },
   created() {
     const token = localStorage.getItem('token');
-    // if(!token) {
-    //   this.$router.push({name: 'login'})
-    // } else {
-    //   this.$router.push({name: 'calendar'})
-    // }
+    console.log(token)
+    if(isEmpty(token)) {
+      this.$message.warning('请先登录！')
+      this.$router.push({name: 'login'})
+    } else {
+      this.$router.push({name: 'calendar'})
+    }
   }
 };
 </script>
