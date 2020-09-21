@@ -12,7 +12,11 @@ export interface Iuser extends Document {
   wechat: String; // 绑定微信
   miniProgram: String; // 绑定小程序
   phone: String; // 手机
-  company: String; // 所属公司
+  company: {
+    // 所属公司
+    info: String;
+    role: String;
+  };
   role: any[]; // 用户角色
   createTime: Date; // 创建时间
   updateTime: Date; // 修改时间

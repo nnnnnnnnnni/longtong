@@ -3,19 +3,19 @@ import * as user from "../controller/user";
 
 const router: Irouter = {
   "/user/register": {
-    method: "POST",
+    method: "GET",
     middleware: [user.register],
-    permission: "public",
+    allowAnonymous: true,
   },
   "/user/login": {
     method: "GET",
     middleware: [user.login],
-    permission: "public",
+    allowAnonymous: true,
   },
   "/user/logout": {
     method: "POST",
     middleware: [user.logout],
-    permission: "public",
+    allowAnonymous: true,
   },
 };
 

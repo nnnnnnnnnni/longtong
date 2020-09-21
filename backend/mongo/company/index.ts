@@ -1,23 +1,26 @@
 import { Icompany } from "./interface";
 import { Schema, model, SchemaTypes } from "mongoose";
+import { user } from "../user";
 
 const companySchema: Schema = new Schema(
   {
     name: String,
-    creater: {
-      type: SchemaTypes.ObjectId,
-      ref: "user",
-    },
-    users: [
+    Participants: [
       {
-        type: SchemaTypes.ObjectId,
-        ref: "user",
-      },
-    ],
-    admins: [
-      {
-        type: SchemaTypes.ObjectId,
-        ref: "user",
+        role: {
+          type: String,
+          enum: [
+            "creater", //创建者
+            "admin", // 管理员
+            "user", // 成员
+          ],
+          ref: "user",
+          default: "user",
+        },
+        user: {
+          type: SchemaTypes.ObjectId,
+          ref: "user",
+        },
       },
     ],
     projects: [

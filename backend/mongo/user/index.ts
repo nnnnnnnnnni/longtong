@@ -10,7 +10,10 @@ const userSchema: Schema = new Schema(
     userName: {
       type: String,
     },
-    avator: String,
+    avator: {
+      type: String,
+      default: "/default",
+    },
     job: String,
     department: {
       type: SchemaTypes.ObjectId,
@@ -35,8 +38,14 @@ const userSchema: Schema = new Schema(
       unique: true,
     },
     company: {
-      type: SchemaTypes.ObjectId,
-      ref: 'company'
+      info: {
+        type: SchemaTypes.ObjectId,
+        ref: "company",
+      },
+      role: {
+        type: String,
+        enum: ["creater", "admin", "user"],
+      },
     },
     role: [
       {

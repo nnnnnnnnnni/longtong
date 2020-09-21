@@ -1,6 +1,7 @@
 export default {
   user: {
-    avator: "https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png",
+    avator: "/api/default.png",
+    userName: "sheNger",
     name: "NI yongsheng",
     job: "web enginer",
     department: "Group 2 of user experience Department",
@@ -10,8 +11,7 @@ export default {
     wxxcx: false,
     wechat: false,
     timeLine: "12h52m",
-    introduction:
-      "这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介是一段简介这是一段简是一段简介这是一段简是一段简介这是一段简"
+    introduction: "这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介是一段简介这是一段简是一段简介这是一段简是一段简介这是一段简"
   },
   route: ""
 };

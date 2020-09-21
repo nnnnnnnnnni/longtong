@@ -1,6 +1,9 @@
 <template>
   <div class="login">
-    <img class="img" :src="imgSrc" />
+    <div class="img">
+      <div class="title">Longtong</div>
+      <img :src="imgSrc" />
+    </div>
     <div class="container" v-if="loginMode">
       <div class="form">
         <div class="title">
@@ -69,6 +72,7 @@
 
 <script>
 import {ismail, isPhone, isCode} from '../lib/utils';
+import img from '../assets/logo.png'
 export default {
   name: "login",
   data() {
@@ -79,7 +83,7 @@ export default {
       bindSendCode: false,
       bindLogin: false,
       bindRegister: false,
-      imgSrc: "https://www.bing.com/th?id=OHR.Schrecksee_ZH-CN8548752524_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp",
+      imgSrc: img,
       account: '',
       phone: '',
       password: '',
@@ -146,22 +150,42 @@ export default {
 </script>
 
 <style scoped>
+@import url('//fonts.googleapis.com/css?family=Montserrat:300,400,500,600');
 .ant-tabs-bar {
   border: none !important;
 }
 .login {
+  font-family: 'Montserrat', sans-serif;
   height: 100%;
   width: 100%;
   display: flex;
+  min-width: 1250px;
+  justify-content: center;
+  align-items: center;
 }
 .login .img {
+  height: 800px;
+  width: 700px;
+  margin-right: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  user-select: none;
+}
+.login .img .title {
+  width: 100%;
+  font-size: 50px;
+  text-align: center;
+}
+.login .img img {
   display: block;
-  height: 100%;
-  width: 40%;
+  height: 500px;
+  width: 700px;
 }
 .login .container {
   height: 100%;
-  flex: 1;
+  width: 400px;
   display: flex;
   justify-content: center;
   align-items: center;

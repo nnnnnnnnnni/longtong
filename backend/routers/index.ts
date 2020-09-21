@@ -1,10 +1,12 @@
 import mission from "./mission";
 import user from "./user";
-import { Iroute, Irouter } from "../interface/router";
+import { Iroute, Irouter, Irole } from "../interface/router";
 import { Context } from "koa";
+import redis from "../redis";
+import { Iuser } from "@/mongo/user/interface";
+import db from "../mongo/schema";
 
-
- /**
+/**
  * 合并路由
  * @return {*}  {Irouter}   // 所有路由对象
  */
@@ -13,6 +15,12 @@ export const getAllRouter = (): Irouter => {
 
   const addRouter = (routers: Irouter) => {
     Object.keys(routers).forEach((path: string) => {
+      if (allRoutes.hasOwnProperty(path)) {
+        console.warn(`路由【${path}】已经存在`);
+      }
+      if (routers[path].middleware.length == 0) {
+        console.warn(`路由【${path}】不存在处理函数`);
+      }
       allRoutes[path] = routers[path];
     });
   };
@@ -53,15 +61,50 @@ const applyRouter = async (ctx: Context, next: Function): Promise<any> => {
       timestamp: new Date().getTime(),
     });
   }
+
+  const _allowAnonymous: boolean = _router.allowAnonymous;
+  const _token = ctx.header.Authorization;
+
+  // 不允许匿名
+  if (!_allowAnonymous) {
+    // 未登录
+    if (_token == null) {
+      return (ctx.body = {
+        status: 403,
+        msg: "Need Login!",
+        data: {},
+        timestamp: new Date().getTime(),
+      });
+    }
+  } else {
+    let _user: Iuser = (await redis.get(0, `TOKEN:${_token}`)) as Iuser;
+    // redis内没有该用户, 则让用户重新登录
+    if (!_user) {
+      return (ctx.body = {
+        status: 401,
+        msg: "Relogin Please!",
+        data: {},
+        timestamp: new Date().getTime(),
+      });
+    } else {
+      ctx.user = _user;
+    }
+  }
+
   _router.middleware.forEach(async (fn: Function) => {
     try {
       const data = await fn(ctx);
-      return (ctx.body = Object.assign({
-        msg: "success",
-        timestamp: new Date().getTime(),
-      }, data));
+      return (ctx.body = Object.assign(
+        {
+          status: 200,
+          data: {},
+          msg: "success",
+          timestamp: new Date().getTime(),
+        },
+        data
+      ));
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return (ctx.body = {
         status: 500,
         msg: error,
@@ -70,6 +113,7 @@ const applyRouter = async (ctx: Context, next: Function): Promise<any> => {
       });
     }
   });
+  next();
 };
 
 export default applyRouter;

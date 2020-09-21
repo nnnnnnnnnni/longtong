@@ -5,12 +5,12 @@ const router: Irouter = {
   "/mission/login": {
     method: "POST",
     middleware: [mission.login],
-    permission: "public",
+    allowAnonymous: true,
   },
   "/mission/logout": {
     method: "POST",
     middleware: [mission.logout],
-    permission: "public",
+    allowAnonymous: true,
   },
 };
 
