@@ -25,26 +25,46 @@
       </div>
     </div>
     <div class="profiles">
-      <div class="profile-item" @click="jumpPage('help')">
-        <a-icon type="question-circle" />
-      </div>
-      <div class="profile-item" @click="jumpPage('help')">
-        <a-icon type="bell" />
-      </div>
+      <a-tooltip placement="bottom">
+        <template slot="title">
+          <span>帮助</span>
+        </template>
+        <div class="profile-item" @click="jumpPage('help')">
+          <a-icon type="question-circle" />
+        </div>
+      </a-tooltip>
+      <a-tooltip placement="bottom">
+        <template slot="title">
+          <span>通知</span>
+        </template>
+        <div class="profile-item" @click="jumpPage('help')">
+          <a-icon type="bell" />
+        </div>
+      </a-tooltip>
       <div class="profile-item" @click="jumpPage('profile')">
         <div class="item-avator item-info">
-          <img :src="avator" alt />
+          <img :src="this.$store.state.user.avator" alt />
         </div>
         <div class="item-name item-info">
           <span>{{this.$store.state.user.name}}</span>
         </div>
       </div>
-      <div class="profile-item" @click="jumpPage('setting')">
-        <a-icon type="setting" />
-      </div>
-      <div class="profile-item">
-        <a-icon type="logout" />
-      </div>
+      <a-tooltip placement="bottom">
+        <template slot="title">
+          <span>设置</span>
+        </template>
+        <div class="profile-item" @click="jumpPage('setting')">
+          <a-icon type="setting" />
+        </div>
+      </a-tooltip>
+      <a-tooltip placement="bottom">
+        <template slot="title">
+          <span>登出</span>
+        </template>
+        <div class="profile-item" @click="logout">
+          <a-icon type="logout" />
+        </div>
+      </a-tooltip>
     </div>
   </div>
 </template>
@@ -55,7 +75,6 @@ export default {
   data() {
     return {
       currentDate: "",
-      avator: this.$store.state.user.avator,
     };
   },
   created() {},
@@ -68,6 +87,18 @@ export default {
         this.$router.push({ name: name });
       }
     },
+    logout: async function() {
+      await this.$post('/user/logout', {
+        token: localStorage.getItem('token')
+      }).then(res =>{
+        localStorage.removeItem('token');
+        this.$store.commit("CHANGE_USER", {});
+        setTimeout(() => {
+          this.$router.push({name: 'login'})
+        }, 1500);
+        return this.$message.success('登出成功！');
+      })
+    }
   },
 };
 </script>

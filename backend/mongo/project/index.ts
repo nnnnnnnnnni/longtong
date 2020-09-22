@@ -4,6 +4,7 @@ import { Schema, model, SchemaTypes } from "mongoose";
 const projectSchema = new Schema(
   {
     name: String,
+    logo: String,
     introduction: String,
     Participants: [
       {

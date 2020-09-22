@@ -17,6 +17,11 @@ const router: Irouter = {
     middleware: user.logout,
     allowAnonymous: false,
   },
+  "/user/info": {
+    method: "GET",
+    middleware: user.info,
+    allowAnonymous: false,
+  },
 };
 
 export default router;

@@ -291,7 +291,7 @@
     <div class="status">404</div>
     <div class="message">Sorry, the page you visited does not exist.</div>
     <div class="backBtn">
-      <lt-button title="Back Home"></lt-button>
+      <lt-button title="Back Home" @click="back"></lt-button>
     </div>
   </div>
 </template>
@@ -305,6 +305,11 @@ export default {
   },
   components: {
     ltButton
+  },
+  methods: {
+    back: function() {
+      this.$router.push({name: 'index'})
+    }
   }
 };
 </script>

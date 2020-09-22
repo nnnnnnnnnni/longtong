@@ -1,17 +1,22 @@
 export default {
   user: {
-    avator: "/api/default.png",
-    userName: "sheNger",
-    name: "NI yongsheng",
-    job: "web enginer",
-    department: "Group 2 of user experience Department",
-    mail: "niyongsheng@123.com",
-    phone: "123456789",
-    mfa: true,
+    avator: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+    userName: "",
+    name: "",
+    job: "",
+    department: "",
+    mail: "",
+    phone: "",
+    mfa: false,
     wxxcx: false,
     wechat: false,
-    timeLine: "12h52m",
-    introduction: "这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介这是一段简介是一段简介这是一段简是一段简介这是一段简是一段简介这是一段简"
+    timeLine: "0h0m",
+    introduction: "暂无简介"
   },
-  route: ""
+  route: "",
+  apis: {
+    dev: {
+      upload: 'http://localhost:8000/generic/upload'
+    }
+  }
 };

@@ -220,6 +220,7 @@ export default {
   text-align: left;
   left: 0;
   padding: 10px 0px;
+  height: 24px;
   font-size: 14px;
   margin: 0 auto;
   left: 0;

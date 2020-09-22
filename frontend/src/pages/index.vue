@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import {isEmpty} from '../lib/utils';
+import { isEmpty } from "../lib/utils";
 import topNav from "@/components/topnav";
 export default {
   name: "index",
@@ -18,14 +18,19 @@ export default {
   components: {
     topNav
   },
-  created() {
-    const token = localStorage.getItem('token');
-    console.log(token)
-    if(isEmpty(token)) {
-      this.$message.warning('请先登录！')
-      this.$router.push({name: 'login'})
+  mounted() {
+    const token = localStorage.getItem("token");
+    if (isEmpty(token)) {
+      this.$message.warning("请先登录！");
+      this.$router.push({ name: "login" });
     } else {
-      this.$router.push({name: 'calendar'})
+      this.$get('/user/info',{}).then(res => {
+        this.$store.commit("CHANGE_USER", res.data);
+        const {company, role} = res.data;
+        if(isEmpty(company)) {
+          // this.$router.push({ name: "guide" });
+        }
+      })
     }
   }
 };

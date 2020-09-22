@@ -1,18 +1,29 @@
 import koa from "koa";
-import bodyParser from "koa-bodyparser";
+import koaBody from "koa-body";
 import { Config } from "./config";
 const app = new koa();
 import connection from "./mongo";
 import dayjs from "dayjs";
 import applyRouter from "./routers";
 import koaStaic from "koa-static";
+import cors from "koa2-cors";
 
 connection(Config.mongo.host, Config.mongo.port, Config.mongo.name);
+
+app.use(cors());
 
 // 静态文件托管
 app.use(koaStaic(Config.localStatic));
 
-app.use(bodyParser());
+app.use(
+  koaBody({
+    multipart: true,
+    formidable: {
+      uploadDir: Config.localStatic,
+      keepExtensions: true,
+    }
+  })
+);
 
 app.use(async (ctx: koa.Context, next: koa.Next) => {
   const start = new Date().getTime();
@@ -24,8 +35,9 @@ app.use(async (ctx: koa.Context, next: koa.Next) => {
   );
 });
 
-app.use(applyRouter);
-
+app.use(async (ctx: koa.Context, next: koa.Next)=>{
+  await applyRouter(ctx, next)
+});
 
 console.log(`APP HAS STARTING AT PORT: ${Config.port}`);
 app.listen(Config.port);

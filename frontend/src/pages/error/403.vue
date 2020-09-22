@@ -279,7 +279,7 @@
     <div class="status">403</div>
     <div class="message">Sorry, you don't have access to this page.</div>
     <div class="backBtn">
-      <lt-button title="Back Home"></lt-button>
+      <lt-button title="Back Home" @click="back"></lt-button>
     </div>
   </div>
 </template>
@@ -293,6 +293,11 @@ export default {
   },
   components: {
     ltButton
+  },
+  methods: {
+    back: function() {
+      this.$router.push({name: 'index'})
+    }
   }
 };
 </script>

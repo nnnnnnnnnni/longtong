@@ -1,7 +1,6 @@
 <template>
   <div class="drawer">
     <a-drawer
-    keyboard='true'
       placement="left"
       :width="400"
       :visible="status"

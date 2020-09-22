@@ -1,91 +1,111 @@
-import axios from 'axios'
+import axios from "axios";
+import { message } from "ant-design-vue";
+import router from "../router";
 
-axios.interceptors.response.use(response => {
-  return Promise.resolve(response.data)
-}, error => {
-  return Promise.resolve(error.response)
-})
+axios.interceptors.response.use(
+  response => {
+    const status = response.data.status;
+    if(status == 200) {
+      return Promise.resolve(response.data);
+    } else if(status == 403 || status == 401){
+      message.warn(response.data.msg);
+      router.push({name: 'login'})
+    } else {
+      message.error(response.data.msg);
+      return Promise.resolve(response.data);
+    }
+  },
+  error => {
+    return Promise.resolve(error.response);
+  }
+);
 
-const authorization = localStorage.getItem('token');
-
-let baseURL = '';
-if (process.env.NODE_ENV == 'development') {
-  baseURL = '/api'
+let baseURL = "";
+if (process.env.NODE_ENV == "development") {
+  baseURL = "http://localhost:8000";
 } else {
-  baseURL = '/'
+  baseURL = "http://localhost:8000";
 }
 
 export default {
   post(url, data) {
     return new Promise((reslove, reject) => {
       axios({
-        method: 'POST',
+        method: "POST",
         baseURL: baseURL,
         url,
         data: data,
         timeout: 10000,
         headers: {
-          'Authorization': authorization
+          Authorization: localStorage.getItem("token")
         }
-      }).then(response => {
-        reslove(response)
-      }).catch(err => {
-        reject(err)
       })
-    })
+        .then(response => {
+          reslove(response);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
   },
   get(url, params) {
     return new Promise((reslove, reject) => {
       axios({
-        method: 'GET',
+        method: "GET",
         baseURL: baseURL,
         url,
         params, // get 请求时带的参数
         timeout: 10000,
         headers: {
-          'Authorization': authorization
+          Authorization: localStorage.getItem("token")
         }
-      }).then(response => {
-        reslove(response)
-      }).catch(err => {
-        reject(err)
       })
-    })
+        .then(response => {
+          reslove(response);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
   },
   put(url, data) {
     return new Promise((reslove, reject) => {
       axios({
-        method: 'PUT',
+        method: "PUT",
         baseURL: baseURL,
         url,
         data: data,
         timeout: 10000,
         headers: {
-          'Authorization': authorization
+          Authorization: localStorage.getItem("token")
         }
-      }).then(response => {
-        reslove(response)
-      }).catch(err => {
-        reject(err)
       })
-    })
+        .then(response => {
+          reslove(response);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
   },
   put(url, data) {
     return new Promise((reslove, reject) => {
       axios({
-        method: 'DELETE',
+        method: "DELETE",
         baseURL: baseURL,
         url,
         data: data,
         timeout: 10000,
         headers: {
-          'Authorization': authorization
+          Authorization: localStorage.getItem("token")
         }
-      }).then(response => {
-        reslove(response)
-      }).catch(err => {
-        reject(err)
       })
-    })
+        .then(response => {
+          reslove(response);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
   }
-}
+};

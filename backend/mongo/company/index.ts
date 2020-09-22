@@ -1,10 +1,10 @@
 import { Icompany } from "./interface";
 import { Schema, model, SchemaTypes } from "mongoose";
-import { user } from "../user";
 
 const companySchema: Schema = new Schema(
   {
     name: String,
+    logo: String,
     Participants: [
       {
         role: {

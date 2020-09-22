@@ -23,8 +23,16 @@ const routerConfig = new Router({
       component: () => import("@/pages/help")
     },
     {
+      path: "/guide",
+      name: "guide",
+      component: () => import("@/pages/guide")
+    },
+    {
       path: "/",
       name: "index",
+      redirect: {
+        name: 'calendar'
+      },
       component: () => import("@/pages/index"),
       children: [
         {
@@ -97,7 +105,6 @@ const routerConfig = new Router({
 });
 
 routerConfig.beforeEach((to, from, next) => {
-  console.log(to);
   store.commit("CHANGE_ROUTE", to.name);
   next();
 });

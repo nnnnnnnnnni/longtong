@@ -1,10 +1,11 @@
 import mission from "./mission";
 import user from "./user";
+import company from "./company";
+import generic from "./generic";
 import { Iroute, Irouter, Irole } from "../interface/router";
 import { Context } from "koa";
 import redis from "../redis";
 import { Iuser } from "@/mongo/user/interface";
-import db from "../mongo/schema";
 
 /**
  * 合并路由
@@ -27,6 +28,8 @@ export const getAllRouter = (): Irouter => {
 
   addRouter(mission);
   addRouter(user);
+  addRouter(company);
+  addRouter(generic);
 
   return allRoutes;
 };
@@ -43,12 +46,12 @@ const allRoutes: Irouter = getAllRouter();
 const applyRouter = async (ctx: Context, next: Function): Promise<any> => {
   const { url, method } = ctx;
   const _router: Iroute = allRoutes[url.split("?")[0]];
-  ctx.status = 200;
 
   if (!_router) {
     return (ctx.body = {
       status: 404,
       msg: "Not Found!",
+      path: url.split("?")[0],
       data: {},
       timestamp: new Date().getTime(),
     });
@@ -57,13 +60,17 @@ const applyRouter = async (ctx: Context, next: Function): Promise<any> => {
     return (ctx.body = {
       status: 404,
       msg: "The Method Is Illegal!",
+      methods: method,
       data: {},
       timestamp: new Date().getTime(),
     });
   }
 
   const _allowAnonymous: boolean = _router.allowAnonymous;
-  const _token = ctx.header.Authorization;
+  const _token = ctx.header.authorization;
+  if (_token) {
+    ctx.token = _token;
+  }
 
   // 不允许匿名
   if (!_allowAnonymous) {
@@ -93,24 +100,27 @@ const applyRouter = async (ctx: Context, next: Function): Promise<any> => {
 
   try {
     const data = await _router.middleware(ctx);
-    ctx.body = Object.assign(
-      {
-        status: 200,
-        msg: "success",
-        timestamp: new Date().getTime(),
-      },
-      data
-    );
+    if (data) {
+      ctx.body = Object.assign(
+        {
+          data: {},
+          status: 200,
+          msg: "success",
+          timestamp: new Date().getTime(),
+        },
+        data
+      );
+      await next();
+    }
   } catch (error) {
     console.log(error);
-    ctx.body = {
+    return (ctx.body = {
       status: 500,
       msg: error.toString(),
       data: {},
       timestamp: new Date().getTime(),
-    };
+    });
   }
-  next();
 };
 
 export default applyRouter;

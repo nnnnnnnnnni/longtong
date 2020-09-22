@@ -20,7 +20,7 @@
                 <a-input-password v-model="password" size="large" placeholder="请输入密码" type='password'/>
               </div>
               <div class="item">
-                <a-button size='large' type='primary' :disabled='!bindLogin' shape="round" icon='arrow-right' @click="login">登录</a-button>
+                <a-button size='large' type='primary' :disabled='!bindLogin' shape="round" icon='arrow-right' @click="login(1)">登录</a-button>
               </div>
             </a-tab-pane>
             <a-tab-pane key="2" tab="手机">
@@ -35,7 +35,7 @@
                 <a-input v-model="code" maxLength='6' size="large" placeholder="请输入验证码"/>
               </div>
               <div class="item">
-                <a-button size='large' type='primary' :disabled='!bindLogin' shape="round" icon='arrow-right' @click="login">登录</a-button>
+                <a-button size='large' type='primary' :disabled='!bindLogin' shape="round" icon='arrow-right' @click="login(2)">登录</a-button>
               </div>
             </a-tab-pane>
             <a-tab-pane key="3" tab="微信">
@@ -140,14 +140,32 @@ export default {
         mail: this.registerMaill,
         pass: this.registerPassword,
       }).then(res =>{
-        console.log(res);
-        if(res.status == 200) {
-          localStorage.setItem('token',res.data.token)
-        }
+        localStorage.setItem('token',res.data.token);
+        this.$store.commit("CHANGE_USER", res.data.user);
+        setTimeout(() => {
+          this.$router.push({name: 'calendar'})
+        }, 1000);
+        return this.$message.success('登录成功！');
       })
     },
-    login: async function() {
-      
+    login: async function(type) {
+      // 账号密码登录
+      if(type == 1) {
+        await this.$post('/user/login', {
+          mail: this.account,
+          pass: this.password,
+          type: 1,
+        }).then(res =>{
+          localStorage.setItem('token',res.data.token);
+          this.$store.commit("CHANGE_USER", res.data.user);
+          setTimeout(() => {
+            this.$router.push({name: 'calendar'})
+          }, 1000);
+          return this.$message.success('登录成功！');
+        })
+      } else { // 手机号登录
+
+      }
     }
   }
 };
