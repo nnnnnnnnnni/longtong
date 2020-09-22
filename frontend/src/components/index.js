@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Button, Input, FormModel, Card, Icon, Tooltip, Avatar, DatePicker, Upload, Calendar, Tabs, Empty, Select, Drawer } from 'ant-design-vue'
+import { Button, Input, FormModel, Card, Icon, Tooltip, Avatar, DatePicker, Upload, Calendar, Tabs, Empty, Select, Drawer, Steps } from 'ant-design-vue'
 Vue.use(FormModel)
 Vue.use(Button)
 Vue.use(Input)
@@ -14,3 +14,4 @@ Vue.use(Tabs)
 Vue.use(Empty)
 Vue.use(Select)
 Vue.use(Drawer)
+Vue.use(Steps)

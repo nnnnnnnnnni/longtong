@@ -16,5 +16,11 @@ export interface Iconfig {
     prot: string;
     password: string;
   };
+  qiniu: {
+    AK: string;
+    SK: string;
+    bucket: string;
+    url: string;
+  };
   localStatic: string;
 }

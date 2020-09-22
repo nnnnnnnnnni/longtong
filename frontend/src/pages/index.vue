@@ -28,7 +28,7 @@ export default {
         this.$store.commit("CHANGE_USER", res.data);
         const {company, role} = res.data;
         if(isEmpty(company)) {
-          // this.$router.push({ name: "guide" });
+          this.$router.push({ name: "guide" });
         }
       })
     }
