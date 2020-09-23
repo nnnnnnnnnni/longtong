@@ -124,8 +124,8 @@ export default {
 .setting-menu .avator {
   cursor: pointer;
   margin: 20px auto 10px auto;
-  width: 260px;
-  height: 260px;
+  width: 220px;
+  height: 220px;
 }
 .avator img {
   width: inherit;

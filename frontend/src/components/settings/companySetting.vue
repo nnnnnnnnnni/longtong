@@ -5,10 +5,10 @@
         <baseTab />
       </a-tab-pane>
       <a-tab-pane key="2" tab="人员设置">
-        <projectTab />
+        <participantsTab />
       </a-tab-pane>
       <a-tab-pane key="3" tab="项目设置">
-        <participantsTab />
+        <projectTab />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -16,7 +16,7 @@
 
 <script>
 import baseTab from "./tabs/base";
-import projectTab from "./tabs/base";
+import projectTab from "./tabs/projects";
 import participantsTab from "./tabs/participants";
 export default {
   name: "companySetting",
