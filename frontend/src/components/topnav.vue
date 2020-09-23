@@ -1,5 +1,11 @@
 <template>
   <div id="topnav">
+    <div class="company">
+      <div class="company-logo">
+        <img :src="this.$store.state.user.company.info.logo" alt="">
+      </div>
+      <div class="company-name">{{this.$store.state.user.company.info.name}}</div>
+    </div>
     <div class="tabs">
       <div
         class="tab-item"
@@ -46,7 +52,7 @@
           <img :src="this.$store.state.user.avator" alt />
         </div>
         <div class="item-name item-info">
-          <span>{{this.$store.state.user.name}}</span>
+          <span>{{this.$store.state.user.userName}}</span>
         </div>
       </div>
       <a-tooltip placement="bottom">
@@ -112,6 +118,24 @@ export default {
   position: relative;
   z-index: 999;
 }
+.company {
+  position: absolute;
+  height: inherit;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  left: 6%;
+  user-select: none;
+}
+.company .company-logo img {
+  height: 34px;
+  width: 34px;
+}
+.company .company-name {
+  margin-left: 20px;
+}
 .tabs {
   width: 40%;
   max-width: 750px;
@@ -176,6 +200,7 @@ export default {
 img {
   height: 26px;
   width: 26px;
+  border-radius: 50%;
 }
 .item-info {
   margin-left: 5px;

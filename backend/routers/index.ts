@@ -76,22 +76,22 @@ const applyRouter = async (ctx: Context, next: Function): Promise<any> => {
   if (!_allowAnonymous) {
     // 未登录
     if (_token == null) {
-      ctx.body = {
+      return (ctx.body = {
         status: 403,
         msg: "Need Login!",
         data: {},
         timestamp: new Date().getTime(),
-      };
+      });
     } else {
       let _user: Iuser = (await redis.get(0, `TOKEN:${_token}`)) as Iuser;
       // redis内没有该用户, 则让用户重新登录
       if (!_user) {
-        ctx.body = {
+        return (ctx.body = {
           status: 401,
           msg: "Relogin Please!",
           data: {},
           timestamp: new Date().getTime(),
-        };
+        });
       } else {
         ctx.user = _user;
       }

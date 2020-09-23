@@ -5,6 +5,8 @@ export default {
     name: "",
     job: "",
     department: "",
+    company: {},
+    projects: {},
     mail: "",
     phone: "",
     mfa: false,

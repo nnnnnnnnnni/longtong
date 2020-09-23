@@ -7,7 +7,7 @@ export interface Iproject extends Document {
   Participants: [
     {
       // 所有成员
-      type: String;
+      role: String;
       user: String;
     }
   ];

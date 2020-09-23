@@ -7,6 +7,8 @@ export default {
       avator: user.avator || "",
       userName: user.userName || user.mail,
       name: user.name || user.mail,
+      company: user.company || {},
+      role: user.role || [],
       job: user.job || "",
       department: user.department || "",
       mail: user.mail || "",

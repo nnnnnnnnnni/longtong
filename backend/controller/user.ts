@@ -78,10 +78,16 @@ export const logout = async (ctx: Context) => {
 
 export const info = async (ctx: Context): Promise<any> => {
   const token: string = ctx.token;
-  const redisData: any = await redis.get(0, `TOKEN:${token}`);
-  let newInfo = await db.user.findOne({ _id: redisData._id }).lean().exec();
-  await redis.set(0, `TOKEN:${token}`, newInfo);
-  return {
-    data: newInfo,
+  if (token) {
+    const redisData: any = await redis.get(0, `TOKEN:${token}`);
+    let newInfo = await db.user
+      .findOne({ _id: redisData._id })
+      .populate("company.info")
+      .lean()
+      .exec();
+    await redis.set(0, `TOKEN:${token}`, newInfo);
+    return {
+      data: newInfo,
+    };
   }
 };

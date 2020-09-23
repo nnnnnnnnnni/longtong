@@ -65,7 +65,7 @@ export default {
         },
         phone: {
           placeholder: '请前往 "绑定设置" 绑定',
-          label: "邮箱",
+          label: "手机",
           value: this.$store.state.user.phone,
         },
         job: {
