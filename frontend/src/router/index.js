@@ -46,11 +46,6 @@ const routerConfig = new Router({
           component: () => import("@/pages/chat")
         },
         {
-          path: "/workbench",
-          name: "workbench",
-          component: () => import("@/pages/workbench")
-        },
-        {
           path: "/setting",
           name: "setting",
           component: () => import("@/pages/setting"),
@@ -69,6 +64,11 @@ const routerConfig = new Router({
               path: "/setting/bind",
               name: "bind",
               component: () => import("@/components/settings/bindSetting")
+            },
+            {
+              path: "/setting/company",
+              name: "company",
+              component: () => import("@/components/settings/companySetting")
             }
           ]
         },

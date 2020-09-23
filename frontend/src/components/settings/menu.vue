@@ -47,6 +47,9 @@
         <a-icon style="fontSize: 16px" type="phone" />
         <div class="info-item-text">{{this.$store.state.user.phone}}</div>
       </div>
+      <div class="info-item _edit bind" :class="{bind_active: mode == 'edit', checked_active: editActive == 'company'}" @click="changeTab('company')">
+        <div class="info-item-text">公司设置</div>
+      </div>
     </div>
     <div class="item-group">
       <div class="line info-item" :class="{line_active: mode == 'edit'}" :title="this.$store.state.user.timeLine">

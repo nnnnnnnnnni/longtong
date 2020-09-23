@@ -5,7 +5,12 @@ export default {
     name: "",
     job: "",
     department: "",
-    company: {},
+    company: {
+      info: {
+        logo: ''
+      },
+      role: ''
+    },
     projects: {},
     mail: "",
     phone: "",

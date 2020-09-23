@@ -4,42 +4,14 @@
       <div class="form-item">
         <h2>基本设置</h2>
       </div>
-      <div class="form-item">
-        <div class="form-item-label">{{fromData.name.label}}</div>
+      <div class="form-item" v-for="item in formData" :key="item.label">
+        <div class="form-item-label">{{item.label}}</div>
         <div class="form-item-container">
-          <a-input v-model="fromData.name.value" :placeholder='fromData.name.placeholder' disabled />
+          <a-textarea v-if="item.hasOwnProperty('autosize')" v-model="item.value" :placeholder='item.placeholder' :autoSize='item.autosize' ></a-textarea>
+          <a-input v-else v-model="item.value" :placeholder='item.placeholder' :disabled='item.disabled' />
         </div>
       </div>
-      <div class="form-item">
-        <div class="form-item-label">{{fromData.mail.label}}</div>
-        <div class="form-item-container">
-          <a-input type='mail' v-model="fromData.mail.value" :placeholder='fromData.mail.placeholder' disabled />
-        </div>
-      </div>
-      <div class="form-item">
-        <div class="form-item-label">{{fromData.phone.label}}</div>
-        <div class="form-item-container">
-          <a-input v-model="fromData.phone.value" :placeholder='fromData.phone.placeholder' disabled />
-        </div>
-      </div>
-      <div class="form-item">
-        <div class="form-item-label">{{fromData.job.label}}</div>
-        <div class="form-item-container">
-          <a-input v-model="fromData.job.value" :placeholder='fromData.job.placeholder' disabled />
-        </div>
-      </div>
-      <div class="form-item">
-        <div class="form-item-label">{{fromData.department.label}}</div>
-        <div class="form-item-container">
-          <a-input v-model="fromData.department.value" :placeholder='fromData.department.placeholder' disabled />
-        </div>
-      </div>
-      <div class="form-item">
-        <div class="form-item-label">{{fromData.introduction.label}}</div>
-        <div class="form-item-container">
-          <a-textarea v-model="fromData.introduction.value" :placeholder='fromData.introduction.placeholder' :autosize='fromData.introduction.autosize' />
-        </div>
-      </div>
+      
       <div class="form-item">
         <a-button type='primary'>修改</a-button>
       </div>
@@ -52,39 +24,45 @@ export default {
   name: "baseSetting",
   data() {
     return {
-      fromData: {
-        name: {
+      formData: [
+        {
           placeholder: '请输入姓名',
           label: "姓名",
+          disabled: true,
           value: this.$store.state.user.name,
         },
-        mail: {
+        {
           placeholder: '请前往 "绑定设置" 绑定',
           label: "邮箱",
+          disabled: true,
           value: this.$store.state.user.mail,
         },
-        phone: {
+        {
           placeholder: '请前往 "绑定设置" 绑定',
           label: "手机",
+          disabled: true,
           value: this.$store.state.user.phone,
         },
-        job: {
+        {
           placeholder: '',
           label: "职位",
+          disabled: true,
           value: this.$store.state.user.job,
         },
-        department: {
+        {
           placeholder: '',
           label: "部门",
+          disabled: true,
           value: this.$store.state.user.department,
         },
-        introduction: {
+        {
           placeholder: '',
           label: "个人简介",
+          disabled: false,
           value: this.$store.state.user.introduction,
           autosize: {minRows: 4, maxRows: 6}
         },
-      },
+      ],
     };
   },
 };

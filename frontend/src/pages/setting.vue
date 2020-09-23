@@ -41,6 +41,6 @@ export default {
   height: 100%;
   width: 950px;
   box-sizing: border-box;
-  padding: 10px 15px 10px 100px;
+  padding: 10px 15px 10px 50px;
 }
 </style>
