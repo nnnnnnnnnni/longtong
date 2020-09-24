@@ -152,10 +152,7 @@ export default {
       name: "",
       introduction: "",
       logo: "",
-      upload:
-        process.env.NODE_ENV == "development"
-          ? this.$store.state.apis.dev.upload
-          : this.$store.state.apis.prd.upload,
+      upload: this.$store.state.apis.upload,
       currentStep: 0
     };
   },

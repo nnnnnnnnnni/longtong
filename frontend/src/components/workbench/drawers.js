@@ -31,4 +31,7 @@ export default [{
 }, {
     icon: 'setting',
     title: '设置'
+}, {
+  icon: 'profile',
+  title: '流程'
 }]

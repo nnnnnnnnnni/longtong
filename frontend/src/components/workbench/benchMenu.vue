@@ -20,9 +20,9 @@
     </div>
     <div class="menu-item" @click="isDrawerOpen = true">
       <span class="item-icon">
-        <a-icon type="apartment" />
+        <a-icon type="ellipsis" />
       </span>
-      <span class="item-title">更多 MORE</span>
+      <span class="item-title">MORE</span>
     </div>
     <drawer :status ='isDrawerOpen' @drawerClosed='isDrawerOpen = false' />
   </div>

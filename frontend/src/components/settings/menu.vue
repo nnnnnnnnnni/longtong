@@ -3,7 +3,7 @@
     <div class="avator">
       <img :src="this.$store.state.user.avator" alt />
     </div>
-    <div class="name info-item">{{this.$store.state.user.name}}</div>
+    <div class="name info-item">{{this.$store.state.user.userName}}</div>
     <div class="item-group">
       <div class="edit info-item" :class="{edit_active: mode == 'edit'}">
         <lt-btutton circle="true" title="Edit Profile" @click="changeMode"/>
@@ -17,8 +17,8 @@
     </div>-->
     <div class="item-group">
       <div class="job info-item" :class="{job_active: mode == 'edit'}" :title="this.$store.state.user.job">
-        <a-icon style="fontSize: 16px" type="idcard" />
-        <span class="info-item-text">{{this.$store.state.user.job}}</span>
+        <a-icon style="fontSize: 16px;color: #1890ff" type="idcard" />
+        <span class="info-item-text">{{this.$store.state.user.job || '暂未设置'}}</span>
       </div>
       <div class="info-item _edit base" :class="{base_active: mode == 'edit', checked_active: editActive == 'base'}" @click="changeTab('base')">
         <div class="info-item-text">基本设置</div>
@@ -26,8 +26,8 @@
     </div>
     <div class="item-group">
       <div class="department info-item ellipsis" :class="{department_active: mode == 'edit'}" :title="this.$store.state.user.department">
-        <a-icon style="fontSize: 16px" type="cluster" />
-        <span class="info-item-text ellipsis">{{this.$store.state.user.department}}</span>
+        <a-icon style="fontSize: 16px;color: #1890ff" type="cluster" />
+        <span class="info-item-text ellipsis">{{this.$store.state.user.department || '暂未设置'}}</span>
       </div>
       <div class="info-item _edit safe" :class="{safe_active: mode == 'edit', checked_active: editActive == 'safe'}" @click="changeTab('safe')">
         <div class="info-item-text">安全设置</div>
@@ -35,8 +35,8 @@
     </div>
     <div class="item-group">
       <div class="mail info-item" :class="{mail_active: mode == 'edit'}" :title="this.$store.state.user.mail">
-        <a-icon style="fontSize: 16px" type="mail" />
-        <div class="info-item-text">{{this.$store.state.user.mail}}</div>
+        <a-icon style="fontSize: 16px;color: #1890ff" type="mail" />
+        <div class="info-item-text">{{this.$store.state.user.mail || '暂未设置'}}</div>
       </div>
       <div class="info-item _edit bind" :class="{bind_active: mode == 'edit', checked_active: editActive == 'bind'}" @click="changeTab('bind')">
         <div class="info-item-text">绑定设置</div>
@@ -44,8 +44,8 @@
     </div>
     <div class="item-group">
       <div class="phone info-item" :class="{phone_active: mode == 'edit'}" :title="this.$store.state.user.phone">
-        <a-icon style="fontSize: 16px" type="phone" />
-        <div class="info-item-text">{{this.$store.state.user.phone}}</div>
+        <a-icon style="fontSize: 16px;color: #1890ff" type="phone" />
+        <div class="info-item-text">{{this.$store.state.user.phone || '暂未设置'}}</div>
       </div>
       <div class="info-item _edit bind" :class="{bind_active: mode == 'edit', checked_active: editActive == 'company'}" @click="changeTab('company')">
         <div class="info-item-text">公司设置</div>
@@ -53,14 +53,14 @@
     </div>
     <div class="item-group">
       <div class="line info-item" :class="{line_active: mode == 'edit'}" :title="this.$store.state.user.timeLine">
-        <a-icon style="fontSize: 16px" type="line-chart" />
+        <a-icon style="fontSize: 16px;color: #1890ff" type="line-chart" />
         <div class="info-item-text">{{this.$store.state.user.timeLine}}</div>
       </div>
     </div>
     <div class="item-group">
-      <div class="introduction info-item" :class="{introduction_active: mode == 'edit'}" :title="this.$store.state.user.introduction">
-        <a-icon style="fontSize: 16px" type="eye" />
-        <div class="info-item-text">{{this.$store.state.user.introduction}}</div>
+      <div class="introduction info-item" style="height: auto;align-items:flex-start" :class="{introduction_active: mode == 'edit'}" :title="this.$store.state.user.introduction">
+        <a-icon style="fontSize: 16px;color: #1890ff;padding-top: 4px" type="eye" />
+        <div class="info-item-text">{{this.$store.state.user.introduction || '暂未设置'}}</div>
       </div>
     </div>
   </div>

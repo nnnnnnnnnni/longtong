@@ -49,6 +49,9 @@ const routerConfig = new Router({
           path: "/setting",
           name: "setting",
           component: () => import("@/pages/setting"),
+          redirect: {
+            name: 'base'
+          },
           children: [
             {
               path: "/setting/base",

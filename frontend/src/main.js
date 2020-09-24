@@ -13,6 +13,8 @@ Vue.config.productionTip = false;
 Vue.prototype.$bus = new Vue();
 Vue.prototype.$post = http.post;
 Vue.prototype.$get = http.get;
+Vue.prototype.$put = http.put;
+Vue.prototype.$delete = http.delete;
 
 /* eslint-disable no-new */
 new Vue({

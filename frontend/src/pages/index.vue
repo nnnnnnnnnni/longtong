@@ -18,14 +18,14 @@ export default {
   components: {
     topNav
   },
-  mounted() {
+  created() {
     const token = localStorage.getItem("token");
     if (isEmpty(token)) {
       this.$message.warning("请先登录！");
       this.$router.push({ name: "login" });
     } else {
-      this.$get('/user/info',{}).then(res => {
-        this.$store.commit("CHANGE_USER", res.data);
+      this.$get('/user/main',{}).then(res => {
+        this.$store.commit("CHANGE_USER", Object.assign({}, res.data));
         const {company, role} = res.data;
         if(isEmpty(company)) {
           this.$router.push({ name: "guide" });

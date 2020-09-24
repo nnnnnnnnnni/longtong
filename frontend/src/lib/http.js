@@ -88,7 +88,7 @@ export default {
         });
     });
   },
-  put(url, data) {
+  delete(url, data) {
     return new Promise((reslove, reject) => {
       axios({
         method: "DELETE",

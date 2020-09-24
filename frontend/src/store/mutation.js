@@ -14,10 +14,13 @@ export default {
       mail: user.mail || "",
       phone: user.phone || "",
       mfa: user.mfa || false,
-      wxxcx: user.wxxcx || "",
+      miniProgram: user.miniProgram || "",
       wechat: user.wechat || "",
       timeLine: user.timeLine || 0,
       introduction: user.introduction || ""
     };
-  }
+  },
+  CHANGE_COMPANY: (state, value) => {
+    state.user.company.info = value;
+  },
 };

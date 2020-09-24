@@ -10,7 +10,7 @@ export interface Icompany extends Document {
       user: String;
     }
   ];
-  projects?: any[]; // 下属项目
+  projects?: string[]; // 下属项目
   introduction: String; // 简介
   createTime?: Date; // 创建时间
   updateTime?: Date; // 修改时间

@@ -11,7 +11,7 @@
             :action="upload"
             @change="handleChange"
           >
-            <img v-if="logo" :src="logo" alt="avatar" />
+            <img v-if="companyInfo.logo" :src="companyInfo.logo" alt="avatar" />
             <div v-else>
               <a-icon :type="loading ? 'loading' : 'plus'" />
               <div class="ant-upload-text">
@@ -25,18 +25,18 @@
       <div class="form-item">
         <div class="form-item-label">公司名称:</div>
         <div class="form-item-container">
-          <a-input v-model="name"></a-input>
+          <a-input v-model="companyInfo.name"></a-input>
         </div>
       </div>
       <div class="form-item">
         <div class="form-item-label">公司简介:</div>
         <div class="form-item-container">
-          <a-input v-model="introduction"></a-input>
+          <a-input v-model="companyInfo.introduction"></a-input>
         </div>
       </div>
 
       <div class="form-item">
-        <a-button type="primary">修改</a-button>
+        <a-button type="primary" @click="editCompany">修改</a-button>
       </div>
     </div>
   </div>
@@ -47,17 +47,32 @@ export default {
   name: "baseTab",
   data() {
     return {
+      companyInfo: {},
       loading: false,
-      logo: this.$store.state.user.company.info.logo,
-      name: this.$store.state.user.company.info.name,
-      introduction: this.$store.state.user.company.info.introduction,
-      upload:
-        process.env.NODE_ENV == "development"
-          ? this.$store.state.apis.dev.upload
-          : this.$store.state.apis.prd.upload
+      upload: this.$store.state.apis.upload
     };
   },
+  created() {
+    this.getCompany();
+  },
   methods: {
+    getCompany: function() {
+      this.$get("company/companyInfo", {
+        field: "logo,name,introduction"
+      }).then(res => {
+        this.companyInfo = res.data;
+      });
+    },
+    editCompany: function(obj) {
+      this.$put("company/update", {
+        name: this.companyInfo.name,
+        introduction: this.companyInfo.introduction,
+        ...obj
+      }).then(res => {
+        this.$store.commit("CHANGE_COMPANY", res.data);
+        this.getCompany();
+      });
+    },
     handleChange: function(info) {
       if (info.file.status === "uploading") {
         this.loading = true;
@@ -65,6 +80,7 @@ export default {
       }
       if (info.file.status === "done") {
         this.logo = "http://" + info.file.response.data.file;
+        this.editCompany({logo: this.logo})
         this.loading = false;
       }
     }

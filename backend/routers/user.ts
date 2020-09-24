@@ -17,9 +17,19 @@ const router: Irouter = {
     middleware: user.logout,
     allowAnonymous: false,
   },
-  "/user/info": {
+  "/user/main": {
     method: "GET",
-    middleware: user.info,
+    middleware: user.main,
+    allowAnonymous: false,
+  },
+  "/user/update": {
+    method: "PUT",
+    middleware: user.update,
+    allowAnonymous: false,
+  },
+  "/user/userInfo": {
+    method: "GET",
+    middleware: user.userInfo,
     allowAnonymous: false,
   },
 };

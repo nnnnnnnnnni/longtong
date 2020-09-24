@@ -2,19 +2,31 @@
   <div class="participants">
     <div class="filters">
       <div class="filter-item">
-        <a-button type="primary" size="small">添加成员</a-button>
+        <a-button type="primary">添加成员</a-button>
       </div>
       <div class="filter-item">
         <span class="item-title">角色:</span>
-        <a-select default-value="lucy" size="small" style="width: 120px">
+        <a-select default-value="lucy" style="width: 120px">
+          <a-select-option value="jack">Jack</a-select-option>
+        </a-select>
+      </div>
+      <div class="filter-item">
+        <span class="item-title">岗位:</span>
+        <a-select default-value="lucy" style="width: 120px">
           <a-select-option value="jack">Jack</a-select-option>
         </a-select>
       </div>
       <div class="filter-item">
         <span class="item-title">部门:</span>
-        <a-select default-value="lucy" size="small" style="width: 120px">
+        <a-select default-value="lucy" style="width: 120px">
           <a-select-option value="jack">Jack</a-select-option>
         </a-select>
+      </div>
+      <div class="filter-item">
+        <span class="item-title">搜索:</span>
+        <a-input style="width: 150px" placeholder='姓名或昵称'>
+          <template slot="addonAfter"><a-icon type='search'></a-icon></template>
+        </a-input>
       </div>
     </div>
     <div class="list">
@@ -81,7 +93,7 @@ export default {
           rowKey: "name"
         },
         {
-          title: "职位",
+          title: "岗位",
           dataIndex: "job",
           rowKey: "job",
         },
@@ -128,7 +140,7 @@ export default {
           phone: "1234567890",
           company: { info: {}, role: "user" },
           projects: [1]
-        }
+        },
       ]
     };
   }
@@ -143,12 +155,17 @@ export default {
 }
 .filters {
   display: flex;
-  justify-content: space-between;
   border-bottom: 1px solid #e3e3e3;
   padding: 0px 15px 15px 15px;
 }
+.filter-item {
+  display: flex;
+  align-items: center;
+  flex: 1 0 auto;
+}
 .filter-item .item-title {
   font-size: 12px;
+  margin-right: 5px;
 }
 img {
   height: 30px;

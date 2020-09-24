@@ -2,29 +2,36 @@
   <div id="topnav">
     <div class="company">
       <div class="company-logo">
-        <img :src="this.$store.state.user.company.info.logo" alt="">
+        <img :src="this.$store.state.user.company.info.logo" alt="" />
       </div>
-      <div class="company-name">{{this.$store.state.user.company.info.name}}</div>
+      <div class="company-name">
+        {{ this.$store.state.user.company.info.name }}
+      </div>
     </div>
     <div class="tabs">
       <div
         class="tab-item"
-        :class="{'tab-active': this.$store.state.route == 'calendar'}"
+        :class="{ 'tab-active': this.$store.state.route == 'calendar' }"
         @click="jumpPage('calendar')"
       >
         <a-icon style="fontSize: 36px; color: #333" type="calendar" />
-        <span class="time">{{currentDate}}</span>
+        <span class="time">{{ currentDate }}</span>
       </div>
       <div
         class="tab-item"
-        :class="{'tab-active': this.$store.state.route == 'chat'}"
+        :class="{ 'tab-active': this.$store.state.route == 'chat' }"
         @click="jumpPage('chat')"
       >
         <a-icon style="fontSize: 36px; color: #333" type="message" />
       </div>
       <div
         class="tab-item"
-        :class="{'tab-active': this.$store.state.route == 'home' || this.$store.state.route == 'mission' || this.$store.state.route == 'project'}"
+        :class="{
+          'tab-active':
+            this.$store.state.route == 'home' ||
+            this.$store.state.route == 'mission' ||
+            this.$store.state.route == 'project'
+        }"
         @click="jumpPage('home')"
       >
         <a-icon style="fontSize: 36px; color: #333" type="area-chart" />
@@ -52,14 +59,14 @@
           <img :src="this.$store.state.user.avator" alt />
         </div>
         <div class="item-name item-info">
-          <span>{{this.$store.state.user.userName}}</span>
+          <span>{{ this.$store.state.user.userName }}</span>
         </div>
       </div>
       <a-tooltip placement="bottom">
         <template slot="title">
           <span>设置</span>
         </template>
-        <div class="profile-item" @click="jumpPage('setting')">
+        <div class="profile-item" @click="jumpPage('base')">
           <a-icon type="setting" />
         </div>
       </a-tooltip>
@@ -80,7 +87,7 @@ export default {
   name: "topnav",
   data() {
     return {
-      currentDate: "",
+      currentDate: ""
     };
   },
   created() {},
@@ -88,27 +95,26 @@ export default {
     this.currentDate = new Date().getDate();
   },
   methods: {
-    jumpPage: function (name) {
+    jumpPage: function(name) {
       if (name != this.$store.state.route) {
         this.$router.push({ name: name });
       }
     },
     logout: async function() {
-      await this.$post('/user/logout', {
-        token: localStorage.getItem('token')
-      }).then(res =>{
-        localStorage.removeItem('token');
+      await this.$post("/user/logout", {
+        token: localStorage.getItem("token")
+      }).then(res => {
+        localStorage.removeItem("token");
         this.$store.commit("CHANGE_USER", {});
         setTimeout(() => {
-          this.$router.push({name: 'login'})
+          this.$router.push({ name: "login" });
         }, 1500);
-        return this.$message.success('登出成功！');
-      })
+        return this.$message.success("登出成功！");
+      });
     }
-  },
+  }
 };
 </script>
-
 
 <style scoped>
 #topnav {
