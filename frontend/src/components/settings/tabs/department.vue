@@ -1,19 +1,30 @@
 <template>
-  <div class='department'>department</div>
+  <div class="department">
+  </div>
 </template>
 
 <script>
-import highchart from "highcharts";
 export default {
-  name: 'department',
+  name: "department",
   data() {
     return {};
   },
-  created() {}
+  mounted() {
+    
+  },
+  methods: {
+    add: function () {
+      
+    }
+  }
 };
 </script>
 
-
 <style scoped>
-
+.department {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
 </style>

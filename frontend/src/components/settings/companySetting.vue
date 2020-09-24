@@ -42,4 +42,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.companySetting {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+</style>
