@@ -2,6 +2,9 @@
 
 ### A project management platform, It can be used as a process management program for small companies or teams to facilitate the most efficient things in the least time.
 
+### technology
+vue + mongodb + redis
+
 <hr/>
 
 ### Appreciation
@@ -22,6 +25,8 @@ me
 > git clone 
 
 > cd backend && npm install --save
+
+> cp ./config.example.ts comfig.ts
 
 > npm start
 
