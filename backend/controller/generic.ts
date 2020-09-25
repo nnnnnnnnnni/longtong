@@ -2,6 +2,7 @@ import { Context } from "koa";
 import { uploadFile } from "../lib/utils";
 import fs from 'fs';
 
+// 上传文件并保存到qiniu，然后删除本地缓存
 export const upload = async (ctx: Context) => {
   const file = ctx.request.files.file;
   const fileArr = file.name.split('.');

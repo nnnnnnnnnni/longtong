@@ -21,7 +21,7 @@
               <template slot="title">
                 <span>解绑</span>
               </template>
-              <a-icon key="delete" type="delete" theme="twoTone" two-tone-color="#ff4d4f" />
+              <a-icon key="disconnect" type="disconnect" />
             </a-tooltip>
           </template>
           <a-card-meta title="微信" :description="userInfo.wechat || '暂未绑定'">
@@ -48,7 +48,7 @@
               <template slot="title">
                 <span>解绑</span>
               </template>
-              <a-icon key="delete" type="delete" theme="twoTone" two-tone-color="#ff4d4f" />
+              <a-icon key="disconnect" type="disconnect" />
             </a-tooltip>
           </template>
           <a-card-meta title="微信小程序" :description="userInfo.miniProgram || '暂未绑定'">

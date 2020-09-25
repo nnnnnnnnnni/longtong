@@ -4,6 +4,7 @@ import db from "../mongo/schema";
 import redis from "../redis";
 import { generateToken } from "../lib/utils";
 
+// 创建公司
 export const create = async (ctx: Context) => {
   const userId = ctx.user._id;
   const { user, name, logo, introduction } = ctx.request.body;
@@ -11,12 +12,7 @@ export const create = async (ctx: Context) => {
     name: name,
     introduction: introduction,
     logo: logo,
-    Participants: [
-      {
-        role: "creater",
-        user: userId,
-      },
-    ],
+    admins: [userId],
   });
   const updatedUser = await db.user
     .findOneAndUpdate(
@@ -46,6 +42,7 @@ export const create = async (ctx: Context) => {
   };
 };
 
+// 更新公司信息
 export const update = async (ctx: Context): Promise<any> => {
   const companyId = ctx.user.company.info._id;
   const doc = ctx.request.body;
@@ -67,6 +64,7 @@ export const update = async (ctx: Context): Promise<any> => {
   }
 };
 
+// 获取公司信息
 export const companyInfo = async (ctx: Context): Promise<any> => {
   const companyId = ctx.user.company.info._id;
   const field = ctx.request.query.field;

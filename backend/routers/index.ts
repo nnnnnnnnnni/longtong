@@ -2,7 +2,8 @@ import mission from "./mission";
 import user from "./user";
 import company from "./company";
 import generic from "./generic";
-import { Iroute, Irouter, Irole } from "../interface/router";
+import department from "./department";
+import { Iroute, Irouter } from "../interface/router";
 import { Context } from "koa";
 import redis from "../redis";
 import { Iuser } from "@/mongo/user/interface";
@@ -30,6 +31,7 @@ export const getAllRouter = (): Irouter => {
   addRouter(user);
   addRouter(company);
   addRouter(generic);
+  addRouter(department);
 
   return allRoutes;
 };

@@ -1,11 +1,16 @@
-import { Iproject } from "./interface";
+import { Idepartment } from "./interface";
 import { Schema, model, SchemaTypes } from "mongoose";
 
-const projectSchema = new Schema(
+const departmentSchema = new Schema(
   {
-    name: String,
-    logo: String,
-    introduction: String,
+    name: {
+      type: String,
+      unique: true
+    },
+    company: {
+      type: SchemaTypes.ObjectId,
+      ref: "company",
+    },
     admins: [
       {
         type: SchemaTypes.ObjectId,
@@ -18,9 +23,9 @@ const projectSchema = new Schema(
         ref: "user",
       },
     ],
-    company: {
+    upper: {
       type: SchemaTypes.ObjectId,
-      ref: "company",
+      ref: "department",
     },
     createTime: {
       type: Date,
@@ -39,4 +44,4 @@ const projectSchema = new Schema(
   }
 );
 
-export const project = model<Iproject>("project", projectSchema);
+export const department = model<Idepartment>("department", departmentSchema);

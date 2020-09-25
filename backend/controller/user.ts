@@ -2,7 +2,10 @@ import { Context } from "koa";
 import db from "../mongo/schema";
 import redis from "../redis";
 import { generateToken } from "../lib/utils";
+import { Idepartment } from "@/mongo/department/interface";
+import { Iuser } from "@/mongo/user/interface";
 
+// 注册管理员
 export const register = async (ctx: Context): Promise<any> => {
   const mail: string = ctx.request.body.mail;
   const pass: string = ctx.request.body.pass;
@@ -27,6 +30,7 @@ export const register = async (ctx: Context): Promise<any> => {
   };
 };
 
+// 登录
 export const login = async (ctx: Context) => {
   const mail: string = ctx.request.body.mail;
   const pass: string = ctx.request.body.pass;
@@ -61,6 +65,7 @@ export const login = async (ctx: Context) => {
   }
 };
 
+// 登出
 export const logout = async (ctx: Context) => {
   const token = ctx.request.body.token;
   if (!token) {
@@ -76,13 +81,14 @@ export const logout = async (ctx: Context) => {
   }
 };
 
+// 获取登陆人信息
 export const main = async (ctx: Context): Promise<any> => {
   const token: string = ctx.token;
   if (token) {
     const redisData: any = await redis.get(0, `TOKEN:${token}`);
     let newInfo = await db.user
       .findOne({ _id: redisData._id })
-      .populate("company.info", 'name logo')
+      .populate("company.info", "name logo")
       .lean()
       .exec();
     await redis.set(0, `TOKEN:${token}`, newInfo);
@@ -92,6 +98,7 @@ export const main = async (ctx: Context): Promise<any> => {
   }
 };
 
+// 更新个人信息
 export const update = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
   const token: string = ctx.token;
@@ -103,25 +110,73 @@ export const update = async (ctx: Context): Promise<any> => {
       },
       {
         $set: doc,
-      },{
-        new: true
+      },
+      {
+        new: true,
       }
     )
-    .populate('company.info')
+    .populate("company.info")
     .lean()
     .exec();
   await redis.set(0, `TOKEN:${token}`, updatedUser);
   return {
-    data: updatedUser
+    data: updatedUser,
+  };
+};
+
+// 个人详细信息（定制field）
+export const userInfo = async (ctx: Context): Promise<any> => {
+  const userId = ctx.user._id;
+  const { field } = ctx.request.query;
+  const fieldString = field.split(",").join(" ");
+  const userInfo = await db.user
+    .findOne({ _id: userId })
+    .select(fieldString)
+    .lean()
+    .exec();
+  return {
+    data: userInfo,
+  };
+};
+
+// 用户列表
+export const users = async (ctx: Context): Promise<any> => {
+  const companyId = ctx.user.company.info._id;
+  const { options, isFirst } = ctx.request.query.field;
+  let departmentData: any[];
+  let jobs: Set<string>;
+  let users: any[];
+  let params: any = {
+    'company.info': companyId
+  };
+  
+  if(isFirst) {
+    departmentData = await db.department.find({company: companyId}).select('name').lean().exec();
+  }
+  if(options.role) {
+    params['company.role'] = options.role;
+  }
+  if(options.job) {
+    params['job'] = options.job;
+  }
+  if(options.department) {
+    params['department'] = options.department;
+  }
+  users = await db.user.find(params).lean().exec();
+  if(isFirst) {
+    users.forEach((user: Iuser) => {
+      jobs.add(user.company.role);
+    })
+  }
+
+  return {
+    data: {
+      departments: departmentData,
+      jobs: Array.from(jobs),
+      users: users
+    }
   }
 };
 
-export const userInfo = async (ctx: Context): Promise<any> => {
-  const userId = ctx.user._id;
-  const {field} = ctx.request.query;
-  const fieldString = field.split(',').join(' ');
-  const userInfo = await db.user.findOne({_id: userId}).select(fieldString).lean().exec();
-  return {
-    data: userInfo
-  }
-}
+// 管理员添加普通用户
+export const add = async (ctx: Context): Promise<any> => {};

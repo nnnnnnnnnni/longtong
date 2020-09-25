@@ -30,4 +30,8 @@ body {
   height: 100%;
   overflow: hidden;
 }
+th._center,
+td._center {
+  text-align: center !important;
+}
 </style>

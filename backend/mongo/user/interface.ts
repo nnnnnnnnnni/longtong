@@ -1,26 +1,26 @@
 import { Document } from "mongoose";
 
 export interface Iuser extends Document {
-  name?: String; // 姓名
-  userName?: String; // 昵称
-  avator?: String; // 头像
-  job?: String; // 担任职务
-  department?: String; // 部门
-  introduction?: String; // 简介
-  mail: String; // 邮箱
-  password: String; // 密码
-  wechat?: String; // 绑定微信
-  miniProgram?: String; // 绑定小程序
-  phone?: String; // 手机
+  name?: string; // 姓名
+  userName?: string; // 昵称
+  avator?: string; // 头像
+  job?: string; // 担任职务
+  department?: string; // 部门
+  introduction?: string; // 简介
+  mail: string; // 邮箱
+  password: string; // 密码
+  wechat?: string; // 绑定微信
+  miniProgram?: string; // 绑定小程序
+  phone?: string; // 手机
   company?: {
     // 所属公司
-    info: String;
-    role: String;
+    info: string;
+    role: string;
   };
   role?: any[]; // 用户角色
   createTime?: Date; // 创建时间
   updateTime?: Date; // 修改时间
   lastLoginTime?: Date; // 最后登录时间
-  timeLine?: String; // 工作时长
-  mfa?: String; // MFA绑定
+  timeLine?: string; // 工作时长
+  mfa?: string; // MFA绑定
 }

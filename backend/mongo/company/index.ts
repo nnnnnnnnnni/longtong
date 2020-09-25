@@ -5,22 +5,16 @@ const companySchema: Schema = new Schema(
   {
     name: String,
     logo: String,
-    Participants: [
+    admins: [
       {
-        role: {
-          type: String,
-          enum: [
-            "creater", //创建者
-            "admin", // 管理员
-            "user", // 成员
-          ],
-          ref: "user",
-          default: "user",
-        },
-        user: {
-          type: SchemaTypes.ObjectId,
-          ref: "user",
-        },
+        type: SchemaTypes.ObjectId,
+        ref: "user",
+      },
+    ],
+    members: [
+      {
+        type: SchemaTypes.ObjectId,
+        ref: "user",
       },
     ],
     projects: [
