@@ -15,13 +15,17 @@
       <div class="filter-item">
         <span class="item-title">岗位:</span>
         <a-select v-model="searchOptions.job" placeholder='请选择...' style="width: 120px">
-          <a-select-option value="jack">Jack</a-select-option>
+          <a-select-option v-for="job in job" :key="job" :value='job'>
+            {{job}}
+          </a-select-option>
         </a-select>
       </div>
       <div class="filter-item">
         <span class="item-title">部门:</span>
-        <a-select v-model="searchOptions.department" placeholder='请选择...' style="width: 120px">
-          <a-select-option value="jack">Jack</a-select-option>
+        <a-select search v-model="searchOptions.department" placeholder='请选择...' style="width: 120px">
+          <a-select-option v-for="department in departments" :key="department.name" :value='department._id'>
+            {{department.name}}
+          </a-select-option>
         </a-select>
       </div>
       <div class="filter-item">
@@ -129,7 +133,8 @@ export default {
   name: "participantsTab",
   data() {
     return {
-      modalVisible: true,
+      loading: false,
+      modalVisible: false,
       confirmLoading: false,
       openType: 1,
       searchOptions: {},
@@ -207,10 +212,22 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.getInfo();
+  },
   methods: {
     beforeUpload(file) {
       console.log(file)
       return false;
+    },
+    getInfo: function() {
+      this.$get('/user/users', {
+        options: {}
+      }).then(res=> {
+        this.departments = res.data.departments;
+        this.userData = res.data.users;
+        console.log(res)
+      })
     },
     // 重置条件选择
     reset: function() {

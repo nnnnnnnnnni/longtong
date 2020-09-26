@@ -142,17 +142,15 @@ export const userInfo = async (ctx: Context): Promise<any> => {
 // 用户列表
 export const users = async (ctx: Context): Promise<any> => {
   const companyId = ctx.user.company.info._id;
-  const { options, isFirst } = ctx.request.query.field;
-  let departmentData: any[];
-  let jobs: Set<string>;
-  let users: any[];
+  const { options } = ctx.request.query;
+  let departmentData: any[] = [];
+  let jobs: string[] = [];
+  let users: any[] = [];
   let params: any = {
     'company.info': companyId
   };
   
-  if(isFirst) {
-    departmentData = await db.department.find({company: companyId}).select('name').lean().exec();
-  }
+  departmentData = await db.department.find({company: companyId}).select('name').lean().exec();
   if(options.role) {
     params['company.role'] = options.role;
   }
@@ -163,16 +161,15 @@ export const users = async (ctx: Context): Promise<any> => {
     params['department'] = options.department;
   }
   users = await db.user.find(params).lean().exec();
-  if(isFirst) {
-    users.forEach((user: Iuser) => {
-      jobs.add(user.company.role);
-    })
-  }
+  users.forEach((user: Iuser) => {
+    if(user.company.role != 'creater') jobs.push(user.job);
+  })
+  jobs = Array.from(new Set(jobs))
 
   return {
     data: {
       departments: departmentData,
-      jobs: Array.from(jobs),
+      jobs: jobs,
       users: users
     }
   }
