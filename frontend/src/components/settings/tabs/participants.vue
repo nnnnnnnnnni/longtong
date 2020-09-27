@@ -118,7 +118,7 @@
         <a-form-model-item label="邮箱" required>
           <a-input v-model="userForm.mail"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="密码" required>
+        <a-form-model-item label="密码" v-if="openType == 1" required>
           <a-input v-model="userForm.password"></a-input>
         </a-form-model-item>
         <a-form-model-item label="姓名" required>
@@ -273,7 +273,17 @@ export default {
       this.modalVisible = true;
     },
     openEditModal: function(text) {
-      console.log(text)
+      this.openType = 2;
+      this.userForm = {
+        avator: Object.keys(this.avatorFile).length == 0? text.avator: '',
+        mail: text.mail,
+        name: text.name,
+        companyRole: text.company.role,
+        departmentRole: text.department? text.department.role: '',
+        department: text.department.info._id || '',
+        job: text.job
+      }
+      this.modalVisible = true;
     },
     // upload avator
     uploadAvator: function() {
@@ -292,22 +302,35 @@ export default {
     },
     // modal-ok
     modalMethodOk:async function() {
-      if(Object.keys(this.avatorFile).length == 0) return this.$message.error('请选择头像');
       if(!this.userForm.mail) return this.$message.error('请填写邮箱');
-      if(!this.userForm.password) return this.$message.error('请填写密码');
       if(!this.userForm.name) return this.$message.error('请填写姓名');
       if(!this.userForm.job) return this.$message.error('请填写岗位');
       if(!this.userForm.department) return this.$message.error('请选择部门');
-      await this.uploadAvator();
-      this.$post('user/addUser', this.userForm).then(res=> {
-        if(res.status == 200) {
-          this.userForm = {companyRole: 'user', departmentRole: 'user'},
-          this.avatorFile = {};
-          this.$message.success('创建成功');
-          this.getInfo();
-          this.modalVisible = false;
-        }
-      })
+      if(this.openType == 1) {
+        if(!this.userForm.password) return this.$message.error('请填写密码');
+        if(Object.keys(this.avatorFile).length == 0) return this.$message.error('请选择头像');
+        await this.uploadAvator();
+        this.$post('user/addUser', this.userForm).then(res=> {
+          if(res.status == 200) {
+            this.userForm = {companyRole: 'user', departmentRole: 'user'},
+            this.avatorFile = {};
+            this.$message.success('创建成功');
+            this.getInfo();
+            this.modalVisible = false;
+          }
+        })
+      } else if(this.openType == 2) {
+        if(Object.keys(this.avatorFile).length != 0) await this.uploadAvator();
+        this.$put('user/adminUpdate', this.userForm).then(res=> {
+          if(res.status == 200) {
+            this.userForm = {companyRole: 'user', departmentRole: 'user'},
+            this.avatorFile = {};
+            this.$message.success('更新成功');
+            this.getInfo();
+            this.modalVisible = false;
+          }
+        })
+      }
     }
   }
 };

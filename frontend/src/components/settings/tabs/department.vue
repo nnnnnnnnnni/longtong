@@ -92,7 +92,6 @@ export default {
   },
   watch: {
     activeTab: function() {
-      console.log(this.activeTab)
       if(this.activeTab == 4) {
         this.getInfo();
       }
