@@ -17,6 +17,7 @@ app.use(koaStaic(Config.localStatic));
 
 app.use(
   koaBody({
+    strict: false,
     multipart: true,
     formidable: {
       uploadDir: Config.localStatic,

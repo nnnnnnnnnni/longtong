@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {Modal, Tag,Table, Button, Input, FormModel, Card, Icon, Tooltip, Avatar, DatePicker, Upload, Calendar, Tabs, Empty, Select, Drawer, Steps } from 'ant-design-vue'
+import {Popconfirm,Radio ,Modal, Tag,Table, Button, Input, FormModel, Card, Icon, Tooltip, Avatar, DatePicker, Upload, Calendar, Tabs, Empty, Select, Drawer, Steps } from 'ant-design-vue'
 Vue.use(FormModel)
 Vue.use(Button)
 Vue.use(Input)
@@ -18,3 +18,5 @@ Vue.use(Steps)
 Vue.use(Table)
 Vue.use(Tag)
 Vue.use(Modal)
+Vue.use(Radio)
+Vue.use(Popconfirm)

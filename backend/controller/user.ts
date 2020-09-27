@@ -86,11 +86,7 @@ export const main = async (ctx: Context): Promise<any> => {
   const token: string = ctx.token;
   if (token) {
     const redisData: any = await redis.get(0, `TOKEN:${token}`);
-    let newInfo = await db.user
-      .findOne({ _id: redisData._id })
-      .populate("company.info", "name logo")
-      .lean()
-      .exec();
+    let newInfo = await db.user.findOne({ _id: redisData._id }).populate("company.info", "name logo").lean().exec();
     await redis.set(0, `TOKEN:${token}`, newInfo);
     return {
       data: newInfo,
@@ -102,7 +98,20 @@ export const main = async (ctx: Context): Promise<any> => {
 export const update = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
   const token: string = ctx.token;
-  const doc = ctx.request.body;
+  let doc = ctx.request.body;
+  if (doc.type && doc.type == "pwd") {
+    const oldUser = await db.user.find({ _id: userId, password: doc.old }).lean().exec();
+    if (oldUser.length > 0) {
+      doc = {
+        password: doc.new,
+      };
+    } else {
+      return {
+        status: 400,
+        msg: "密码不正确",
+      };
+    }
+  }
   const updatedUser = await db.user
     .findOneAndUpdate(
       {
@@ -129,11 +138,7 @@ export const userInfo = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
   const { field } = ctx.request.query;
   const fieldString = field.split(",").join(" ");
-  const userInfo = await db.user
-    .findOne({ _id: userId })
-    .select(fieldString)
-    .lean()
-    .exec();
+  const userInfo = await db.user.findOne({ _id: userId }).select(fieldString).lean().exec();
   return {
     data: userInfo,
   };
@@ -147,33 +152,79 @@ export const users = async (ctx: Context): Promise<any> => {
   let jobs: string[] = [];
   let users: any[] = [];
   let params: any = {
-    'company.info': companyId
+    "company.info": companyId,
   };
-  
-  departmentData = await db.department.find({company: companyId}).select('name').lean().exec();
-  if(options.role) {
-    params['company.role'] = options.role;
+
+  departmentData = await db.department.find({ company: companyId }).select("name").lean().exec();
+  if (options.role) {
+    params["company.role"] = options.role;
   }
-  if(options.job) {
-    params['job'] = options.job;
+  if (options.job) {
+    params["job"] = options.job;
   }
-  if(options.department) {
-    params['department'] = options.department;
+  if (options.department) {
+    params["department"] = options.department;
   }
-  users = await db.user.find(params).lean().exec();
+  users = await db.user.find(params).select("-password").populate("department.info", "name").lean().exec();
   users.forEach((user: Iuser) => {
-    if(user.company.role != 'creater') jobs.push(user.job);
-  })
-  jobs = Array.from(new Set(jobs))
+    if (user.company.role != "creater") jobs.push(user.job);
+  });
+  jobs = Array.from(new Set(jobs));
 
   return {
     data: {
       departments: departmentData,
       jobs: jobs,
-      users: users
-    }
-  }
+      users: users,
+    },
+  };
 };
 
 // 管理员添加普通用户
-export const add = async (ctx: Context): Promise<any> => {};
+export const addUser = async (ctx: Context): Promise<any> => {
+  const companyId = ctx.user.company.info._id;
+  const doc: any = ctx.request.body;
+  const newUser = await db.user.create({
+    name: doc.name,
+    userName: doc.userName ? doc.userName : doc.name,
+    job: doc.job.toUpperCase(),
+    avator: doc.avator,
+    password: doc.password,
+    department: {
+      info: doc.department,
+      role: doc.departmentRole
+    },
+    mail: doc.mail,
+    company: {
+      info: companyId,
+      role: doc.companyRole,
+    },
+  });
+  delete newUser.password;
+  if (doc.departmentRole == "user") {
+    await db.department.update(
+      {
+        _id: doc.department,
+      },
+      {
+        $addToSet: {
+          members: newUser._id,
+        },
+      }
+    );
+  } else {
+    await db.department.update(
+      {
+        _id: doc.department,
+      },
+      {
+        $addToSet: {
+          admins: newUser._id,
+        },
+      }
+    );
+  }
+  return {
+    data: newUser,
+  };
+};

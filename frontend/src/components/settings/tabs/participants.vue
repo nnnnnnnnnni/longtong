@@ -14,15 +14,15 @@
       </div>
       <div class="filter-item">
         <span class="item-title">岗位:</span>
-        <a-select v-model="searchOptions.job" placeholder='请选择...' style="width: 120px">
-          <a-select-option v-for="job in job" :key="job" :value='job'>
+        <a-select showSearch optionFilterProp='children' v-model="searchOptions.job" placeholder='请选择...' style="width: 120px">
+          <a-select-option v-for="job in jobs" :key="job" :value='job'>
             {{job}}
           </a-select-option>
         </a-select>
       </div>
       <div class="filter-item">
         <span class="item-title">部门:</span>
-        <a-select search v-model="searchOptions.department" placeholder='请选择...' style="width: 120px">
+        <a-select showSearch optionFilterProp='children' v-model="searchOptions.department" placeholder='请选择...' style="width: 120px">
           <a-select-option v-for="department in departments" :key="department.name" :value='department._id'>
             {{department.name}}
           </a-select-option>
@@ -54,15 +54,25 @@
         <span slot="avator" slot-scope="text">
           <img :src="text" alt="" />
         </span>
+        <span slot="name" slot-scope="_, record">
+          <span style="display:block;font-size: 1rem">{{record.userName}}</span>
+          <span style="display:block;font-size: 0.5rem">({{record.name}})</span>
+        </span>
+        <span slot="department" slot-scope="text,record">
+          <span v-if="record.department">{{record.department.info.name}}</span>
+          <span v-else><a-icon type="stop" theme="twoTone" two-tone-color="red" /></span>
+        </span>
         <span slot="contact" slot-scope="text, record">
           <div class="contact">
             <div class="contact-item">
               <a-icon type='mail'></a-icon>
-              {{ record.mail }}
+              <span v-if="record.mail">{{record.mail}}</span>
+              <span v-else><a-icon type="stop" theme="twoTone" two-tone-color="red" /></span>
             </div>
             <div class="contact-item">
               <a-icon type='phone'></a-icon>
-              {{ record.phone }}
+              <span v-if="record.phone">{{record.phone}}</span>
+              <span v-else><a-icon type="stop" theme="twoTone" two-tone-color="red" /></span>
             </div>
           </div>
         </span>
@@ -78,45 +88,58 @@
           </span>
         </span>
         <span slot="projects" slot-scope="text">
-          <span v-if="text.length == 0">暂无加入</span>
+          <span v-if="!text">
+            <a-icon type="stop" theme="twoTone" two-tone-color="red" />
+          </span>
           <span v-else>
-            <span><a-button size='small' type='link'>查看详情</a-button></span>
+            <span><a-button size='small' type='link'>{{text}}</a-button></span>
           </span>
         </span>
-        <span slot="_id">
-          <span><a-button type='danger' size='small'>编辑</a-button></span>
+        <span slot="_id" slot-scope="_, record">
+          <span><a-button type='danger' size='small' @click="openEditModal(record)">编辑</a-button></span>
         </span>
       </a-table>
     </div>
 
     <!-- 新增 / 编辑 modal -->
-    <a-modal title="Title" :visible="modalVisible" :confirm-loading="confirmLoading" @ok="modalMethodOk" @cancel="modalVisible = false" >
-      <a-form-model :model="userForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14,offset: 1 }">
-        <a-form-model-item label="头像">
-          <a-upload  name="file" list-type="picture-card" class="avatar-uploader" :before-upload="beforeUpload" :show-upload-list="false" >
-            <img v-if="userForm.avator" :src="userForm.avator" alt="avatar" />
-            <div v-else>
-              <a-icon :type="loading ? 'loading' : 'plus'" />
-              <div class="ant-upload-text"> Upload </div>
-            </div>
+    <a-modal :title="openType == 1 ? '新增':'编辑'" :visible="modalVisible" :confirm-loading="confirmLoading" @ok="modalMethodOk" @cancel="modalVisible = false" >
+      <a-form-model ref='userModal' :model="userForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14,offset: 1 }">
+        <a-form-model-item label="头像" required>
+          <a-upload accept='.jpg,.png' name="file" class="avatar-uploader" :before-upload="beforeUpload" :show-upload-list="false" >
+            <a-button> <a-icon type="upload" /> Select File </a-button>
+            <span style="padding-left: 20px" v-if="avatorFile.name && avatorFile.name.length < 12">
+              {{avatorFile.name}}
+            </span>
+            <span style="padding-left: 20px" v-else-if="avatorFile.name">
+              {{avatorFile.name.slice(0, 8)}}......{{avatorFile.name.slice(-3)}}
+            </span>
           </a-upload>
         </a-form-model-item>
-        <a-form-model-item label="邮箱">
+        <a-form-model-item label="邮箱" required>
           <a-input v-model="userForm.mail"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="密码">
+        <a-form-model-item label="密码" required>
           <a-input v-model="userForm.password"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="姓名">
+        <a-form-model-item label="姓名" required>
           <a-input v-model="userForm.name"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="昵称">
-          <a-input v-model="userForm.userName"></a-input>
+        <a-form-model-item label="公司角色">
+          <a-radio-group v-model="userForm.companyRole">
+            <a-radio value="user">成员</a-radio>
+            <a-radio value="admin">管理员</a-radio>
+          </a-radio-group>
         </a-form-model-item>
-        <a-form-model-item label="岗位">
+        <a-form-model-item label="岗位" required>
           <a-input v-model="userForm.job"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="部门">
+        <a-form-model-item label="部门角色">
+          <a-radio-group v-model="userForm.departmentRole">
+            <a-radio value="user">成员</a-radio>
+            <a-radio value="admin">管理员</a-radio>
+          </a-radio-group>
+        </a-form-model-item>
+        <a-form-model-item label="部门" required>
           <a-select v-model="userForm.department" style="width: 100%" :allowClear='true' placeholder="下拉选择..." >
             <a-select-option v-for="department in departments" :key="department.name" :value='department._id'>
               {{department.name}}
@@ -131,15 +154,21 @@
 <script>
 export default {
   name: "participantsTab",
+  props: ['activeTab'],
   data() {
     return {
+      avatorFile: {},
       loading: false,
       modalVisible: false,
       confirmLoading: false,
       openType: 1,
       searchOptions: {},
-      userForm: {},
+      userForm: {
+        companyRole: 'user',
+        departmentRole: 'user',
+      },
       departments: [],
+      jobs: [],
       columns: [
         {
           title: "头像",
@@ -152,7 +181,8 @@ export default {
           title: "姓名",
           className: '_center',
           dataIndex: "name",
-          key: "name"
+          key: "name",
+          scopedSlots: { customRender: "name" },
         },
         {
           title: "岗位",
@@ -165,6 +195,7 @@ export default {
           className: '_center',
           dataIndex: "department",
           key: "department",
+          scopedSlots: { customRender: "department" }
         },
         {
           title: "联系方式",
@@ -196,37 +227,37 @@ export default {
           fixed: 'right'
         }
       ],
-      userData: [
-        {
-          _id: 1,
-          avator: "http://qh27o5obv.hd-bkt.clouddn.com/logo_1600831787696.png",
-          name: "NIyongsheng",
-          userName: "shenger",
-          job: "web",
-          department: "web group 2",
-          mail: "714275326@qq.com",
-          phone: "1234567890",
-          company: { info: {}, role: "user" },
-          projects: [1]
-        },
-      ]
+      userData: []
     };
   },
   mounted() {
     this.getInfo();
   },
+  watch: {
+    activeTab: function() {
+      if(this.activeTab == 2) {
+        this.getInfo();
+      }
+    }
+  },
   methods: {
+    // 文件上传前处理
     beforeUpload(file) {
-      console.log(file)
+      if(file.type.indexOf('png') == -1 && file.type.indexOf('jpeg') == -1 && file.type.indexOf('jpg') == -1){
+        this.$message.error('文件格式不正确');
+        return false;
+      }
+      this.avatorFile = file;
       return false;
     },
+    // 获取用户信息
     getInfo: function() {
       this.$get('/user/users', {
         options: {}
       }).then(res=> {
         this.departments = res.data.departments;
+        this.jobs = res.data.jobs;
         this.userData = res.data.users;
-        console.log(res)
       })
     },
     // 重置条件选择
@@ -241,9 +272,42 @@ export default {
       this.openType =1;
       this.modalVisible = true;
     },
+    openEditModal: function(text) {
+      console.log(text)
+    },
+    // upload avator
+    uploadAvator: function() {
+      return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('file', this.avatorFile);
+        this.$post('/generic/upload', formData).then(res=> {
+          if(res.status == 200) {
+            this.userForm.avator = 'http://' + res.data.file;
+            resolve()
+          } else {
+            reject(res.msg)
+          }
+        })
+      })
+    },
     // modal-ok
-    modalMethodOk: function() {
-
+    modalMethodOk:async function() {
+      if(Object.keys(this.avatorFile).length == 0) return this.$message.error('请选择头像');
+      if(!this.userForm.mail) return this.$message.error('请填写邮箱');
+      if(!this.userForm.password) return this.$message.error('请填写密码');
+      if(!this.userForm.name) return this.$message.error('请填写姓名');
+      if(!this.userForm.job) return this.$message.error('请填写岗位');
+      if(!this.userForm.department) return this.$message.error('请选择部门');
+      await this.uploadAvator();
+      this.$post('user/addUser', this.userForm).then(res=> {
+        if(res.status == 200) {
+          this.userForm = {companyRole: 'user', departmentRole: 'user'},
+          this.avatorFile = {};
+          this.$message.success('创建成功');
+          this.getInfo();
+          this.modalVisible = false;
+        }
+      })
     }
   }
 };

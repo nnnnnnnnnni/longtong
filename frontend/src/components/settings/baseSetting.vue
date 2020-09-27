@@ -72,8 +72,21 @@
 
       <div class="form-item">
         <a-button type="primary" @click="editInfo">修改</a-button>
+        <a-button type="danger" @click="editPwd">修改密码</a-button>
       </div>
     </div>
+
+    <!-- model -->
+    <a-modal title='修改密码' :model="pwdForm"  :visible="modalVisible" @ok="modalMethodOk" @cancel="modalVisible = false" >
+      <a-form-model :model="pwdForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14,offset: 1 }">
+        <a-form-model-item label="旧密码">
+          <a-input-password v-model="pwdForm.old" placeholder='请输入...'></a-input-password>
+        </a-form-model-item>
+        <a-form-model-item label="新密码">
+          <a-input-password v-model="pwdForm.new" placeholder='请输入...'></a-input-password>
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
   </div>
 </template>
 
@@ -82,7 +95,9 @@ export default {
   name: "baseSetting",
   data() {
     return {
-      userInfo: {}
+      modalVisible: false,
+      userInfo: {},
+      pwdForm: {}
     };
   },
   mounted() {
@@ -96,6 +111,7 @@ export default {
         this.userInfo = res.data;
       });
     },
+    // 编辑信息
     editInfo: function() {
       this.$put("/user/update", {
         userName: this.userInfo.userName,
@@ -105,6 +121,33 @@ export default {
         this.getInfo();
         this.$store.commit("CHANGE_USER", Object.assign({}, res.data));
         this.$message.success("修改成功");
+      });
+    },
+    editPwd: function() {
+      this.modalVisible = true;
+    },
+    modalMethodOk:async function() {
+      if(!this.pwdForm.old) return this.$message.error('必须：旧密码');
+      if(!this.pwdForm.new) return this.$message.error('必须：新密码');
+      if(this.pwdForm.old == this.pwdForm.new) return this.$message.error('新旧密码不能相同');
+      if(this.pwdForm.new.length < 6) return this.$message.error('密码长度不可少于6');
+      this.$put("/user/update", {
+        type: 'pwd',
+        old: this.pwdForm.old,
+        new: this.pwdForm.new
+      }).then(async res => {
+        if(res.status == 200) {
+          await this.$post("/user/logout", {
+            token: localStorage.getItem("token")
+          }).then(res => {
+            localStorage.removeItem("token");
+            this.$store.commit("CHANGE_USER", {});
+            this.$message.warning('密码已修改，请重新登录');
+            setTimeout(() => {
+              this.$router.push({ name: "login" });
+            }, 500);
+          });
+        }
       });
     }
   }

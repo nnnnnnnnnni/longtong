@@ -14,7 +14,12 @@
           <span v-else>暂无</span>
         </span>
         <span slot="action" slot-scope="text">
-          <span><a-button type="danger" size="small" @click="openEditModal(text)">编辑</a-button></span>
+          <span>
+            <a-popconfirm title="删除后无法恢复，确定要删除嘛?" ok-text="是" cancel-text="否" @confirm="deleteDep(text)">
+              <a-button type="danger" size="small">删除</a-button>
+            </a-popconfirm>
+            <a-button type="primary" size="small" @click="openEditModal(text)">编辑</a-button>
+          </span>
         </span>
       </a-table>
     </div>
@@ -40,6 +45,7 @@
 <script>
 export default {
   name: "department",
+  props: ['activeTab'],
   data() {
     return {
       openType: 1,
@@ -84,14 +90,34 @@ export default {
   mounted() {
     this.getInfo();
   },
+  watch: {
+    activeTab: function() {
+      console.log(this.activeTab)
+      if(this.activeTab == 4) {
+        this.getInfo();
+      }
+    }
+  },
   methods: {
     getInfo: function() {
       this.$get('/department/departments', {}).then(res=> {
         this.departmentData = res.data;
       })
     },
+    // 删除部门
+    deleteDep: function(text) {
+      this.$delete('/department/deleteDep', {
+        departmentId: text._id
+      }).then(res=> {
+        if(res.status == 200 ){
+          this.$message.success('删除成功');
+          this.getInfo();
+        }
+      })
+    },
     // 打开新增窗口
     openAddModal: function() {
+      this.openType = 1;
       this.modalVisible = true;
     },
     // add-modal OK-button 

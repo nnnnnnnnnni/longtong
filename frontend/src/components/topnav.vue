@@ -108,7 +108,7 @@ export default {
         this.$store.commit("CHANGE_USER", {});
         setTimeout(() => {
           this.$router.push({ name: "login" });
-        }, 1500);
+        }, 500);
         return this.$message.success("登出成功！");
       });
     }

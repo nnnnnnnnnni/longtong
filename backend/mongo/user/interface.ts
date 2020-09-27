@@ -1,11 +1,16 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
+export import ObjectId = Types.ObjectId;
 
 export interface Iuser extends Document {
   name?: string; // 姓名
   userName?: string; // 昵称
   avator?: string; // 头像
   job?: string; // 担任职务
-  department?: string; // 部门
+  department?: {
+    // 部门
+    info: ObjectId;
+    role: string;
+  };
   introduction?: string; // 简介
   mail: string; // 邮箱
   password: string; // 密码
@@ -14,7 +19,7 @@ export interface Iuser extends Document {
   phone?: string; // 手机
   company?: {
     // 所属公司
-    info: string;
+    info: ObjectId;
     role: string;
   };
   role?: any[]; // 用户角色

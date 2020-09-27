@@ -45,6 +45,7 @@
 <script>
 export default {
   name: "baseTab",
+  props: ['activeTab'],
   data() {
     return {
       companyInfo: {},
@@ -54,6 +55,13 @@ export default {
   },
   created() {
     this.getCompany();
+  },
+  watch: {
+    activeTab: function() {
+      if(this.activeTab == 1) {
+        this.getCompany();
+      }
+    }
   },
   methods: {
     getCompany: function() {
@@ -69,8 +77,13 @@ export default {
         introduction: this.companyInfo.introduction,
         ...obj
       }).then(res => {
-        this.$store.commit("CHANGE_COMPANY", res.data);
-        this.getCompany();
+        if(res.status == 200) {
+          this.$store.commit("CHANGE_COMPANY", res.data);
+          this.$message.success('修改成功');
+          this.getCompany();
+        } else {
+          this.$message.error(res.msg);
+        }
       });
     },
     handleChange: function(info) {

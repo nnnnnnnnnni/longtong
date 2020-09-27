@@ -37,6 +37,11 @@ const router: Irouter = {
     middleware: user.users,
     allowAnonymous: false,
   },
+  "/user/addUser": {
+    method: "POST",
+    middleware: user.addUser,
+    allowAnonymous: false,
+  },
 };
 
 export default router;

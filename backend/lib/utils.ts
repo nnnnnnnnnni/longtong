@@ -1,4 +1,3 @@
-import { user } from "@/mongo/user";
 import crypto from "crypto";
 import qiniu from "qiniu";
 import { Config } from "../config";

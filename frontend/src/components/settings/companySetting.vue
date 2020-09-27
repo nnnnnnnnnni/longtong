@@ -1,17 +1,17 @@
 <template>
   <div class="companySetting">
-    <a-tabs default-active-key="1">
+    <a-tabs default-active-key="1" @change="changeTab">
       <a-tab-pane key="1" tab="基本设置">
-        <baseTab />
+        <baseTab :activeTab='activeTab' />
       </a-tab-pane>
       <a-tab-pane key="2" tab="人员设置">
-        <participantsTab />
+        <participantsTab :activeTab='activeTab' />
       </a-tab-pane>
       <a-tab-pane key="3" tab="项目设置">
-        <projectTab />
+        <projectTab :activeTab='activeTab' />
       </a-tab-pane>
       <a-tab-pane key="4" tab="部门设置">
-        <departmentTab />
+        <departmentTab :activeTab='activeTab' />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -26,13 +26,20 @@ import departmentTab from "./tabs/department";
 export default {
   name: "companySetting",
   data() {
-    return {};
+    return {
+      activeTab: 1,
+    };
   },
   components: {
     baseTab,
     projectTab,
     participantsTab,
     departmentTab
+  },
+  methods: {
+    changeTab: function(index) {
+      this.activeTab = index;
+    }
   }
 };
 </script>

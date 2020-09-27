@@ -16,8 +16,14 @@ const userSchema: Schema = new Schema(
     },
     job: String,
     department: {
-      type: SchemaTypes.ObjectId,
-      ref: "department",
+      info: {
+        type: SchemaTypes.ObjectId,
+        ref: "department",
+      },
+      role: {
+        type: String,
+        enum: ["admin", "user"],
+      },
     },
     introduction: String,
     mail: {
@@ -27,15 +33,12 @@ const userSchema: Schema = new Schema(
     password: String,
     wechat: {
       type: String,
-      unique: true,
     },
     miniProgram: {
       type: String,
-      unique: true,
     },
     phone: {
       type: String,
-      unique: true,
     },
     company: {
       info: {
@@ -52,7 +55,6 @@ const userSchema: Schema = new Schema(
         project: {
           type: SchemaTypes.ObjectId,
           ref: "project",
-          unique: true,
         },
         role: {
           type: String,
@@ -72,7 +74,6 @@ const userSchema: Schema = new Schema(
     timeLine: String,
     mfa: {
       type: String,
-      unique: true,
     },
   },
   {

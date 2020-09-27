@@ -10,6 +10,8 @@ axios.interceptors.response.use(
     } else if(status == 403 || status == 401){
       message.warn(response.data.msg);
       router.push({name: 'login'})
+    } else if(response.status == 404 || status == 404){
+      message.warn('NOT FOUND');
     } else {
       message.error(response.data.msg);
       return Promise.resolve(response.data);

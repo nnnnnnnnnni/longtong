@@ -17,6 +17,11 @@ const router: Irouter = {
     middleware: department.departments,
     allowAnonymous: false,
   },
+  "/department/deleteDep": {
+    method: "DELETE",
+    middleware: department.deleteDep,
+    allowAnonymous: false,
+  },
 };
 
 export default router;
