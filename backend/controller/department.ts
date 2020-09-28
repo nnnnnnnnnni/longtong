@@ -55,22 +55,6 @@ export const update = async (ctx: Context): Promise<any> => {
   };
 };
 
-// 搜索部门成员
-export const searchUser = async (ctx: Context): Promise<any> => {
-  const {userId, departmentId} = ctx.request.query;
-  const user: Iuser = await db.user.findOne({_id: userId});
-  let isOwn = false;
-  if(user.department.info == departmentId) {
-    isOwn = true;
-  }
-  return {
-    data: {
-      user: user,
-      isOwn: isOwn,
-    }
-  }
-}
-
 // 删除部门
 export const deleteDep = async (ctx: Context): Promise<any> => {
   const departmentId = ctx.request.body.departmentId;

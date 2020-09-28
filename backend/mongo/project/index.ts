@@ -18,6 +18,10 @@ const projectSchema = new Schema(
         ref: "user",
       },
     ],
+    department: {
+      type: SchemaTypes.ObjectId,
+      ref: "department",
+    },
     company: {
       type: SchemaTypes.ObjectId,
       ref: "company",

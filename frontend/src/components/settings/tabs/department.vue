@@ -37,31 +37,6 @@
             </a-select-option>
           </a-select>
         </a-form-model-item>
-        <a-form-model-item label="搜索">
-          <div style="display:flex;align-items: center">
-            <a-input style="width: 50%"></a-input>
-            <span>
-              <a-tooltip placement="bottom">
-                <template slot="title">
-                  <span>搜索</span>
-                </template>
-                <a-button style="margin-left: 10px" type='primary' icon='search'></a-button>
-              </a-tooltip>
-              <a-tooltip placement="bottom">
-                <template slot="title">
-                  <span>添加成员</span>
-                </template>
-                <a-button style="margin-left: 10px" type='primary' icon='plus' :disabled='isOwn'></a-button>
-              </a-tooltip>
-              <a-tooltip placement="bottom">
-                <template slot="title">
-                  <span>去除成员</span>
-                </template>
-                <a-button style="margin-left: 10px" type='primary' icon='minus' :disabled='!isOwn'></a-button>
-              </a-tooltip>
-            </span>
-          </div>
-        </a-form-model-item>
       </a-form-model>
     </a-modal>
   </div>
@@ -190,7 +165,6 @@ export default {
       } else {
         delete _text.upper;
       }
-      console.log(_text)
       this.departmentForm = _text;
       this.modalVisible = true;
     }

@@ -2,9 +2,6 @@
   <div class="participants">
     <div class="filters">
       <div class="filter-item">
-        <a-button type="primary" icon='plus' @click="openAddModal"></a-button>
-      </div>
-      <div class="filter-item">
         <span class="item-title">角色:</span>
         <a-select v-model="searchOptions.role" placeholder='请选择...' style="width: 120px">
           <a-select-option value='admin'>管理员</a-select-option>
@@ -33,6 +30,12 @@
       </div>
       <div class="filter-item">
         <a-button-group>
+          <a-tooltip placement="bottom">
+            <template slot="title">
+              <span>新增</span>
+            </template>
+            <a-button type="primary" icon='plus' @click="openAddModal"></a-button>
+          </a-tooltip>
           <a-tooltip placement="bottom">
             <template slot="title">
               <span>重置</span>
@@ -112,7 +115,7 @@
     </div>
 
     <!-- 新增 / 编辑 modal -->
-    <a-modal :title="openType == 1 ? '新增':'编辑'" :visible="modalVisible" :confirm-loading="confirmLoading" @ok="modalMethodOk" @cancel="modalMtehodCancel" >
+    <a-modal :title="openType == 1 ? '新增':'编辑'" :visible="modalVisible" @ok="modalMethodOk" @cancel="modalMtehodCancel" >
       <a-form-model ref='userModal' :model="userForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14,offset: 1 }">
         <a-form-model-item label="头像" required>
           <a-upload accept='.jpg,.png' name="file" class="avatar-uploader" :before-upload="beforeUpload" :show-upload-list="false" >
@@ -170,7 +173,6 @@ export default {
       avatorFile: {},
       loading: false,
       modalVisible: false,
-      confirmLoading: false,
       openType: 1,
       searchOptions: {},
       userForm: {

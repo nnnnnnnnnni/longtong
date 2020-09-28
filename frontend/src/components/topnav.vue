@@ -210,6 +210,6 @@ img {
   border-radius: 50%;
 }
 .item-info {
-  margin-left: 5px;
+  margin-left: 10px;
 }
 </style>
