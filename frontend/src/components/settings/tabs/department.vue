@@ -37,6 +37,31 @@
             </a-select-option>
           </a-select>
         </a-form-model-item>
+        <a-form-model-item label="搜索">
+          <div style="display:flex;align-items: center">
+            <a-input style="width: 50%"></a-input>
+            <span>
+              <a-tooltip placement="bottom">
+                <template slot="title">
+                  <span>搜索</span>
+                </template>
+                <a-button style="margin-left: 10px" type='primary' icon='search'></a-button>
+              </a-tooltip>
+              <a-tooltip placement="bottom">
+                <template slot="title">
+                  <span>添加成员</span>
+                </template>
+                <a-button style="margin-left: 10px" type='primary' icon='plus' :disabled='isOwn'></a-button>
+              </a-tooltip>
+              <a-tooltip placement="bottom">
+                <template slot="title">
+                  <span>去除成员</span>
+                </template>
+                <a-button style="margin-left: 10px" type='primary' icon='minus' :disabled='!isOwn'></a-button>
+              </a-tooltip>
+            </span>
+          </div>
+        </a-form-model-item>
       </a-form-model>
     </a-modal>
   </div>
@@ -48,6 +73,7 @@ export default {
   props: ['activeTab'],
   data() {
     return {
+      isOwn: true,
       openType: 1,
       modalVisible: false,
       confirmLoading: false,
@@ -124,7 +150,11 @@ export default {
       if(this.openType == 1) {
         if(!this.departmentForm.name) return this.$message.error("必填：名称");
         this.confirmLoading = true;
-        this.$post('/department/create', this.departmentForm).then(res=> {
+        this.$post('/department/create', {
+          _id: this.departmentForm._id,
+          name: this.departmentForm.name,
+          upper: this.departmentForm.upper
+        }).then(res=> {
           if(res.status == 200) {
             this.confirmLoading = false;
             this.departmentForm = {};
@@ -138,11 +168,7 @@ export default {
       } else {
         if(!this.departmentForm.name) return this.$message.error("必填：名称");
         this.confirmLoading = true;
-        this.$put('/department/update', {
-          _id: this.departmentForm._id,
-          name: this.departmentForm.name,
-          upper: this.departmentForm.upper
-        }).then(res=> {
+        this.$put('/department/update', this.departmentForm).then(res=> {
           if(res.status == 200) {
             this.confirmLoading = false;
             this.departmentForm = {};
@@ -164,6 +190,7 @@ export default {
       } else {
         delete _text.upper;
       }
+      console.log(_text)
       this.departmentForm = _text;
       this.modalVisible = true;
     }

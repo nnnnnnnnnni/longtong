@@ -4,10 +4,16 @@ export default {
     userName: "",
     name: "",
     job: "",
-    department: "",
+    department: {
+      info: {
+        name: ''
+      },
+      role: ''
+    },
     company: {
       info: {
-        logo: ''
+        logo: '',
+        name: ''
       },
       role: ''
     },

@@ -10,7 +10,7 @@ export default {
       company: user.company || {},
       role: user.role || [],
       job: user.job || "",
-      department: user.department || "",
+      department: user.department || {info:{name: ''}, name: ''},
       mail: user.mail || "",
       phone: user.phone || "",
       mfa: user.mfa || false,

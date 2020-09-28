@@ -3,7 +3,7 @@ import db from "../mongo/schema";
 import redis from "../redis";
 import { generateToken } from "../lib/utils";
 import { Idepartment } from "@/mongo/department/interface";
-import { Iuser } from "@/mongo/user/interface";
+import { Iuser, ObjectId } from "@/mongo/user/interface";
 
 // 注册管理员
 export const register = async (ctx: Context): Promise<any> => {
@@ -86,7 +86,7 @@ export const main = async (ctx: Context): Promise<any> => {
   const token: string = ctx.token;
   if (token) {
     const redisData: any = await redis.get(0, `TOKEN:${token}`);
-    let newInfo = await db.user.findOne({ _id: redisData._id }).populate("company.info", "name logo").lean().exec();
+    let newInfo = await db.user.findOne({ _id: redisData._id }).populate("company.info", "name logo").populate("department.info", "name").lean().exec();
     await redis.set(0, `TOKEN:${token}`, newInfo);
     return {
       data: newInfo,
@@ -125,6 +125,7 @@ export const update = async (ctx: Context): Promise<any> => {
       }
     )
     .populate("company.info")
+    .populate("department.info", "name")
     .lean()
     .exec();
   await redis.set(0, `TOKEN:${token}`, updatedUser);
@@ -138,7 +139,7 @@ export const userInfo = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
   const { field } = ctx.request.query;
   const fieldString = field.split(",").join(" ");
-  const userInfo = await db.user.findOne({ _id: userId }).select(fieldString).lean().exec();
+  const userInfo = await db.user.findOne({ _id: userId }).select(fieldString).populate("department.info", "name").lean().exec();
   return {
     data: userInfo,
   };
@@ -147,14 +148,13 @@ export const userInfo = async (ctx: Context): Promise<any> => {
 // 用户列表
 export const users = async (ctx: Context): Promise<any> => {
   const companyId = ctx.user.company.info._id;
-  const { options } = ctx.request.query;
+  const options = JSON.parse(ctx.request.query.options);
   let departmentData: any[] = [];
   let jobs: string[] = [];
   let users: any[] = [];
   let params: any = {
     "company.info": companyId,
   };
-
   departmentData = await db.department.find({ company: companyId }).select("name").lean().exec();
   if (options.role) {
     params["company.role"] = options.role;
@@ -163,9 +163,20 @@ export const users = async (ctx: Context): Promise<any> => {
     params["job"] = options.job;
   }
   if (options.department) {
-    params["department"] = options.department;
+    params["department.info"] = options.department;
   }
-  users = await db.user.find(params).select("-password").populate("department.info", "name").lean().exec();
+  if(options.info) {
+    params = {
+      $or: [
+        {name: {$regex: options.info, $options:'i'}},
+        {userName: {$regex: options.info, $options:'i'}},
+        {job: {$regex: options.info, $options:'i'}},
+        {mail: {$regex: options.info, $options:'i'}},
+        {phone: {$regex: options.info, $options:'i'}},
+      ]
+    }
+  }
+  users = await db.user.find(params).select("-password").populate("department.info", "name").sort({ "company.role": 1 }).lean().exec();
   users.forEach((user: Iuser) => {
     if (user.company.role != "creater") jobs.push(user.job);
   });
@@ -192,7 +203,7 @@ export const addUser = async (ctx: Context): Promise<any> => {
     password: doc.password,
     department: {
       info: doc.department,
-      role: doc.departmentRole
+      role: doc.departmentRole,
     },
     mail: doc.mail,
     company: {
@@ -202,11 +213,9 @@ export const addUser = async (ctx: Context): Promise<any> => {
   });
   delete newUser.password;
   if (doc.departmentRole == "user") {
-    await db.department.update(
-      {
+    await db.department.update({
         _id: doc.department,
-      },
-      {
+      },{
         $addToSet: {
           members: newUser._id,
         },
@@ -224,7 +233,85 @@ export const addUser = async (ctx: Context): Promise<any> => {
       }
     );
   }
+  if (doc.companyRole == "user") {
+    await db.company.update(
+      {
+        _id: companyId,
+      },
+      {
+        $addToSet: {
+          members: newUser._id,
+        },
+      }
+    );
+  } else {
+    await db.company.update(
+      {
+        _id: companyId,
+      },
+      {
+        $addToSet: {
+          admins: newUser._id,
+        },
+      }
+    );
+  }
   return {
     data: newUser,
   };
+};
+
+export const adminUpdate = async (ctx: Context): Promise<any> => {
+  const companyId = ctx.user.company.info._id;
+  const doc: any = ctx.request.body;
+  const oldUser: Iuser = await db.user.findOne({ _id: doc._id });
+  if (!oldUser) {
+    return {
+      status: 400,
+      msg: "用户查找错误",
+    };
+  }
+  const newUser = await db.user
+    .findOneAndUpdate(
+      { _id: doc._id },
+      {
+        $set: {
+          name: doc.name,
+          mail: doc.mail,
+          job: doc.job,
+          "company.role": doc.companyRole,
+          department: {
+            info: doc.department,
+            role: doc.departmentRole,
+          },
+        },
+      }
+    )
+    .lean()
+    .exec();
+  if (oldUser.department.role == "user" && doc.departmentRole == "admin") {
+    await db.department.update({_id: oldUser.department.info}, {$pull: {members: doc._id}});
+    await db.department.update({_id: doc.department}, {$addToSet: {admins: doc._id}});
+  }
+  if (oldUser.department.role == "admin" && doc.departmentRole == "user") {
+    await db.department.update({_id: oldUser.department.info}, {$pull: {admins: doc._id}});
+    await db.department.update({_id: doc.department}, {$addToSet: {members: doc._id}});
+  }
+  if (oldUser.department.role == "admin" && doc.departmentRole == "admin") {
+    await db.department.update({_id: oldUser.department.info}, {$pull: {admins: doc._id}});
+    await db.department.update({_id: doc.department}, {$addToSet: {admins: doc._id}});
+  }
+  if (oldUser.department.role == "user" && doc.departmentRole == "user") {
+    await db.department.update({_id: oldUser.department.info}, {$pull: {members: doc._id}});
+    await db.department.update({_id: doc.department}, {$addToSet: {members: doc._id}});
+  }
+  if (oldUser.company.role == "admin" && doc.companyRole == "user") {
+    await db.company.update({_id: companyId}, {$pull: {admins: doc._id}, $addToSet: {members: doc._id}});
+  }
+  if (oldUser.company.role == "user" && doc.companyRole == "admin") {
+    await db.company.update({_id: companyId}, {$pull: {members: doc._id}, $addToSet: {admins: doc._id}});
+  }
+  return {
+    msg: '更新成功'
+  }
 };

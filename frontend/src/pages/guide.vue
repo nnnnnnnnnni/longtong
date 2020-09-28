@@ -163,7 +163,7 @@ export default {
         return;
       }
       if (info.file.status === "done") {
-        this.logo = "http://" + info.file.response.data.file;
+        this.logo = info.file.response.data.file;
         this.loading = false;
       }
     },
@@ -173,7 +173,7 @@ export default {
         return;
       }
       if (info.file.status === "done") {
-        this.user.logo = "http://" + info.file.response.data.file;
+        this.user.logo = info.file.response.data.file;
         this.loading = false;
       }
     },

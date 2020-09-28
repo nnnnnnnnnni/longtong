@@ -54,14 +54,6 @@
           <a-icon type="bell" />
         </div>
       </a-tooltip>
-      <div class="profile-item" @click="jumpPage('profile')">
-        <div class="item-avator item-info">
-          <img :src="this.$store.state.user.avator" alt />
-        </div>
-        <div class="item-name item-info">
-          <span>{{ this.$store.state.user.userName }}</span>
-        </div>
-      </div>
       <a-tooltip placement="bottom">
         <template slot="title">
           <span>设置</span>
@@ -70,6 +62,14 @@
           <a-icon type="setting" />
         </div>
       </a-tooltip>
+      <div class="profile-item" @click="jumpPage('profile')">
+        <div class="item-avator item-info">
+          <img :src="this.$store.state.user.avator" alt />
+        </div>
+        <div class="item-name item-info">
+          <span>{{ this.$store.state.user.userName }}</span>
+        </div>
+      </div>
       <a-tooltip placement="bottom">
         <template slot="title">
           <span>登出</span>
@@ -105,9 +105,9 @@ export default {
         token: localStorage.getItem("token")
       }).then(res => {
         localStorage.removeItem("token");
-        this.$store.commit("CHANGE_USER", {});
         setTimeout(() => {
           this.$router.push({ name: "login" });
+          this.$store.commit("CHANGE_USER", {});
         }, 500);
         return this.$message.success("登出成功！");
       });
@@ -141,6 +141,7 @@ export default {
 }
 .company .company-name {
   margin-left: 20px;
+  font-size: 14px;
 }
 .tabs {
   width: 40%;
@@ -181,7 +182,7 @@ export default {
   position: absolute;
   top: 0;
   height: inherit;
-  right: 20px;
+  right: 6%;
   display: flex;
 }
 .profiles .profile-item {
@@ -192,7 +193,7 @@ export default {
   height: inherit;
   cursor: pointer;
   font-size: 14px;
-  padding: 0 8px;
+  padding: 0 10px;
   transition: all 0.25s;
   user-select: none;
 }

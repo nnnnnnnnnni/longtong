@@ -2,12 +2,11 @@
   <div class="participants">
     <div class="filters">
       <div class="filter-item">
-        <a-button type="primary" @click="openAddModal">添加成员</a-button>
+        <a-button type="primary" icon='plus' @click="openAddModal"></a-button>
       </div>
       <div class="filter-item">
         <span class="item-title">角色:</span>
         <a-select v-model="searchOptions.role" placeholder='请选择...' style="width: 120px">
-          <a-select-option value='creater'>创建者</a-select-option>
           <a-select-option value='admin'>管理员</a-select-option>
           <a-select-option value='user'>成员</a-select-option>
         </a-select>
@@ -30,7 +29,7 @@
       </div>
       <div class="filter-item">
         <span class="item-title">搜索:</span>
-        <a-input style="width: 150px" placeholder='请输入...'></a-input>
+        <a-input style="width: 160px" v-model="searchOptions.info" placeholder='姓名、昵称、岗位、邮箱、电话'></a-input>
       </div>
       <div class="filter-item">
         <a-button-group>
@@ -44,7 +43,7 @@
             <template slot="title">
               <span>搜索</span>
             </template>
-            <a-button type='primary' icon='search'></a-button>
+            <a-button type='primary' icon='search' @click="getInfo(false)"></a-button>
           </a-tooltip>
         </a-button-group>
       </div>
@@ -59,7 +58,18 @@
           <span style="display:block;font-size: 0.5rem">({{record.name}})</span>
         </span>
         <span slot="department" slot-scope="text,record">
-          <span v-if="record.department">{{record.department.info.name}}</span>
+          <span v-if="record.department">
+            <div>{{record.department.info.name}}</div>
+            <span v-if="text.role == 'user'">
+              <a-tag color="blue">成员</a-tag>
+            </span>
+            <span v-else-if="text.role == 'admin'">
+              <a-tag color="green">管理员</a-tag>
+            </span>
+            <span v-else>
+              <a-tag color="red">创建者</a-tag>
+            </span>
+          </span>
           <span v-else><a-icon type="stop" theme="twoTone" two-tone-color="red" /></span>
         </span>
         <span slot="contact" slot-scope="text, record">
@@ -96,13 +106,13 @@
           </span>
         </span>
         <span slot="_id" slot-scope="_, record">
-          <span><a-button type='danger' size='small' @click="openEditModal(record)">编辑</a-button></span>
+          <span><a-button type='danger' size='small' @click="openEditModal(record)" :disabled="record.company.role == 'creater'">编辑</a-button></span>
         </span>
       </a-table>
     </div>
 
     <!-- 新增 / 编辑 modal -->
-    <a-modal :title="openType == 1 ? '新增':'编辑'" :visible="modalVisible" :confirm-loading="confirmLoading" @ok="modalMethodOk" @cancel="modalVisible = false" >
+    <a-modal :title="openType == 1 ? '新增':'编辑'" :visible="modalVisible" :confirm-loading="confirmLoading" @ok="modalMethodOk" @cancel="modalMtehodCancel" >
       <a-form-model ref='userModal' :model="userForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14,offset: 1 }">
         <a-form-model-item label="头像" required>
           <a-upload accept='.jpg,.png' name="file" class="avatar-uploader" :before-upload="beforeUpload" :show-upload-list="false" >
@@ -231,12 +241,12 @@ export default {
     };
   },
   mounted() {
-    this.getInfo();
+    this.getInfo(true);
   },
   watch: {
     activeTab: function() {
       if(this.activeTab == 2) {
-        this.getInfo();
+        this.getInfo(true);
       }
     }
   },
@@ -251,12 +261,14 @@ export default {
       return false;
     },
     // 获取用户信息
-    getInfo: function() {
+    getInfo: function(flush) {
       this.$get('/user/users', {
-        options: {}
+        options: flush? {}: this.searchOptions
       }).then(res=> {
-        this.departments = res.data.departments;
-        this.jobs = res.data.jobs;
+        if(flush) {
+          this.departments = res.data.departments;
+          this.jobs = res.data.jobs;
+        }
         this.userData = res.data.users;
       })
     },
@@ -280,8 +292,9 @@ export default {
         name: text.name,
         companyRole: text.company.role,
         departmentRole: text.department? text.department.role: '',
-        department: text.department.info._id || '',
-        job: text.job
+        department: text.department? text.department.info._id : '',
+        job: text.job,
+        _id: text._id,
       }
       this.modalVisible = true;
     },
@@ -292,13 +305,21 @@ export default {
         formData.append('file', this.avatorFile);
         this.$post('/generic/upload', formData).then(res=> {
           if(res.status == 200) {
-            this.userForm.avator = 'http://' + res.data.file;
+            this.userForm.avator = res.data.file;
             resolve()
           } else {
             reject(res.msg)
           }
         })
       })
+    },
+    // modal-cancel
+    modalMtehodCancel: function() {
+      this.modalVisible = false;
+      this.userForm = {
+        companyRole: 'user',
+        departmentRole: 'user',
+      }
     },
     // modal-ok
     modalMethodOk:async function() {
@@ -345,7 +366,7 @@ export default {
 .filters {
   display: flex;
   border-bottom: 1px solid #e3e3e3;
-  padding: 0px 15px 15px 15px;
+  padding-bottom: 15px;
 }
 .filter-item {
   display: flex;
@@ -357,8 +378,9 @@ export default {
   margin-right: 5px;
 }
 img {
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
 }
 .contact {
   font-size: 14px;

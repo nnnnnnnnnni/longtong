@@ -54,7 +54,7 @@
         <div class="form-item-label">部门</div>
         <div class="form-item-container">
           <a-input
-            v-model="userInfo.department"
+            v-model="userInfo.department.info.name"
             placeholder="请联系管理员设置"
             disabled
           />
@@ -96,7 +96,13 @@ export default {
   data() {
     return {
       modalVisible: false,
-      userInfo: {},
+      userInfo: {
+        department: {
+          info: {
+            name: ''
+          }
+        }
+      },
       pwdForm: {}
     };
   },
@@ -108,6 +114,9 @@ export default {
       this.$get("/user/userInfo", {
         field: "name,userName,mail,phone,job,department,introduction"
       }).then(res => {
+        if(!res.data.hasOwnProperty('department')) {
+          res.data.department = {info: {name: ''}}
+        }
         this.userInfo = res.data;
       });
     },

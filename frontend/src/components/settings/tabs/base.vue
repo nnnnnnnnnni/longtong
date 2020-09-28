@@ -23,6 +23,12 @@
       </div>
 
       <div class="form-item">
+        <div class="form-item-container">
+          <a-tag color="green">管理员: {{companyInfo.admins.length}}</a-tag>
+          <a-tag color="blue">成员: {{companyInfo.members.length}}</a-tag>
+        </div>
+      </div>
+      <div class="form-item">
         <div class="form-item-label">公司名称:</div>
         <div class="form-item-container">
           <a-input v-model="companyInfo.name"></a-input>
@@ -48,7 +54,10 @@ export default {
   props: ['activeTab'],
   data() {
     return {
-      companyInfo: {},
+      companyInfo: {
+        admins: [],
+        members: [],
+      },
       loading: false,
       upload: this.$store.state.apis.upload
     };
@@ -66,7 +75,7 @@ export default {
   methods: {
     getCompany: function() {
       this.$get("company/companyInfo", {
-        field: "logo,name,introduction"
+        field: "logo,name,introduction,admins,members"
       }).then(res => {
         this.companyInfo = res.data;
       });
@@ -92,7 +101,7 @@ export default {
         return;
       }
       if (info.file.status === "done") {
-        this.logo = "http://" + info.file.response.data.file;
+        this.logo = info.file.response.data.file;
         this.editCompany({logo: this.logo})
         this.loading = false;
       }

@@ -27,7 +27,7 @@
     <div class="item-group">
       <div class="department info-item ellipsis" :class="{department_active: mode == 'edit'}" :title="this.$store.state.user.department">
         <a-icon style="fontSize: 16px;color: #1890ff" type="cluster" />
-        <span class="info-item-text ellipsis">{{this.$store.state.user.department || '暂未设置'}}</span>
+        <span class="info-item-text ellipsis">{{this.$store.state.user.department.info.name || '暂未设置'}}</span>
       </div>
       <div class="info-item _edit safe" :class="{safe_active: mode == 'edit', checked_active: editActive == 'safe'}" @click="changeTab('safe')">
         <div class="info-item-text">安全设置</div>
@@ -116,9 +116,8 @@ export default {
 .setting-menu {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
   box-sizing: border-box;
-  padding: 0 15px;
   position: relative;
 }
 .setting-menu .avator {

@@ -1,4 +1,5 @@
 import { Idepartment } from "@/mongo/department/interface";
+import { Iuser } from "@/mongo/user/interface";
 import { Context } from "koa";
 import { Types } from "mongoose";
 const ObjectId = Types.ObjectId;
@@ -20,7 +21,11 @@ export const create = async (ctx: Context): Promise<any> => {
 // 部门信息列表
 export const departments = async (ctx: Context): Promise<any> => {
   const companyId = ctx.user.company.info._id;
-  const departmentData = await db.department.find({ company: companyId }).populate("upper").sort({ createTime: 1 }).lean().exec();
+  const departmentData = await db.department.find({ company: companyId })
+  .populate("upper")
+  .populate('admins', 'name')
+  .populate('members', 'name')
+  .sort({ createTime: 1 }).lean().exec();
   const _departmentData = departmentData.map((departmentItem: Idepartment) => {
     return {
       ...departmentItem,
@@ -50,14 +55,42 @@ export const update = async (ctx: Context): Promise<any> => {
   };
 };
 
-// 删除部门
+// 搜索部门成员
+export const searchUser = async (ctx: Context): Promise<any> => {
+  const {userId, departmentId} = ctx.request.query;
+  const user: Iuser = await db.user.findOne({_id: userId});
+  let isOwn = false;
+  if(user.department.info == departmentId) {
+    isOwn = true;
+  }
+  return {
+    data: {
+      user: user,
+      isOwn: isOwn,
+    }
+  }
+}
 
+// 删除部门
 export const deleteDep = async (ctx: Context): Promise<any> => {
   const departmentId = ctx.request.body.departmentId;
   const uppers = await db.department
     .find({ upper: departmentId })
     .lean()
     .exec();
+  const department = await db.department.findOne({_id: departmentId}).lean().exec();
+  if(department.admins && department.admins.length != 0) {
+    return {
+      status: 400,
+      msg: "该单位存在管理员，请先移除",
+    };
+  }
+  if(department.members && department.members.length != 0) {
+    return {
+      status: 400,
+      msg: "该单位存在成员，请先移除",
+    };
+  }
   if (uppers.length != 0) {
     return {
       status: 400,

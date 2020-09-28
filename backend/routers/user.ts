@@ -42,6 +42,11 @@ const router: Irouter = {
     middleware: user.addUser,
     allowAnonymous: false,
   },
+  "/user/adminUpdate": {
+    method: "PUT",
+    middleware: user.adminUpdate,
+    allowAnonymous: false,
+  },
 };
 
 export default router;
