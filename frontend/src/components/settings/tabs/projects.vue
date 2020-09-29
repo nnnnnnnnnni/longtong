@@ -24,7 +24,7 @@
         </span>
         <span slot="action" slot-scope="text">
           <span>
-            <a-popconfirm title="删除后无法恢复，确定要删除嘛?" ok-text="是" cancel-text="否" @confirm="deleteDep(text)">
+            <a-popconfirm title="删除后无法恢复，确定要删除嘛?" ok-text="是" cancel-text="否" @confirm="deleteProject(text)">
               <a-button type="danger" size="small">删除</a-button>
             </a-popconfirm>
             <a-button type="primary" size="small">编辑</a-button>
@@ -36,12 +36,46 @@
     <!-- add / edit model -->
     <a-modal :title="openType == 1? '新增': '编辑'" :visible="modalVisible" okText='确定' @ok="modalMethodOk" @cancel="modalVisible = false" >
       <a-form-model :model="projectForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14,offset: 1 }">
-        <a-form-model-item label="隶属部门">
+        <a-form-model-item label="LOGO" required>
+          <a-upload accept='.jpg,.png' name="file" class="avatar-uploader" :before-upload="beforeUpload" :show-upload-list="false" >
+            <a-button> <a-icon type="upload" /> Select File </a-button>
+            <span style="padding-left: 20px" v-if="avatorFile.name && avatorFile.name.length < 12">
+              {{avatorFile.name}}
+            </span>
+            <span style="padding-left: 20px" v-else-if="avatorFile.name">
+              {{avatorFile.name.slice(0, 8)}}......{{avatorFile.name.slice(-3)}}
+            </span>
+          </a-upload>
+        </a-form-model-item>
+        <a-form-model-item label="名称" required>
+          <a-input v-model="projectForm.name" placeholder="请输入..."></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="隶属部门" required>
           <a-select v-model="projectForm.department" style="width: 100%" :allowClear='true' placeholder="下拉选择..." >
             <a-select-option v-for="department in departmentData" :key="department.name" :value='department._id'>
               {{department.name}}
             </a-select-option>
           </a-select>
+        </a-form-model-item>
+        <a-form-model-item label="管理员" required>
+          <a-select
+            mode="multiple"
+            show-search
+            v-model="projectForm.admins"
+            placeholder='搜索（姓名、昵称、邮箱、手机号）'
+            :default-active-first-option="false"
+            :show-arrow="false"
+            :filter-option="false"
+            :not-found-content="null"
+            @search="handleSearch"
+          >
+            <a-select-option v-for="d in users" :value="d._id" :key="d.name">
+              {{ d.name }}
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+        <a-form-model-item label="简介">
+          <a-textarea v-model="projectForm.introduction" placeholder="请输入..."></a-textarea>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -54,10 +88,12 @@ export default {
   name: "projectsTab",
   data() {
     return {
+      avatorFile: {},
       modalVisible: false,
       openType: 1,
       projectForm: {},
       departmentData: [],
+      users: [],
       columns: [
         {
           title: "LOGO",
@@ -106,6 +142,37 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    // 文件上传前处理
+    beforeUpload(file) {
+      if(file.type.indexOf('png') == -1 && file.type.indexOf('jpeg') == -1 && file.type.indexOf('jpg') == -1){
+        this.$message.error('文件格式不正确');
+        return false;
+      }
+      this.avatorFile = file;
+      return false;
+    },
+    // 下拉框搜索
+    handleSearch: function(value) {
+      this.$get('/user/users', {
+        options: {
+          info: value
+        }
+      }).then(res=> {
+        this.users = res.data.users;
+      })
+    },
+    modalMethodOk: function() {
+      console.log(this.projectForm)
+    },
+    deleteProject: function(text) {
+
+    },
+    openAddModal: function() {
+      this.openType = 1;
+      this.modalVisible = true;
+    }
   }
 };
 </script>
