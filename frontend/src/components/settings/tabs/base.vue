@@ -24,8 +24,8 @@
 
       <div class="form-item">
         <div class="form-item-container">
-          <a-tag color="green">管理员: {{companyInfo.admins.length}}</a-tag>
-          <a-tag color="blue">成员: {{companyInfo.members.length}}</a-tag>
+          <a-tag color="green">管理员: {{ companyInfo.admins.length }}</a-tag>
+          <a-tag color="blue">成员: {{ companyInfo.members.length }}</a-tag>
         </div>
       </div>
       <div class="form-item">
@@ -51,12 +51,12 @@
 <script>
 export default {
   name: "baseTab",
-  props: ['activeTab'],
+  props: ["activeTab"],
   data() {
     return {
       companyInfo: {
         admins: [],
-        members: [],
+        members: []
       },
       loading: false,
       upload: this.$store.state.apis.upload
@@ -67,7 +67,7 @@ export default {
   },
   watch: {
     activeTab: function() {
-      if(this.activeTab == 1) {
+      if (this.activeTab == 1) {
         this.getCompany();
       }
     }
@@ -86,9 +86,9 @@ export default {
         introduction: this.companyInfo.introduction,
         ...obj
       }).then(res => {
-        if(res.status == 200) {
+        if (res.status == 200) {
           this.$store.commit("CHANGE_COMPANY", res.data);
-          this.$message.success('修改成功');
+          this.$message.success("修改成功");
           this.getCompany();
         } else {
           this.$message.error(res.msg);
@@ -102,7 +102,7 @@ export default {
       }
       if (info.file.status === "done") {
         this.logo = info.file.response.data.file;
-        this.editCompany({logo: this.logo})
+        this.editCompany({ logo: this.logo });
         this.loading = false;
       }
     }

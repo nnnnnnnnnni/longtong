@@ -65,7 +65,6 @@
             placeholder='搜索（姓名、昵称、邮箱、手机号）'
             :default-active-first-option="false"
             :show-arrow="false"
-            :filter-option="false"
             :not-found-content="null"
             @search="handleSearch"
           >
@@ -143,6 +142,9 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.getDepartments();
+  },
   methods: {
     // 文件上传前处理
     beforeUpload(file) {
@@ -163,12 +165,42 @@ export default {
         this.users = res.data.users;
       })
     },
-    modalMethodOk: function() {
-      console.log(this.projectForm)
+    // 上传logo
+    uploadLogo: function() {
+      return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('file', this.avatorFile);
+        this.$post('/generic/upload', formData).then(res=> {
+          if(res.status == 200) {
+            this.projectForm.logo = res.data.file;
+            resolve()
+          } else {
+            reject(res.msg)
+          }
+        })
+      })
     },
+    // 获取所有的部门
+    getDepartments: function() {
+      this.$get('/department/departments', {}).then(res=> {
+        this.departmentData = res.data;
+      })
+    },
+    // modal-ok button
+    modalMethodOk: function() {
+      if(this.openType == 1) {
+        if(Object.keys(this.avatorFile).length == 0) return this.$message.error('必须：头像');
+        if(!this.projectForm.name) return this.$message.error('必须：名称');
+        if(!this.projectForm.department) return this.$message.error('必须：部门');
+        if(!this.projectForm.admins) return this.$message.error('必须：管理员');
+        console.log(this.projectForm)
+      }
+    },
+    // 删除项目
     deleteProject: function(text) {
 
     },
+    // 打开新增model
     openAddModal: function() {
       this.openType = 1;
       this.modalVisible = true;

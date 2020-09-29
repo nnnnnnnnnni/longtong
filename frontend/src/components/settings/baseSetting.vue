@@ -132,9 +132,11 @@ export default {
         this.$message.success("修改成功");
       });
     },
+    // 打开修改密码modal
     editPwd: function() {
       this.modalVisible = true;
     },
+    // 提交修改密码
     modalMethodOk:async function() {
       if(!this.pwdForm.old) return this.$message.error('必须：旧密码');
       if(!this.pwdForm.new) return this.$message.error('必须：新密码');

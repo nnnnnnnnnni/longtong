@@ -325,13 +325,13 @@ export default {
     },
     // modal-ok
     modalMethodOk:async function() {
-      if(!this.userForm.mail) return this.$message.error('请填写邮箱');
-      if(!this.userForm.name) return this.$message.error('请填写姓名');
-      if(!this.userForm.job) return this.$message.error('请填写岗位');
-      if(!this.userForm.department) return this.$message.error('请选择部门');
+      if(!this.userForm.mail) return this.$message.error('必须：邮箱');
+      if(!this.userForm.name) return this.$message.error('必须：姓名');
+      if(!this.userForm.job) return this.$message.error('必须：岗位');
+      if(!this.userForm.department) return this.$message.error('必须：部门');
       if(this.openType == 1) {
-        if(!this.userForm.password) return this.$message.error('请填写密码');
-        if(Object.keys(this.avatorFile).length == 0) return this.$message.error('请选择头像');
+        if(!this.userForm.password) return this.$message.error('必须：密码');
+        if(Object.keys(this.avatorFile).length == 0) return this.$message.error('必须：头像');
         await this.uploadAvator();
         this.$post('user/addUser', this.userForm).then(res=> {
           if(res.status == 200) {

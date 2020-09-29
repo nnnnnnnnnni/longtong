@@ -261,6 +261,7 @@ export const addUser = async (ctx: Context): Promise<any> => {
   };
 };
 
+// 用户更新普通用户
 export const adminUpdate = async (ctx: Context): Promise<any> => {
   const companyId = ctx.user.company.info._id;
   const doc: any = ctx.request.body;

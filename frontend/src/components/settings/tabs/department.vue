@@ -99,6 +99,7 @@ export default {
     }
   },
   methods: {
+    // 获取所有部门
     getInfo: function() {
       this.$get('/department/departments', {}).then(res=> {
         this.departmentData = res.data;

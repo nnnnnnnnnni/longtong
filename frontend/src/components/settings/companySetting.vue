@@ -37,6 +37,7 @@ export default {
     departmentTab
   },
   methods: {
+    // tab 切换通知
     changeTab: function(index) {
       this.activeTab = index;
     }
