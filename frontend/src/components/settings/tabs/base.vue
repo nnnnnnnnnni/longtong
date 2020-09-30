@@ -26,6 +26,8 @@
         <div class="form-item-container">
           <a-tag color="green">管理员: {{ companyInfo.admins.length }}</a-tag>
           <a-tag color="blue">成员: {{ companyInfo.members.length }}</a-tag>
+          <a-tag color="cyan">项目: {{ companyInfo.projectCount }}</a-tag>
+          <a-tag color="pink">部门: {{ companyInfo.departmentCount }}</a-tag>
         </div>
       </div>
       <div class="form-item">

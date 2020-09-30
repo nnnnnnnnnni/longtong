@@ -22,7 +22,10 @@ export interface Iuser extends Document {
     info: ObjectId;
     role: string;
   };
-  role?: any[]; // 用户角色
+  project?: [{
+    info: ObjectId;
+    role: string;
+  }]; // 用户角色
   createTime?: Date; // 创建时间
   updateTime?: Date; // 修改时间
   lastLoginTime?: Date; // 最后登录时间

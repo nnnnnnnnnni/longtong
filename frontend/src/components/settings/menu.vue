@@ -47,7 +47,7 @@
         <a-icon style="fontSize: 16px;color: #1890ff" type="phone" />
         <div class="info-item-text">{{this.$store.state.user.phone || '暂未设置'}}</div>
       </div>
-      <div class="info-item _edit bind" :class="{bind_active: mode == 'edit', checked_active: editActive == 'company'}" @click="changeTab('company')">
+      <div class="info-item _edit bind" :class="{bind_active: mode == 'edit', checked_active: editActive == 'company'}" @click="changeTab('company')" v-if="this.$store.state.user.company.role != 'user'">
         <div class="info-item-text">公司设置</div>
       </div>
     </div>

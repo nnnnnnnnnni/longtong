@@ -76,7 +76,12 @@ export const companyInfo = async (ctx: Context): Promise<any> => {
     .select(fieldArr)
     .lean()
     .exec();
+  const departmentData = await db.department.find({company: companyId}).count().lean().exec();
+  const projectData = await db.project.find({company: companyId}).count().lean().exec();
   return {
-    data: companyInfo,
+    data: Object.assign(companyInfo, {
+      departmentCount: departmentData,
+      projectCount: projectData
+    }),
   };
 };

@@ -9,6 +9,6 @@ export interface Iproject extends Document {
   members?: ObjectId[]; // 成员
   department: ObjectId; // 所属部门
   company: ObjectId; // 所属公司
-  createTime: Date; // 创建时间
-  updateTime: Date; // 修改时间
+  createTime?: Date; // 创建时间
+  updateTime?: Date; // 修改时间
 }

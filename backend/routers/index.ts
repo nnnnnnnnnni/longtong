@@ -3,6 +3,7 @@ import user from "./user";
 import company from "./company";
 import generic from "./generic";
 import department from "./department";
+import project from "./project";
 import { Iroute, Irouter } from "../interface/router";
 import { Context } from "koa";
 import redis from "../redis";
@@ -32,6 +33,7 @@ export const getAllRouter = (): Irouter => {
   addRouter(company);
   addRouter(generic);
   addRouter(department);
+  addRouter(project);
 
   return allRoutes;
 };

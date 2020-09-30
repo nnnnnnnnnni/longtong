@@ -50,15 +50,15 @@ const userSchema: Schema = new Schema(
         enum: ["creater", "admin", "user"],
       },
     },
-    role: [
+    project: [
       {
-        project: {
+        info: {
           type: SchemaTypes.ObjectId,
           ref: "project",
         },
         role: {
           type: String,
-          enum: ["creater", "admin", "user"],
+          enum: ["admin", "user"],
         },
       },
     ],

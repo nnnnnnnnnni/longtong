@@ -143,6 +143,7 @@ export default {
         })
       } else {
         if(!this.departmentForm.name) return this.$message.error("必填：名称");
+        if(this.departmentForm.upper == this.departmentForm._id) return this.$message.error("上级部门不可设置为自己");
         this.confirmLoading = true;
         this.$put('/department/update', this.departmentForm).then(res=> {
           if(res.status == 200) {

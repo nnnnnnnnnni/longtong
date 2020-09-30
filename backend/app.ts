@@ -1,7 +1,8 @@
 import koa from "koa";
+import Application from "koa";
 import koaBody from "koa-body";
 import { Config } from "./config";
-const app = new koa();
+const app: Application = new koa();
 import connection from "./mongo";
 import dayjs from "dayjs";
 import applyRouter from "./routers";
@@ -22,22 +23,18 @@ app.use(
     formidable: {
       uploadDir: Config.localStatic,
       keepExtensions: true,
-    }
+    },
   })
 );
 
 app.use(async (ctx: koa.Context, next: koa.Next) => {
   const start = new Date().getTime();
   await next();
-  console.log(
-    `${dayjs().format("MM/DD")} ${dayjs().format("hh:mm:ss")} ${ctx.method} ${
-      ctx.url
-    } [${ctx.response.status}] ${new Date().getTime() - start}ms`
-  );
+  console.log(`${dayjs().format("MM/DD")} ${dayjs().format("hh:mm:ss")} ${ctx.method} ${ctx.url} [${ctx.response.status}] ${new Date().getTime() - start}ms`);
 });
 
-app.use(async (ctx: koa.Context, next: koa.Next)=>{
-  await applyRouter(ctx, next)
+app.use(async (ctx: koa.Context, next: koa.Next) => {
+  await applyRouter(ctx, next);
 });
 
 console.log(`APP HAS STARTING AT PORT: ${Config.port}`);
