@@ -171,6 +171,7 @@ const routerConfig = new Router({
 routerConfig.beforeEach((to, from, next) => {
   store.commit("CHANGE_ROUTE", to.name);
   document.title = to.meta.pageTitle;
+  // console.log(store.state.route)
   next();
 });
 

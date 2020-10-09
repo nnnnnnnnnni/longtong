@@ -57,7 +57,7 @@
         <div class="info-item-text">{{this.$store.state.user.timeLine}}</div>
       </div>
       <div class="info-item _edit bind" :class="{departments_active: mode == 'edit', checked_active: editActive == 'departments'}" @click="changeTab('departments')">
-        <div class="info-item-text">部门设置</div>
+        <div class="info-item-text">我的部门</div>
       </div>
     </div>
     <div class="item-group">
@@ -66,7 +66,7 @@
         <div class="info-item-text">{{this.$store.state.user.introduction || '暂未设置'}}</div>
       </div>
       <div class="info-item _edit bind" :class="{projects_active: mode == 'edit', checked_active: editActive == 'projects'}" @click="changeTab('projects')">
-        <div class="info-item-text">项目设置</div>
+        <div class="info-item-text">我的项目</div>
       </div>
     </div>
   </div>
@@ -89,9 +89,6 @@ export default {
     if(this.$route.path.toString().includes('/setting')){
       this.mode = 'edit';
     }
-  },
-  mounted() {
-    console.log(this.$route)
   },
   methods: {
     changeMode: function(){
