@@ -1,4 +1,4 @@
-import koa from "koa";
+import koa, { Next, Context } from "koa";
 import Application from "koa";
 import koaBody from "koa-body";
 import { Config } from "./config";
@@ -27,13 +27,13 @@ app.use(
   })
 );
 
-app.use(async (ctx: koa.Context, next: koa.Next) => {
+app.use(async (ctx: Context, next: Next) => {
   const start = new Date().getTime();
   await next();
   console.log(`${dayjs().format("MM/DD")} ${dayjs().format("hh:mm:ss")} ${ctx.method} ${ctx.url} [${ctx.response.status}] ${new Date().getTime() - start}ms`);
 });
 
-app.use(async (ctx: koa.Context, next: koa.Next) => {
+app.use(async (ctx: Context, next: Next) => {
   await applyRouter(ctx, next);
 });
 

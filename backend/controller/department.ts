@@ -1,8 +1,5 @@
-import { Idepartment } from "@/mongo/department/interface";
-import { Iuser } from "@/mongo/user/interface";
+import { Idepartment, ObjectId } from "@/mongo/department/interface";
 import { Context } from "koa";
-import { Types } from "mongoose";
-const ObjectId = Types.ObjectId;
 import db from "../mongo/schema";
 
 // 创建部门

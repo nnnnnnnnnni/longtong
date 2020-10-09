@@ -17,6 +17,16 @@ const router: Irouter = {
     middleware: project.update,
     allowAnonymous: false,
   },
+  "/project/deletePro": {
+    method: "DELETE",
+    middleware: project.deletePro,
+    allowAnonymous: false,
+  },
+  "/project/deleteProF": {
+    method: "DELETE",
+    middleware: project.deleteProF,
+    allowAnonymous: false,
+  },
 };
 
 export default router;

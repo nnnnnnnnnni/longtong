@@ -25,7 +25,7 @@
         <span slot="action" slot-scope="text">
           <span>
             <a-popconfirm title="删除后无法恢复，确定要删除嘛?" ok-text="是" cancel-text="否" @confirm="deleteProject(text)" >
-              <a-button type="danger" size="small">删除</a-button>
+              <a-button type="danger" size="small">{{text.admins && text.admins.length != 0 ? '解散': '删除'}}</a-button>
             </a-popconfirm>
             <a-button type="primary" size="small" @click="openEditModal(text)">编辑</a-button>
           </span>
@@ -239,7 +239,28 @@ export default {
       }
     },
     // 删除项目
-    deleteProject: function(text) {},
+    deleteProject: function(text) {
+      const length = text.admins.length + text.members.length;
+      if(length == 0) {
+        this.$delete('/project/deletePro', {
+          projectId: text._id
+        }).then(res=> {
+          if(res.status == 200 ){
+            this.$message.success('删除成功');
+            this.getProjects();
+          }
+        })
+      } else {
+        this.$delete('/project/deleteProF', {
+          projectId: text._id
+        }).then(res=> {
+          if(res.status == 200 ){
+            this.$message.success('删除成功');
+            this.getProjects();
+          }
+        })
+      }
+    },
     // 打开新增model
     openAddModal: function() {
       this.openType = 1;

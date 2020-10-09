@@ -39,7 +39,7 @@
       <div class="form-item">
         <div class="form-item-label">公司简介:</div>
         <div class="form-item-container">
-          <a-input v-model="companyInfo.introduction"></a-input>
+          <a-textarea v-model="companyInfo.introduction"></a-textarea>
         </div>
       </div>
 

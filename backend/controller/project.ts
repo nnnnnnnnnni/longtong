@@ -87,3 +87,47 @@ export const update = async (ctx: Context): Promise<any> => {
     msg: "ok",
   };
 };
+
+// 删除项目
+export const deletePro = async (ctx: Context): Promise<any> => {
+  const projectId = ctx.request.body.projectId;
+  const project = await db.project.findOne({ _id: projectId }).lean().exec();
+  if (project.admins && project.admins.length != 0) {
+    return {
+      status: 400,
+      msg: "该项目存在管理员，请先移除",
+    };
+  }
+  if (project.members && project.members.length != 0) {
+    return {
+      status: 400,
+      msg: "该项目存在成员，请先移除",
+    };
+  }
+  await db.project.remove({ _id: projectId }).lean().exec();
+  return {
+    msg: "删除成功",
+  };
+};
+
+// 强制删除项目
+export const deleteProF = async (ctx: Context): Promise<any> => {
+  const projectId = ctx.request.body.projectId;
+  const project = await db.project.findOne({ _id: projectId }).lean().exec();
+  let members: ObjectId[] = [];
+  if (project.admins && project.admins.length != 0) {
+    members = [...members, ...project.admins];
+  }
+  if (project.members && project.members.length != 0) {
+    members = [...members, ...project.members];
+  }
+  await db.user.update(
+    {},
+    { $pull: { project: { info: projectId } } },
+    { multi: true }
+  );
+  await db.project.remove({ _id: projectId });
+  return {
+    msg: "删除成功",
+  };
+};

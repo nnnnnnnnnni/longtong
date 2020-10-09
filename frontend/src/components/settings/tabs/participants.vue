@@ -3,14 +3,14 @@
     <div class="filters">
       <div class="filter-item">
         <span class="item-title">角色:</span>
-        <a-select v-model="searchOptions.role" placeholder='请选择...' style="width: 120px">
+        <a-select v-model="searchOptions.role" placeholder='请选择...' style="width: 100px">
           <a-select-option value='admin'>管理员</a-select-option>
           <a-select-option value='user'>成员</a-select-option>
         </a-select>
       </div>
       <div class="filter-item">
         <span class="item-title">岗位:</span>
-        <a-select showSearch optionFilterProp='children' v-model="searchOptions.job" placeholder='请选择...' style="width: 120px">
+        <a-select showSearch optionFilterProp='children' v-model="searchOptions.job" placeholder='请选择...' style="width: 100px">
           <a-select-option v-for="job in jobs" :key="job" :value='job'>
             {{job}}
           </a-select-option>
@@ -18,15 +18,15 @@
       </div>
       <div class="filter-item">
         <span class="item-title">部门:</span>
-        <a-select showSearch optionFilterProp='children' v-model="searchOptions.department" placeholder='请选择...' style="width: 120px">
+        <a-select showSearch optionFilterProp='children' v-model="searchOptions.department" placeholder='请选择...' style="width: 100px">
           <a-select-option v-for="department in departments" :key="department.name" :value='department._id'>
             {{department.name}}
           </a-select-option>
         </a-select>
       </div>
       <div class="filter-item">
-        <span class="item-title">搜索:</span>
-        <a-input style="width: 160px" v-model="searchOptions.info" placeholder='姓名、昵称、岗位、邮箱、电话'></a-input>
+        <span class="item-title">关键字:</span>
+        <a-input style="width: 190px" v-model="searchOptions.info" placeholder='姓名/昵称/岗位/邮箱/电话'></a-input>
       </div>
       <div class="filter-item">
         <a-button-group>
@@ -165,6 +165,7 @@
 </template>
 
 <script>
+import {ismail} from '../../../lib/utils'
 export default {
   name: "participantsTab",
   props: ['activeTab'],
@@ -326,6 +327,7 @@ export default {
     // modal-ok
     modalMethodOk:async function() {
       if(!this.userForm.mail) return this.$message.error('必须：邮箱');
+      if(!ismail(this.userForm.mail)) return this.$message.error('格式错误：邮箱');
       if(!this.userForm.name) return this.$message.error('必须：姓名');
       if(!this.userForm.job) return this.$message.error('必须：岗位');
       if(!this.userForm.department) return this.$message.error('必须：部门');

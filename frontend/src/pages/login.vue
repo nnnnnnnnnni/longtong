@@ -172,12 +172,10 @@ export default {
 </script>
 
 <style scoped>
-@import url('//fonts.googleapis.com/css?family=Montserrat:300,400,500,600');
 .ant-tabs-bar {
   border: none !important;
 }
 .login {
-  font-family: 'Montserrat', sans-serif;
   height: 100%;
   width: 100%;
   display: flex;

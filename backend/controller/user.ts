@@ -2,8 +2,7 @@ import { Context } from "koa";
 import db from "../mongo/schema";
 import redis from "../redis";
 import { generateToken } from "../lib/utils";
-import { Idepartment } from "@/mongo/department/interface";
-import { Iuser, ObjectId } from "@/mongo/user/interface";
+import { Iuser } from "@/mongo/user/interface";
 
 // 注册管理员
 export const register = async (ctx: Context): Promise<any> => {
@@ -87,6 +86,7 @@ export const main = async (ctx: Context): Promise<any> => {
   if (token) {
     const redisData: any = await redis.get(0, `TOKEN:${token}`);
     let newInfo = await db.user.findOne({ _id: redisData._id }).populate("company.info", "name logo").populate("department.info", "name").lean().exec();
+    delete newInfo.password;
     await redis.set(0, `TOKEN:${token}`, newInfo);
     return {
       data: newInfo,
@@ -195,6 +195,13 @@ export const users = async (ctx: Context): Promise<any> => {
 export const addUser = async (ctx: Context): Promise<any> => {
   const companyId = ctx.user.company.info._id;
   const doc: any = ctx.request.body;
+  const findUser = await db.user.countDocuments({mail: doc.mail});
+  if(findUser) {
+    return {
+      status: 400,
+      msg: '邮箱已存在'
+    }
+  }
   const newUser = await db.user.create({
     name: doc.name,
     userName: doc.userName ? doc.userName : doc.name,

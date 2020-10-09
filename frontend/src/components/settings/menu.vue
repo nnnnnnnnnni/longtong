@@ -56,11 +56,17 @@
         <a-icon style="fontSize: 16px;color: #1890ff" type="line-chart" />
         <div class="info-item-text">{{this.$store.state.user.timeLine}}</div>
       </div>
+      <div class="info-item _edit bind" :class="{departments_active: mode == 'edit', checked_active: editActive == 'departments'}" @click="changeTab('departments')">
+        <div class="info-item-text">部门设置</div>
+      </div>
     </div>
     <div class="item-group">
       <div class="introduction info-item" style="height: auto;align-items:flex-start" :class="{introduction_active: mode == 'edit'}" :title="this.$store.state.user.introduction">
         <a-icon style="fontSize: 16px;color: #1890ff;padding-top: 4px" type="eye" />
         <div class="info-item-text">{{this.$store.state.user.introduction || '暂未设置'}}</div>
+      </div>
+      <div class="info-item _edit bind" :class="{projects_active: mode == 'edit', checked_active: editActive == 'projects'}" @click="changeTab('projects')">
+        <div class="info-item-text">项目设置</div>
       </div>
     </div>
   </div>
@@ -195,7 +201,7 @@ export default {
   height: 34px;
   width: 95% !important;
 }
-.quit_active, .base_active, .safe_active, .bind_active {
+.quit_active, .base_active, .safe_active, .bind_active, .departments_active, .projects_active {
   left: 0;
   top: 0;
 }

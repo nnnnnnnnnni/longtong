@@ -11,6 +11,7 @@ export default {
 </script>
 
 <style>
+@import url('//fonts.googleapis.com/css?family=Montserrat:300,400,500,600');
 @import url('./assets/scroll.css');
 
 html,
@@ -22,7 +23,7 @@ body {
   min-width: 1250px;
 }
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
