@@ -106,22 +106,6 @@ const routerConfig = new Router({
               },
               component: () => import("@/components/settings/companySetting")
             },
-            {
-              path: "/setting/department",
-              name: "departments",
-              meta: {
-                pageTitle: '部门设置'
-              },
-              component: () => import("@/components/settings/departmentSetting")
-            },
-            {
-              path: "/setting/project",
-              name: "projects",
-              meta: {
-                pageTitle: '项目设置'
-              },
-              component: () => import("@/components/settings/projectSetting")
-            }
           ]
         },
         {

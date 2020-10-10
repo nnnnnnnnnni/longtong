@@ -1,6 +1,6 @@
 <template>
   <div class="calendar">
-    <div class="add">
+    <div class="add" @click="openAddModal">
       <a-icon type="plus" />
     </div>
     <div class="btn-group">
@@ -31,6 +31,31 @@
       </a-calendar>
     </div>
     <div id="calendar" style="height: 100%; flex: 1"></div>
+
+    <!-- modal add or edit -->
+    <a-modal :title="openType== 1? '新建': '编辑'" :visible="visible" @ok="handleOk" @cancel="visible = false" width='60%'>
+      <div class="content">
+        <div class="form flex-item">
+          <a-form-model :model="missionForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14,offset: 1 }">
+            <a-form-model-item label="标题">
+              <a-input v-model="missionForm.title" />
+            </a-form-model-item>
+            <a-form-model-item label="开始-截止时间">
+              <a-range-picker 
+                style="width: calc(100% - 80px);margin-right: 20px" 
+                format="YYYY-MM-DD HH:mm:ss" 
+                v-model="missionForm.time" 
+                :show-time="{
+                  hideDisabledOptions: true,
+                  defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],}"
+              />
+              <a-checkbox style="width: 50px" @change="changeAllDay">全天</a-checkbox>
+            </a-form-model-item>
+          </a-form-model>
+        </div>
+        <div class="msg flex-item"></div>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -49,46 +74,19 @@ export default {
   data() {
     return {
       moment,
+      openType: 1,
+      visible: true,
       calendar: null,
+      missionForm: {
+        isAllDay: false,
+      },
       defaultView: "week",
       defaultDate: moment(new Date(), "YYYY-MM-DD HH:mm:ss"),
       schedules: [
-        {
-          id: "1",
-          calendarId: "1",
-          title: "my schedule",
-          category: "allday",
-          dueDateClass: "",
-          start: "2020-09-05T22:30:00+09:00",
-          end: "2020-09-08T12:30:00+09:00"
-        },
-        {
-          id: "2",
-          calendarId: "2",
-          title: "second schedule",
-          category: "allday",
-          dueDateClass: "",
-          start: "2020-09-07T16:30:00+09:00",
-          end: "2020-09-08T22:31:00+09:00"
-        },
-        {
-          id: "3",
-          calendarId: "3",
-          title: "second schedule",
-          category: "time",
-          dueDateClass: "",
-          start: "2020-09-07T16:30:00+09:00",
-          end: "2020-09-07T22:31:00+09:00"
-        },
-        {
-          id: "4",
-          calendarId: "4",
-          title: "second schedule",
-          category: "time",
-          dueDateClass: "",
-          start: "2020-09-07T18:30:00+09:00",
-          end: "2020-09-07T22:31:00+09:00"
-        }
+        {  id: "1",  calendarId: "1",  title: "my schedule1",  body: 'asdasdasdasdasd',  category: "allday",  dueDateClass: "",  start: "2020-10-05T22:30:00+09:00",  end: "2020-10-08T12:30:00+09:00" },
+        { id: "2", calendarId: "2", title: "second schedule11", category: "allday", dueDateClass: "", start: "2020-10-07T16:30:00+09:00", end: "2020-10-08T22:31:00+09:00" },
+        { id: "3", calendarId: "3", title: "second schedule111", category: "time", dueDateClass: "", start: "2020-10-07T16:30:00+09:00", end: "2020-10-07T22:31:00+09:00" },
+        { id: "4", calendarId: "4", title: "second schedule1111", category: "time", body: 'asdasdasdasdasd', dueDateClass: "", start: "2020-10-07T18:30:00+09:00", end: "2020-10-07T22:31:00+09:00" }
       ]
     };
   },
@@ -110,7 +108,7 @@ export default {
       scheduleView: true, // Can be also ['allday', 'time']
       template: {},
       theme: this.themeConfig,
-      useCreationPopup: true,
+      useCreationPopup: false,
       useDetailPopup: false,
       month: {
         daynames: ["日", "一", "二", "三", "四", "五", "六"],
@@ -121,17 +119,10 @@ export default {
         daynames: ["日", "一", "二", "三", "四", "五", "六"],
         startDayOfWeek: 1,
         narrowWeekend: true
-      }
+      },
     });
     // 注册 活动
     this.calendar.createSchedules(this.schedules, false);
-    // 设置活动颜色
-    // this.calendar.setCalendarColor("1", {
-    //   color: "#e8e8e8",
-    //   bgColor: "#585858",
-    //   borderColor: "#a1b56c",
-    //   dragBgColor: "#585858",
-    // });
     // 点击日程
     this.calendar.on("clickSchedule", event => {
       console.log(event.schedule);
@@ -142,10 +133,22 @@ export default {
       var changes = event.changes;
 
       this.calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
-      console.log(event);
     });
   },
   methods: {
+    // 切换是否全天
+    changeAllDay: function(value) {
+      this.missionForm.isAllDay = value.target.checked;
+    },
+    // modal- ok
+    handleOk: function() {
+
+    },
+    // 打开新建model
+    openAddModal: function(){
+      this.openType = 1;
+      this.visible = true;
+    },
     // 切换视图显示单位
     changeView: function(mode) {
       this.defaultView = mode;
@@ -239,6 +242,15 @@ export default {
   transition: all 0.3s;
 }
 .add:hover {
-  transform: rotate(120deg);
+  transform: rotate(90deg);
+}
+
+.content{
+  display: flex;
+}
+.flex-item {
+  height: 100%;
+  width: 50%;
+  flex: 1 0 auto;
 }
 </style>
