@@ -14,6 +14,7 @@
     "axios": "^0.20.0",
     "highcharts": "^8.2.0",
     "tui-calendar": "^1.12.13",
+    "vditor": "^3.5.4",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.5.1"

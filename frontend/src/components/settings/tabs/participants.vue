@@ -129,7 +129,7 @@
           </a-upload>
         </a-form-model-item>
         <a-form-model-item label="邮箱" required>
-          <a-input v-model="userForm.mail"></a-input>
+          <a-input v-model="userForm.mail" :disabled='openType == 2'></a-input>
         </a-form-model-item>
         <a-form-model-item label="密码" v-if="openType == 1" required>
           <a-input v-model="userForm.password"></a-input>

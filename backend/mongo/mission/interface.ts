@@ -7,7 +7,7 @@ export interface IMission extends Document {
   isALLDay: Boolean // 是否全天
   startTime: Date; // 开始时间
   endTime: Date; // 截止时间
-  priority: number; // 优先级  1-5： 十分紧急|紧急|普通|较低
+  priority: number; // 优先级  1-4： 十分紧急|紧急|普通|较低
   type: string; // 任务类型
   status: string; // 任务状态
   handler?: [
@@ -17,6 +17,7 @@ export interface IMission extends Document {
       isFinish: boolean;
     }
   ];
+  project: ObjectId // 所属项目
   remarks?: string; //备注
   comment?: string; //评论
   createTime: Date; // 创建时间

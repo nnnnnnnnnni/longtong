@@ -33,33 +33,75 @@
     <div id="calendar" style="height: 100%; flex: 1"></div>
 
     <!-- modal add or edit -->
-    <a-modal :title="openType== 1? '新建': '编辑'" :visible="visible" @ok="handleOk" @cancel="visible = false" width='60%'>
+    <a-modal :title="openType== 1? '新建': '编辑'" :visible="visible" @ok="handleOk" @cancel="visible = false" width='90%'>
       <div class="content">
         <div class="form flex-item">
           <a-form-model :model="missionForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14,offset: 1 }">
             <a-form-model-item label="标题">
               <a-input v-model="missionForm.title" />
             </a-form-model-item>
-            <a-form-model-item label="开始-截止时间">
+            <a-form-model-item label="开始/截止时间">
               <a-range-picker 
                 style="width: calc(100% - 80px);margin-right: 20px" 
-                format="YYYY-MM-DD HH:mm:ss" 
+                format="YYYY-MM-DD HH:mm"
                 v-model="missionForm.time" 
                 :show-time="{
                   hideDisabledOptions: true,
-                  defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],}"
+                  defaultValue: [moment('00:00', 'HH:mm'), moment('11:59', 'HH:mm')]}"
               />
-              <a-checkbox style="width: 50px" @change="changeAllDay">全天</a-checkbox>
+              <a-checkbox @change="changeAllDay">全天</a-checkbox>
+            </a-form-model-item>
+            <a-form-model-item label="优先级">
+              <a-select v-model="missionForm.priority">
+                <a-select-option :value="1">十分紧急</a-select-option>
+                <a-select-option :value="2">紧急</a-select-option>
+                <a-select-option :value="3">普通</a-select-option>
+                <a-select-option :value="4">较低</a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item label="类型">
+              <a-select v-model="missionForm.type">
+                <a-select-option value="bug">BUG</a-select-option>
+                <a-select-option value="demand">需求</a-select-option>
+                <a-select-option value="mission">任务</a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item label='参与者'>
+              <a-select
+                mode="multiple"
+                show-search
+                v-model="missionForm.admins"
+                placeholder="搜索（姓名、昵称、邮箱、手机号）"
+                :default-active-first-option="false"
+                :show-arrow="false"
+                :filter-option="false"
+                :not-found-content="null"
+                @search="handleSearch"
+              >
+                <a-select-option v-for="d in users" :value="d._id" :key="d._id">
+                  {{ d.name }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item label='可见'>
+              <a-radio-group v-model="missionForm.visibility">
+                <a-radio value="public">公开</a-radio>
+                <a-radio value="private">团队内可见</a-radio>
+              </a-radio-group>
             </a-form-model-item>
           </a-form-model>
         </div>
-        <div class="msg flex-item"></div>
+        <div class="msg flex-item">
+          <div style="margin-bottom: 10px">备注：</div>
+              <editer v-model="missionForm.remark" />
+        </div>
       </div>
     </a-modal>
   </div>
 </template>
 
 <script>
+import editer from '../components/common/editer';
 // https://nhn.github.io/tui.calendar/latest/Calendar
 import { themeConfig } from "../lib/calendar";
 import moment from "moment";
@@ -74,11 +116,15 @@ export default {
   data() {
     return {
       moment,
+      users: [],
       openType: 1,
       visible: true,
       calendar: null,
       missionForm: {
         isAllDay: false,
+        priority: 4,
+        type: 'mission',
+        visibility: 'public'
       },
       defaultView: "week",
       defaultDate: moment(new Date(), "YYYY-MM-DD HH:mm:ss"),
@@ -89,6 +135,9 @@ export default {
         { id: "4", calendarId: "4", title: "second schedule1111", category: "time", body: 'asdasdasdasdasd', dueDateClass: "", start: "2020-10-07T18:30:00+09:00", end: "2020-10-07T22:31:00+09:00" }
       ]
     };
+  },
+  components: {
+    editer,
   },
   computed: {
     defaultDateFormat: function() {
@@ -113,12 +162,12 @@ export default {
       month: {
         daynames: ["日", "一", "二", "三", "四", "五", "六"],
         startDayOfWeek: 1,
-        narrowWeekend: true
+        narrowWeekend: false
       },
       week: {
         daynames: ["日", "一", "二", "三", "四", "五", "六"],
         startDayOfWeek: 1,
-        narrowWeekend: true
+        narrowWeekend: false
       },
     });
     // 注册 活动
@@ -136,13 +185,23 @@ export default {
     });
   },
   methods: {
+    // 下拉框搜索
+    handleSearch: function(value) {
+      this.$get("/user/users", {
+        options: {
+          info: value
+        }
+      }).then(res => {
+        this.users = res.data.users;
+      });
+    },
     // 切换是否全天
     changeAllDay: function(value) {
       this.missionForm.isAllDay = value.target.checked;
     },
     // modal- ok
     handleOk: function() {
-
+      console.log(this.missionForm.remark);
     },
     // 打开新建model
     openAddModal: function(){
@@ -232,7 +291,7 @@ export default {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  z-index: 99999;
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;

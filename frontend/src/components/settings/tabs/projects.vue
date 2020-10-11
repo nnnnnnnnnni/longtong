@@ -178,7 +178,6 @@ export default {
         }
       }).then(res => {
         this.users = res.data.users;
-        console.log(this.users.length)
       });
     },
     // 上传logo

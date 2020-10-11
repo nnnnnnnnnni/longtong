@@ -42,6 +42,10 @@ const missionSchema = new Schema(
         default: false
       }
     }],
+    project: {
+      type: SchemaTypes.ObjectId,
+      ref: 'project'
+    },
     remark: String,
     comment: String,
     createTime: {
