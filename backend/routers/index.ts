@@ -38,7 +38,7 @@ export const getAllRouter = (): Irouter => {
   return allRoutes;
 };
 
-const allRoutes: Irouter = getAllRouter();
+export const allRoutes: Irouter = getAllRouter();
 
 /**
  *

@@ -33,7 +33,7 @@
     <div id="calendar" style="height: 100%; flex: 1"></div>
 
     <!-- modal add or edit -->
-    <a-modal :title="openType== 1? '新建': '编辑'" :visible="visible" @ok="handleOk" @cancel="visible = false" width='90%'>
+    <a-modal :title="openType== 1? '新建': '编辑'" :visible="visible" @ok="handleOk" @cancel="handleCancel" width='90%'>
       <div class="content">
         <div class="form flex-item">
           <a-form-model :model="missionForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14,offset: 1 }">
@@ -47,30 +47,31 @@
                 v-model="missionForm.time" 
                 :show-time="{
                   hideDisabledOptions: true,
-                  defaultValue: [moment('00:00', 'HH:mm'), moment('11:59', 'HH:mm')]}"
+                  defaultValue: [moment('09:00', 'HH:mm'), moment('18:00', 'HH:mm')]}"
               />
               <a-checkbox @change="changeAllDay">全天</a-checkbox>
             </a-form-model-item>
             <a-form-model-item label="优先级">
               <a-select v-model="missionForm.priority">
-                <a-select-option :value="1">十分紧急</a-select-option>
-                <a-select-option :value="2">紧急</a-select-option>
-                <a-select-option :value="3">普通</a-select-option>
-                <a-select-option :value="4">较低</a-select-option>
+                <a-select-option v-for="item in prioritys" :key="item.name" :value="item.val">
+                  <span :style="{'background-color': item.color}" class="option option-dot"></span>
+                  <span :style="{'color': item.color}" class="option option-name">{{item.name}}</span>
+                </a-select-option>
               </a-select>
             </a-form-model-item>
             <a-form-model-item label="类型">
               <a-select v-model="missionForm.type">
-                <a-select-option value="bug">BUG</a-select-option>
-                <a-select-option value="demand">需求</a-select-option>
-                <a-select-option value="mission">任务</a-select-option>
+                <a-select-option v-for="item in missionTypes" :key="item.name" :value="item.val">
+                  <span :style="{'background-color': item.color}" class="option option-dot"></span>
+                  <span :style="{'color': item.color}" class="option option-name">{{item.name}}</span>
+                </a-select-option>
               </a-select>
             </a-form-model-item>
             <a-form-model-item label='参与者'>
               <a-select
                 mode="multiple"
                 show-search
-                v-model="missionForm.admins"
+                v-model="missionForm.handler"
                 placeholder="搜索（姓名、昵称、邮箱、手机号）"
                 :default-active-first-option="false"
                 :show-arrow="false"
@@ -83,17 +84,11 @@
                 </a-select-option>
               </a-select>
             </a-form-model-item>
-            <a-form-model-item label='可见'>
-              <a-radio-group v-model="missionForm.visibility">
-                <a-radio value="public">公开</a-radio>
-                <a-radio value="private">团队内可见</a-radio>
-              </a-radio-group>
-            </a-form-model-item>
           </a-form-model>
         </div>
         <div class="msg flex-item">
           <div style="margin-bottom: 10px">备注：</div>
-              <editer v-model="missionForm.remark" />
+            <editer mode='ir' ref='refEditer' v-model="missionForm.remark" />
         </div>
       </div>
     </a-modal>
@@ -111,20 +106,23 @@ moment.locale("zh-cn", {
 });
 import Calendar from "tui-calendar";
 import "../assets/calendar.css";
+import { missionType as missionTypes, priority as prioritys } from '../lib/type'
 export default {
   name: "calendar",
   data() {
     return {
+      missionTypes,
+      prioritys,
       moment,
+      editerVal: ' ',
       users: [],
       openType: 1,
-      visible: true,
+      visible: false,
       calendar: null,
       missionForm: {
         isAllDay: false,
-        priority: 4,
-        type: 'mission',
-        visibility: 'public'
+        priority: '4',
+        type: 'mission'
       },
       defaultView: "week",
       defaultDate: moment(new Date(), "YYYY-MM-DD HH:mm:ss"),
@@ -199,9 +197,26 @@ export default {
     changeAllDay: function(value) {
       this.missionForm.isAllDay = value.target.checked;
     },
+    handleCancel: function() {
+      this.$refs.refEditer.clearEditer();
+      this.visible = false;
+    },
     // modal- ok
     handleOk: function() {
-      console.log(this.missionForm.remark);
+      if(!this.missionForm.title) return this.$message.error('必须：标题');
+      if(!this.missionForm.time || this.missionForm.time.length == 0) return this.$message.error('必须：时间');
+      this.$post('/mission/create', this.missionForm).then(res=> {
+        if(res.status == 200) {
+          this.missionForm = {
+            isAllDay: false,
+            priority: '4',
+            type: 'mission',
+          }
+          this.$message.success('添加成功');
+          this.visible = false;
+          this.editerVal = ''
+        }
+      })
     },
     // 打开新建model
     openAddModal: function(){
@@ -311,5 +326,12 @@ export default {
   height: 100%;
   width: 50%;
   flex: 1 0 auto;
+}
+.option-dot {
+  margin-right: 5px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 </style>

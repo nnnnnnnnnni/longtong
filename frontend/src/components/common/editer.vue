@@ -10,16 +10,15 @@ export default {
   name: "editer",
   data() {
     return {
-      contentEditor: null,
+      contentEditor: '',
+      ca: 1
     };
   },
   model: {
     prop: "body", //指向props的参数名
     event: "change" //事件名称
   },
-  props: {
-    body: ""
-  },
+  props: ["body", "mode"],
   mounted() {
     this.contentEditor = new Vditor("vditor", {
       height: 360,
@@ -29,6 +28,7 @@ export default {
       cache: {
         enable: false
       },
+      mode: this.mode || "wysiwyg",
       toolbar: [
         "emoji",
         "|",
@@ -45,7 +45,8 @@ export default {
         "upload",
         "link",
         "table",
-        "export"
+        "export",
+        "fullscreen"
       ],
       typewriterMode: true,
       upload: {
@@ -78,6 +79,11 @@ export default {
         this.$emit("change", val);
       }
     });
+  },
+  methods: {
+    clearEditer: () => {
+      console.log(this.ca)
+    }
   }
 };
 </script>

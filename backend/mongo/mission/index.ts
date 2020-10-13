@@ -47,7 +47,20 @@ const missionSchema = new Schema(
       ref: 'project'
     },
     remark: String,
-    comment: String,
+    comment: {
+      user: {
+        type: SchemaTypes.ObjectId,
+        ref: 'user'
+      },
+      action: {
+        type: String,
+      },
+      time: {
+        type: Date,
+        default: Date.now()
+      },
+      msg: String
+    },
     createTime: {
       type: Date,
       default: Date.now(),
