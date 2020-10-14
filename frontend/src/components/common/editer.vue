@@ -10,7 +10,7 @@ export default {
   name: "editer",
   data() {
     return {
-      contentEditor: '',
+      contentEditor: "",
       ca: 1
     };
   },
@@ -18,8 +18,14 @@ export default {
     prop: "body", //指向props的参数名
     event: "change" //事件名称
   },
-  props: ["body", "mode"],
+  props: ["body", "mode", "val"],
+  watch: {
+    val: function() {
+      this.contentEditor.setValue("", true);
+    }
+  },
   mounted() {
+    let that = this;
     this.contentEditor = new Vditor("vditor", {
       height: 360,
       toolbarConfig: {
@@ -79,11 +85,6 @@ export default {
         this.$emit("change", val);
       }
     });
-  },
-  methods: {
-    clearEditer: () => {
-      console.log(this.ca)
-    }
   }
 };
 </script>

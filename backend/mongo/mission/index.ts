@@ -59,7 +59,6 @@ const missionSchema = new Schema(
         type: Date,
         default: Date.now()
       },
-      msg: String
     },
     createTime: {
       type: Date,

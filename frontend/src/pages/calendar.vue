@@ -4,13 +4,12 @@
       <a-icon type="plus" />
     </div>
     <div class="btn-group">
-      <a-calendar :fullscreen="false" v-model="defaultDate" @change="onChange">
+      <a-calendar :fullscreen="false" v-model="defaultDate">
         <template slot="headerRender">
           <div>
             <div class="calendar-header">
-              <a-button class="header-item header-btn" size='small' :type="defaultView == 'day'? 'primary' : ''" @click="changeView('day')">日</a-button>
-              <a-button class="header-item header-btn" size='small' :type="defaultView == 'week'? 'primary' : ''" @click="changeView('week')">周</a-button>
-              <a-button class="header-item header-btn" size='small' :type="defaultView == 'month'? 'primary' : ''" @click="changeView('month')">月</a-button>
+              <a-button class="header-item header-btn" size='small' :type="calendar_settings.view_type == 'day'? 'primary':''" @click="changeView('day')">日</a-button>
+              <a-button class="header-item header-btn" size='small' :type="calendar_settings.view_type == 'week'? 'primary':''" @click="changeView('week')">周</a-button>
             </div>
             <div class="calendar-header">
               <div class="header-item header-time">{{ defaultDateFormat }}</div>
@@ -19,10 +18,10 @@
               </div>
               <div class="header-item">
                 <div class="header-item-span">
-                  <a-icon type="left" @click="changeShow('prev')" />
+                  <a-icon type="left" />
                 </div>
                 <div class="header-item-span">
-                  <a-icon type="right" @click="changeShow('next')" />
+                  <a-icon type="right" />
                 </div>
               </div>
             </div>
@@ -30,7 +29,7 @@
         </template>
       </a-calendar>
     </div>
-    <div id="calendar" style="height: 100%; flex: 1"></div>
+    <Kalendar class="kalendar" :configuration="_calendar_settings" :events.sync="calendar_events" />
 
     <!-- modal add or edit -->
     <a-modal :title="openType== 1? '新建': '编辑'" :visible="visible" @ok="handleOk" @cancel="handleCancel" width='90%'>
@@ -88,7 +87,7 @@
         </div>
         <div class="msg flex-item">
           <div style="margin-bottom: 10px">备注：</div>
-            <editer mode='ir' ref='refEditer' v-model="missionForm.remark" />
+            <editer :val='editerVal' mode='ir' ref='refEditer' v-model="missionForm.remark" />
         </div>
       </div>
     </a-modal>
@@ -96,16 +95,13 @@
 </template>
 
 <script>
+import { Kalendar } from 'kalendar-vue'
 import editer from '../components/common/editer';
-// https://nhn.github.io/tui.calendar/latest/Calendar
-import { themeConfig } from "../lib/calendar";
-import moment from "moment";
+import moment, { locale } from "moment";
 import "moment/locale/zh-cn";
-moment.locale("zh-cn", {
+locale("zh-cn", {
   weekdaysMin: ["日", "一", "二", "三", "四", "五", "六"]
 });
-import Calendar from "tui-calendar";
-import "../assets/calendar.css";
 import { missionType as missionTypes, priority as prioritys } from '../lib/type'
 export default {
   name: "calendar",
@@ -118,69 +114,58 @@ export default {
       users: [],
       openType: 1,
       visible: false,
-      calendar: null,
+      calendar_events: [],
+      calendar_settings: {
+        view_type: 'week',
+        style: 'material_design',
+        cell_height: 15,
+        scrollToNow: true,
+        read_only: false,
+        current_day: new Date().toISOString(),
+        day_starts_at: 0,
+        day_ends_at: 24,
+        overlap: true,
+        hide_dates: [], // Spooky
+        hide_days: [],
+        past_event_creation: true
+      },
+      kalendarKey: '',
       missionForm: {
         isAllDay: false,
         priority: '4',
         type: 'mission'
       },
-      defaultView: "week",
-      defaultDate: moment(new Date(), "YYYY-MM-DD HH:mm:ss"),
-      schedules: [
-        {  id: "1",  calendarId: "1",  title: "my schedule1",  body: 'asdasdasdasdasd',  category: "allday",  dueDateClass: "",  start: "2020-10-05T22:30:00+09:00",  end: "2020-10-08T12:30:00+09:00" },
-        { id: "2", calendarId: "2", title: "second schedule11", category: "allday", dueDateClass: "", start: "2020-10-07T16:30:00+09:00", end: "2020-10-08T22:31:00+09:00" },
-        { id: "3", calendarId: "3", title: "second schedule111", category: "time", dueDateClass: "", start: "2020-10-07T16:30:00+09:00", end: "2020-10-07T22:31:00+09:00" },
-        { id: "4", calendarId: "4", title: "second schedule1111", category: "time", body: 'asdasdasdasdasd', dueDateClass: "", start: "2020-10-07T18:30:00+09:00", end: "2020-10-07T22:31:00+09:00" }
-      ]
+      defaultDate: '',
     };
   },
   components: {
     editer,
+    Kalendar
   },
   computed: {
     defaultDateFormat: function() {
       return moment(this.defaultDate).format("YYYY-MM-DD");
-    }
+    },
+    _calendar_settings: {
+      get() {
+        return this.calendar_settings;
+      },
+      set(value) {
+        console.log('New se=====t:', value);
+        this.calendar_settings.view_type = value;
+      },
+    },
   },
-  created() {
-    window.addEventListener("resize", () => {
-      this.calendar.render();
-    });
+  watch: {
+    calendar_settings: {
+        handler(newValue) {
+            this.kalendarKey = new Date().valueOf();
+        },
+        deep: true,
+    },
   },
   mounted() {
-    // 初始化日历组件
-    this.calendar = new Calendar("#calendar", {
-      defaultView: this.defaultView,
-      taskView: false, // Can be also ['milestone', 'task']
-      scheduleView: true, // Can be also ['allday', 'time']
-      template: {},
-      theme: this.themeConfig,
-      useCreationPopup: false,
-      useDetailPopup: false,
-      month: {
-        daynames: ["日", "一", "二", "三", "四", "五", "六"],
-        startDayOfWeek: 1,
-        narrowWeekend: false
-      },
-      week: {
-        daynames: ["日", "一", "二", "三", "四", "五", "六"],
-        startDayOfWeek: 1,
-        narrowWeekend: false
-      },
-    });
-    // 注册 活动
-    this.calendar.createSchedules(this.schedules, false);
-    // 点击日程
-    this.calendar.on("clickSchedule", event => {
-      console.log(event.schedule);
-    });
-    // 拖动修改
-    this.calendar.on("beforeUpdateSchedule", event => {
-      var schedule = event.schedule;
-      var changes = event.changes;
-
-      this.calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
-    });
+    this.getMissions();
   },
   methods: {
     // 下拉框搜索
@@ -197,9 +182,10 @@ export default {
     changeAllDay: function(value) {
       this.missionForm.isAllDay = value.target.checked;
     },
+    // modal - cancel
     handleCancel: function() {
-      this.$refs.refEditer.clearEditer();
-      this.visible = false;
+      this.visible=  false;
+      this.editerVal = new Date();
     },
     // modal- ok
     handleOk: function() {
@@ -213,9 +199,22 @@ export default {
             type: 'mission',
           }
           this.$message.success('添加成功');
-          this.visible = false;
-          this.editerVal = ''
+          this.handleCancel();
         }
+      })
+    },
+    // 获取所有mission
+    getMissions: function() {
+      this.$get('/mission/missions').then(res=> {
+        this.calendar_events = res.data.map(item => {
+          return Object.assign({}, {
+            key: item._id,
+            kalendar_id: item._id,
+            data: item,
+            start_time: item.startTime,
+            end_time: item.endTime
+          })
+        });
       })
     },
     // 打开新建model
@@ -225,30 +224,7 @@ export default {
     },
     // 切换视图显示单位
     changeView: function(mode) {
-      this.defaultView = mode;
-      this.calendar.changeView(mode, true);
-    },
-    // 切换显示日期
-    changeShow: function(type) {
-      if (type == "prev") {
-        if (this.defaultView == "day") {
-          this.defaultDate = moment(this.defaultDate).add("-1", "days");
-        } else if (this.defaultView == "week") {
-          this.defaultDate = moment(this.defaultDate).add("-1", "week");
-        } else if (this.defaultView == "month") {
-          this.defaultDate = moment(this.defaultDate).add("-1", "month");
-        }
-        this.calendar.prev();
-      } else {
-        if (this.defaultView == "day") {
-          this.defaultDate = moment(this.defaultDate).add("+1", "days");
-        } else if (this.defaultView == "week") {
-          this.defaultDate = moment(this.defaultDate).add("+1", "week");
-        } else if (this.defaultView == "month") {
-          this.defaultDate = moment(this.defaultDate).add("+1", "month");
-        }
-        this.calendar.next();
-      }
+      this._calendar_settings = mode
     },
     // 改变时间选择框
     onChange: function(date) {
@@ -257,7 +233,6 @@ export default {
     // 跳到今日
     today: function() {
       this.defaultDate = moment(new Date(), "YYYY-MM-DD HH:mm:ss");
-      this.calendar.setDate(new Date(moment(new Date())));
     }
   }
 };
@@ -292,7 +267,7 @@ export default {
   display: inline-block;
 }
 .calendar-header .header-btn {
-  width: 25%;
+  width: 40%;
 }
 .calendar-header .header-time {
   font-size: 16px;
@@ -333,5 +308,10 @@ export default {
   width: 10px;
   height: 10px;
   border-radius: 50%;
+}
+.kalendar{
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
 }
 </style>

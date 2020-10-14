@@ -35,4 +35,7 @@ th._center,
 td._center {
   text-align: center !important;
 }
+.week-navigator{
+  display: none !important;
+}
 </style>

@@ -8,7 +8,7 @@ export const create = async (ctx: Context): Promise<any> => {
   const companyId = ctx.user.company.info._id;
   const doc = ctx.request.body;
   const admins =
-    doc.admins.indexOf(userId) == -1 ? [...doc.admins, userId] : doc.admins;
+  doc.admins.indexOf(userId) == -1 ? [...doc.admins, userId] : doc.admins;
   const newProject: Iproject = await db.project.create({
     name: doc.name,
     logo: doc.logo,

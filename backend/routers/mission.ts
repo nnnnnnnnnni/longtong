@@ -7,6 +7,11 @@ const router: Irouter = {
     middleware: mission.create,
     allowAnonymous: false,
   },
+  "/mission/missions": {
+    method: "GET",
+    middleware: mission.missions,
+    allowAnonymous: false,
+  },
 };
 
 export default router;

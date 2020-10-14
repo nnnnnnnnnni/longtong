@@ -18,13 +18,12 @@ export interface IMission extends Document {
     }
   ];
   project?: ObjectId; // 所属项目
-  remarks?: string; //备注
+  remark?: string; //备注
   comment?: {
     // 评论信息
     user: ObjectId;
     action: string;
     time: Date;
-    msg: String;
   }; //评论
   createTime?: Date; // 创建时间
   updateTime?: Date; // 更新时间
