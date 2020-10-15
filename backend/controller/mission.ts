@@ -77,6 +77,7 @@ export const missionById = async (ctx: Context): Promise<any> => {
     .findOne({
       _id: missionId
     })
+    .populate('organizer')
     .populate('handler.user')
     .populate('comment.user')
     .lean().exec()

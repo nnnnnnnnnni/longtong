@@ -6,7 +6,7 @@ const missionSchema = new Schema(
     title: String,
     organizer: {
       type: SchemaTypes.ObjectId,
-      ref: "index",
+      ref: "user",
     },
     isAllDay: {
       type: Boolean,

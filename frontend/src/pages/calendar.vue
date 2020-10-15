@@ -169,7 +169,11 @@
       :body-style="{ paddingBottom: '80px', 'z-dinex': '1000' }"
       @close="drawerVisible = false"
     >
-      <template slot="title">{{ currentEvent.title }}</template>
+      <template slot="title">
+        {{ currentEvent.title }}
+        <img class="title-img" :src="currentEvent.organizer.avator" alt="">
+        {{ currentEvent.organizer.userName }}
+      </template>
       <div class="drawer-container">
         <div class="time">
           <div class="icon"><a-icon type="clock-circle" /> 时间 :</div>
@@ -299,7 +303,12 @@ export default {
         eventChange: this.handleChange,
         eventDragStop: this.handleDragStop
       },
-      currentEvent: {}
+      currentEvent: {
+        organizer: {
+          userName: '',
+          avator: ''
+        }
+      }
     };
   },
   components: {
@@ -367,7 +376,7 @@ export default {
         calendarApi.addEvent({
           groupId: "nowMine",
           start: e.startTime,
-          end: e.endTime,
+          end: e.startTime,
           display: "background",
           backgroundColor: prioritys[e.priority - 1].color
         });
@@ -651,6 +660,13 @@ export default {
   height: 30px;
   border-radius: 50%;
   margin-right: 20px;
+  cursor: pointer;
+}
+.title-img{
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  margin: 0px 10px;
   cursor: pointer;
 }
 </style>
