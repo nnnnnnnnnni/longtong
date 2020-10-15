@@ -477,13 +477,14 @@ export default {
     // 事件变更更新
     handleChange(info) {
       const newEvent = info.event;
+      console.log(info)
       this.$put("/mission/update", {
         _id: newEvent.id,
         isAllDay: newEvent.allDay,
         startTime: moment(moment(newEvent.start).format("YYYY-MM-DD HH:mm:ss")),
         endTime: newEvent.end
           ? moment(moment(newEvent.end).format("YYYY-MM-DD HH:mm:ss"))
-          : moment(moment(newEvent.start).format("YYYY-MM-DD 18:mm:ss"))
+          : moment(moment(newEvent.start).format("YYYY-MM-DD HH:mm:ss"))
       }).then(res => {
         if (res.status == 200) {
           this.$message.success("更新成功");
