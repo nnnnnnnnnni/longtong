@@ -164,10 +164,10 @@ export default {
 }
 .tabs .tab-item span {
   position: absolute;
-  left: 49%;
+  left: 50%;
   font-size: 16px;
   bottom: 50%;
-  transform: translate(-5%, 78%);
+  transform: translate(-50%, 78%);
   font-weight: 600;
   user-select: none;
 }

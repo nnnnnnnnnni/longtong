@@ -35,7 +35,7 @@ th._center,
 td._center {
   text-align: center !important;
 }
-.week-navigator{
+.fc-header-toolbar, .fc-toolbar, .fc-toolbar-ltr{
   display: none !important;
 }
 </style>

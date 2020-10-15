@@ -12,6 +12,16 @@ const router: Irouter = {
     middleware: mission.missions,
     allowAnonymous: false,
   },
+  "/mission/update": {
+    method: "PUT",
+    middleware: mission.update,
+    allowAnonymous: false,
+  },
+  "/mission/missionById": {
+    method: "GET",
+    middleware: mission.missionById,
+    allowAnonymous: false,
+  },
 };
 
 export default router;

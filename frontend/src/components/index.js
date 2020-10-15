@@ -21,5 +21,3 @@ Vue.use(Modal)
 Vue.use(Radio)
 Vue.use(Popconfirm)
 Vue.use(Checkbox)
-import PortalVue from "portal-vue";
-Vue.use(PortalVue);

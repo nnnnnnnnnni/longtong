@@ -8,7 +8,7 @@ const missionSchema = new Schema(
       type: SchemaTypes.ObjectId,
       ref: "index",
     },
-    isALLDay: {
+    isAllDay: {
       type: Boolean,
       default: false,
     },
@@ -35,7 +35,7 @@ const missionSchema = new Schema(
     handler: [{
       user: {
         type: SchemaTypes.ObjectId,
-        ref: 'index'
+        ref: 'user'
       },
       isFinish: {
         type: Boolean,
@@ -47,7 +47,7 @@ const missionSchema = new Schema(
       ref: 'project'
     },
     remark: String,
-    comment: {
+    comment: [{
       user: {
         type: SchemaTypes.ObjectId,
         ref: 'user'
@@ -59,7 +59,7 @@ const missionSchema = new Schema(
         type: Date,
         default: Date.now()
       },
-    },
+    }],
     createTime: {
       type: Date,
       default: Date.now(),
