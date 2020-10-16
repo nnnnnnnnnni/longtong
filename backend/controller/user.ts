@@ -165,14 +165,19 @@ export const users = async (ctx: Context): Promise<any> => {
   if (options.department) {
     params["department.info"] = options.department;
   }
+  if(options.userIds) {
+    params = {
+      _id: {$in: options.userIds}
+    }
+  }
   if(options.info) {
     params = {
       $or: [
-        {name: {$regex: options.info, $options:'i'}},
-        {userName: {$regex: options.info, $options:'i'}},
-        {job: {$regex: options.info, $options:'i'}},
-        {mail: {$regex: options.info, $options:'i'}},
-        {phone: {$regex: options.info, $options:'i'}},
+        {name: {$regex: options.info, $options:'i'}, "company.info": companyId},
+        {userName: {$regex: options.info, $options:'i'}, "company.info": companyId},
+        {job: {$regex: options.info, $options:'i'}, "company.info": companyId},
+        {mail: {$regex: options.info, $options:'i'}, "company.info": companyId},
+        {phone: {$regex: options.info, $options:'i'}, "company.info": companyId},
       ]
     }
   }

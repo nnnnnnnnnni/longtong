@@ -35,11 +35,13 @@ export const create = async (ctx: Context) => {
     isAllDay: doc.isAllDay,
     status: missionStatus,
     remark: doc.remark,
-    comment: [{
-      user: ctx.user._id,
-      action: "create",
-      time: new Date(),
-    }],
+    comment: [
+      {
+        user: ctx.user._id,
+        action: "create",
+        time: new Date(),
+      },
+    ],
     handler: handlers,
   });
   return {
@@ -54,7 +56,7 @@ export const missions = async (ctx: Context): Promise<any> => {
     .find({
       $or: [{ organizer: userId }, { "handler.user": userId }],
     })
-    .populate('handler.user')
+    .populate("handler.user")
     .lean()
     .exec();
   let _missions: any[] = [];
@@ -70,30 +72,38 @@ export const missions = async (ctx: Context): Promise<any> => {
   };
 };
 
+// 通过id 获取某一任务
 export const missionById = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
   const missionId = ctx.request.query._id;
-  const missions: any = await db.mission
+  const mission: any = await db.mission
     .findOne({
-      _id: missionId
+      _id: missionId,
     })
-    .populate('organizer')
-    .populate('handler.user')
-    .populate('comment.user')
-    .lean().exec()
+    .populate("organizer")
+    .populate("handler.user")
+    .populate("comment.user")
+    .lean()
+    .exec();
   return {
     data: {
-      ...missions,
-      isOwn: missions.organizer == userId
-    }
+      ...mission,
+      isOwn: mission.organizer._id == userId,
+    },
   };
-}
+};
 
 // 更新单个任务
 export const update = async (ctx: Context): Promise<any> => {
   const doc = ctx.request.body;
   const missionId = doc._id;
   delete doc._id;
+  const oldMission: IMission = await db.mission.findOne({ _id: missionId });
+  const oldHanlders: any[] = oldMission.handler;
+  if (doc.createTime) delete doc.createTime;
+  if (doc.updateTime) delete doc.updateTime;
+  if (doc.organizer) delete doc.organizer;
+  if (doc.comment) delete doc.comment;
   const newMission: IMission = await db.mission.updateOne(
     {
       _id: missionId,
@@ -103,7 +113,7 @@ export const update = async (ctx: Context): Promise<any> => {
       $set: doc,
     },
     {
-      new: true
+      new: true,
     }
   );
   return {

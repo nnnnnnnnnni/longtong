@@ -22,7 +22,7 @@ export default {
   watch: {
     val: function() {
       this.contentEditor.setValue("", true);
-    }
+    },
   },
   mounted() {
     let that = this;

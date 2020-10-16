@@ -60,7 +60,7 @@
 
     <!-- modal add or edit -->
     <a-modal
-      title="新建任务"
+      :title="openType == 1 ? '新建任务' : '编辑任务'"
       :visible="modalVisible"
       @ok="handleOk"
       @cancel="handleCancel"
@@ -97,7 +97,7 @@
                 <a-select-option
                   v-for="item in prioritys"
                   :key="item.name"
-                  :value="item.val"
+                  :value="item.val.toString()"
                 >
                   <span
                     :style="{ 'background-color': item.color }"
@@ -162,92 +162,12 @@
     </a-modal>
 
     <!-- drawer -->
-    <a-drawer
-      placement="right"
-      width="600"
-      :visible="drawerVisible"
-      :body-style="{ paddingBottom: '80px', 'z-dinex': '1000' }"
-      @close="drawerVisible = false"
-    >
-      <template slot="title">
-        {{ currentEvent.title }}
-        <img class="title-img" :src="currentEvent.organizer.avator" alt="">
-        {{ currentEvent.organizer.userName }}
-      </template>
-      <div class="drawer-container">
-        <div class="time">
-          <div class="icon"><a-icon type="clock-circle" /> 时间 :</div>
-          <div class="field">
-            <div class="startTime">
-              {{
-                currentEvent.isAllDay
-                  ? moment(currentEvent.startTime).format("YYYY-MM-DD")
-                  : moment(currentEvent.startTime).format("YYYY-MM-DD HH:mm")
-              }}
-            </div>
-            <div>~</div>
-            <div class="endTime">
-              {{
-                currentEvent.isAllDay
-                  ? moment(currentEvent.endTime).format("YYYY-MM-DD")
-                  : moment(currentEvent.endTime).format("YYYY-MM-DD HH:mm")
-              }}
-            </div>
-            <div class="isAllDay" v-if="currentEvent.isAllDay">
-              <a-tooltip>
-                <template slot="title">
-                  全天
-                </template>
-                <a-icon type="fire" theme="twoTone" two-tone-color="#eb2f96" />
-              </a-tooltip>
-            </div>
-          </div>
-        </div>
-        <div class="handler">
-          <div class="icon"><a-icon type="user" /> 参与者 :</div>
-          <div class="field" v-if="currentEvent.handler && currentEvent.handler.length!=0">
-            <img
-              v-for="handler in currentEvent.handler"
-              :src="handler.user.avator"
-              :key="handler._id"
-              alt=""
-            />
-          </div>
-          <div class="field" v-else>
-            <a-tag color="rgb(230, 36, 18)">暂未分配</a-tag>
-          </div>
-        </div>
-        <div class="priority">
-          <div class="icon"><a-icon type="warning" /> 优先级 :</div>
-          <div class="field">
-            <a-tag :color='currentEvent.priorityColor'>{{currentEvent.priority}}</a-tag>
-          </div>
-        </div>
-        <div class="type">
-          <div class="icon"><a-icon type="share-alt" /> 类型 :</div>
-          <div class="field">
-            <a-tag :color='currentEvent.typeColor'>{{currentEvent.type}}</a-tag>
-          </div>
-        </div>
-        <div class="body">
-          <div class="icon"><a-icon type="border" style="margin-top: 4px"/> 备注 :</div>
-          <div class="body-field" v-html="currentEvent.remarkBody">
-          </div>
-        </div>
-        <div class="comment">
-          <div class="icon"><a-icon type="profile" style="margin-top: 4px"/> 记录 :</div>
-          <div class="comment-field">
-            <div class="comment-item" v-for="item in currentEvent.comment" :key="item._id">
-              <div class="name">{{item.user.userName}}</div>
-              <div class="action" v-if="item.action == 'create'">创建了此任务</div>
-              <div class="action" v-else-if="item.action == 'update'">更新了此任务</div>
-              <div class="action" v-else-if="item.action == 'finish'">完成了此任务</div>
-              <div class="time">{{moment(item.time).format('YYYY-MM-DD HH:mm:ss')}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </a-drawer>
+    <drawer
+      :drawerVisible="drawerVisible"
+      :currentEvent="currentEvent"
+      @closeDrawer="closeDrawer"
+      @editMission="editMission"
+    />
   </div>
 </template>
 
@@ -258,7 +178,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import editer from "../components/common/editer";
-import VditorPreview from 'vditor/dist/method.min'  
+import drawer from "../components/calendar/drawer";
+import VditorPreview from "vditor/dist/method.min";
 import moment, { locale } from "moment";
 import {
   missionType as missionTypes,
@@ -268,12 +189,14 @@ export default {
   name: "calendar",
   data() {
     return {
+      openType: 1,
       calendar: null,
       missionTypes,
       prioritys,
       moment,
       editerVal: " ",
       users: [],
+      allUsers: [],
       modalVisible: false,
       drawerVisible: false,
       missionForm: {
@@ -305,15 +228,16 @@ export default {
       },
       currentEvent: {
         organizer: {
-          userName: '',
-          avator: ''
+          userName: "",
+          avator: ""
         }
       }
     };
   },
   components: {
     editer,
-    FullCalendar
+    FullCalendar,
+    drawer
   },
   computed: {
     defaultDateFormat: function() {
@@ -347,16 +271,27 @@ export default {
     // modal- ok
     handleOk: function() {
       if (!this.missionForm.title) return this.$message.error("必须：标题");
-      if (!this.missionForm.time || this.missionForm.time.length == 0)
+      if (!this.missionForm.time || this.missionForm.time.length == 0) {
         return this.$message.error("必须：时间");
-      this.$post("/mission/create", this.missionForm).then(res => {
-        if (res.status == 200) {
-          res.data.isOwn = true;
-          this.addEvent(res.data);
-          this.$message.success("添加成功");
-          this.handleCancel();
-        }
-      });
+      }
+      if (this.openType == 1) {
+        this.$post("/mission/create", this.missionForm).then(res => {
+          if (res.status == 200) {
+            res.data.isOwn = true;
+            this.addEvent(res.data);
+            this.$message.success("添加成功");
+            this.handleCancel();
+          }
+        });
+      } else {
+        this.$put("/mission/update", this.missionForm).then(res => {
+          if (res.status == 200) {
+            res.data.isOwn = true;
+            this.$message.success("更新成功");
+            this.handleCancel();
+          }
+        });
+      }
     },
     // 插入新event
     addEvent: function(e) {
@@ -369,12 +304,12 @@ export default {
           end: e.endTime,
           allDay: e.isAllDay,
           extendedProps: e,
-          constraint: "nowMine",
+          constraint: e._id,
           backgroundColor: prioritys[e.priority - 1].color,
           borderColor: prioritys[e.priority - 1].color
         });
         calendarApi.addEvent({
-          groupId: "nowMine",
+          groupId: e._id,
           start: e.startTime,
           end: e.startTime,
           display: "background",
@@ -403,6 +338,7 @@ export default {
     },
     // 打开新建model
     openAddModal: function() {
+      this.openType = 1;
       this.modalVisible = true;
     },
     // 日历时间切换
@@ -412,10 +348,9 @@ export default {
     // 切换视图显示单位
     changeView: function(mode) {
       this.viewMode = mode;
-      this.$refs.calendarRef.getApi().changeView(
-        mode,
-        new Date(this.defaultDate)
-      );
+      this.$refs.calendarRef
+        .getApi()
+        .changeView(mode, new Date(this.defaultDate));
     },
     // 跳到今日
     today: function() {
@@ -449,44 +384,38 @@ export default {
       console.log(selectInfo);
       let calendarApi = selectInfo.view.calendar;
       calendarApi.unselect(); // clear date selection
+      this.openType = 1;
       this.missionForm.time = [selectInfo.startStr, selectInfo.endStr];
       this.missionForm.isAllDay = selectInfo.allDay;
       this.modalVisible = true;
     },
-    // 点击事件
+    // 点击任务
     handleEventClick: async function(clickInfo) {
-      this.$get('/mission/missionById', {
+      this.$get("/mission/missionById", {
         _id: clickInfo.event.id
       }).then(async res => {
-        let body = '无备注'
-        if(res.data.remark) {
+        let body = "无备注";
+        if (res.data.remark) {
           body = await VditorPreview.md2html(res.data.remark);
         }
         this.currentEvent = Object.assign(res.data, {
-          priority: prioritys[res.data.priority - 1].name,
-          priorityColor: prioritys[res.data.priority - 1].color,
+          _priority: prioritys[res.data.priority - 1].name,
+          _priorityColor: prioritys[res.data.priority - 1].color,
           remarkBody: body
         });
         missionTypes.forEach(type => {
-          if(type.val == res.data.type) {
-            this.currentEvent.type = type.name,
-            this.currentEvent.typeColor = type.color
+          if (type.val == res.data.type) {
+            this.currentEvent._type = type.name;
+            this.currentEvent._typeColor = type.color;
           }
-        })
+        });
         this.drawerVisible = true;
-      })
-      // if (
-      //   confirm(
-      //     `Are you sure you want to delete the event '${clickInfo.event.title}'`
-      //   )
-      // ) {
-      //   clickInfo.event.remove();
-      // }
+      });
     },
     // 事件变更更新
     handleChange(info) {
       const newEvent = info.event;
-      console.log(info)
+      console.log(info);
       this.$put("/mission/update", {
         _id: newEvent.id,
         isAllDay: newEvent.allDay,
@@ -499,6 +428,32 @@ export default {
           this.$message.success("更新成功");
         }
       });
+    },
+    // 关闭Drawer
+    closeDrawer: function() {
+      this.drawerVisible = false;
+    },
+    // 进入编辑模式
+    editMission: function() {
+      this.openType = 2;
+      const userIds = this.currentEvent.handler.map(user => {
+        if (typeof user == "string") return user;
+        else return user.user._id;
+      });
+      this.$get("/user/users", {
+        options: {
+          userIds: userIds
+        }
+      }).then(res => {
+        this.users = res.data.users;
+      });
+      const _mission = JSON.parse(JSON.stringify(this.currentEvent));
+      this.missionForm = Object.assign(_mission, {
+        time: [this.currentEvent.startTime, this.currentEvent.endTime],
+        handler: userIds,
+        priority: this.currentEvent.priority.toString()
+      });
+      this.modalVisible = true;
     }
   }
 };
@@ -506,7 +461,7 @@ export default {
 
 <style scoped>
 .calendar {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   height: 100%;
   width: 100%;
   display: flex;
@@ -581,92 +536,5 @@ export default {
   width: 100%;
   height: 100%;
   color: #333;
-}
-.time,
-.handler,
-.priority,
-.type {
-  line-height: 40px;
-  display: flex;
-}
-.drawer-container .icon {
-  padding: 0px 10px;
-  width: 90px;
-  display: flex;
-  float: left;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-}
-.drawer-container .isAllDay {
-  margin-left: 10px;
-  cursor: pointer;
-}
-.field {
-  display: flex;
-  flex: 1 0 auto;
-  box-sizing: border-box;
-  padding-left: 20px;
-  align-items: center;
-}
-.body {
-  display: flex;
-  margin-top: 8px;
-}
-.body .icon {
-  width: 90px;
-  display: flex;
-  align-items: flex-start;
-}
-.body-field {
-  overflow-y: scroll;
-  flex: 1;
-  height: 400px;
-  box-sizing: border-box;
-  background-color:#f2f4f5;
-  padding: 10px;
-}
-.comment {
-  display: flex;
-  margin-top: 8px;
-}
-.comment .icon {
-  width: 90px;
-  display: flex;
-  align-items: flex-start;
-}
-.comment-field {
-  overflow-y: scroll;
-  flex: 1;
-  height: 200px;
-  box-sizing: border-box;
-  background-color:#f2f4f5;
-  padding: 10px;
-}
-.comment-field .comment-item {
-  height: 40px;
-  display: flex;
-  line-height: 40px;
-}
-.comment-field .comment-item .name {
-  padding-right: 20px;
-}
-.comment-field .comment-item .action {
-  color: #000000;
-  padding-right: 20px;
-}
-.drawer-container .handler img {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-right: 20px;
-  cursor: pointer;
-}
-.title-img{
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  margin: 0px 10px;
-  cursor: pointer;
 }
 </style>

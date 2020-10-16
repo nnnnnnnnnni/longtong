@@ -1,22 +1,22 @@
 export const priority = [
   {
     name: "十分紧急",
-    val: "1",
+    val: 1,
     color: "rgb(230, 36, 18)"
   },
   {
     name: "紧急",
-    val: "2",
+    val: 2,
     color: "rgb(250, 140, 21)"
   },
   {
     name: "普通",
-    val: "3",
+    val: 3,
     color: "rgb(27, 154, 238)"
   },
   {
     name: "较低",
-    val: "4",
+    val: 4,
     color: "rgb(140, 140, 140)"
   }
 ];
