@@ -99,11 +99,27 @@ export const update = async (ctx: Context): Promise<any> => {
   const missionId = doc._id;
   delete doc._id;
   const oldMission: IMission = await db.mission.findOne({ _id: missionId });
-  const oldHanlders: any[] = oldMission.handler;
   if (doc.createTime) delete doc.createTime;
   if (doc.updateTime) delete doc.updateTime;
   if (doc.organizer) delete doc.organizer;
   if (doc.comment) delete doc.comment;
+  const newHandlersObj: any = {};
+  oldMission.handler.forEach((user: any) => {
+    newHandlersObj[user.user] = user.isFinish;
+  })
+  doc.handler.forEach((user: string) => {
+    if(!newHandlersObj.hasOwnProperty(user)) {
+      newHandlersObj[user] = false;
+    }
+  })
+  let newHandlersArr: any = []
+  Object.keys(newHandlersObj).forEach((key: string) => {
+    newHandlersArr.push({
+      user: key,
+      isFinish: newHandlersObj[key]
+    })
+  })
+  doc.handler = newHandlersArr
   const newMission: IMission = await db.mission.updateOne(
     {
       _id: missionId,
