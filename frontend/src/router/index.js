@@ -51,6 +51,14 @@ const routerConfig = new Router({
       component: () => import("@/pages/index"),
       children: [
         {
+          path: "/:id",
+          name: "profile",
+          meta: {
+            pageTitle: '日历'
+          },
+          component: () => import("@/pages/profile")
+        },
+        {
           path: "/calendar",
           name: "calendar",
           meta: {

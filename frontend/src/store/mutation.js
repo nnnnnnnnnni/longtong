@@ -4,6 +4,7 @@ export default {
   },
   CHANGE_USER: (state, user) => {
     state.user = {
+      _id: user._id,
       avator: user.avator || "",
       userName: user.userName || user.mail,
       name: user.name || user.mail,

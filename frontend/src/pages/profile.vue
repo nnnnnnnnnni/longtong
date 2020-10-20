@@ -1,42 +1,44 @@
 <template>
-  <div class="setting">
+  <div class="profile">
     <div class="menu">
       <setting-menu />
     </div>
-    <div class="setting-container">
-      <router-view />
+    <div class="profile-container">
+      <projects />
     </div>
   </div>
 </template>
 
 <script>
-import settingMenu from "@/components/settings/menu";
+import settingMenu from "@/components/settings/menu.vue";
+import projects from "@/components/profile/projects";
 export default {
-  name: "setting",
+  name: "profile",
   data() {
     return {};
   },
   components: {
-    settingMenu
+    settingMenu,
+    projects
   }
 };
 </script>
 
 <style scoped>
-.setting {
+.profile {
   width: 1250px;
   margin: 0 auto;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
 }
-.setting .menu {
+.profile .menu {
   position: absolute;
   width: 300px;
   top: 60px;
   bottom: 0;
 }
-.setting-container {
+.profile-container {
   margin-left: 300px;
   height: 100%;
   width: 950px;

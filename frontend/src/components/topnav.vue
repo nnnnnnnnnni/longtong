@@ -97,6 +97,9 @@ export default {
   methods: {
     jumpPage: function(name) {
       if (name != this.$store.state.route) {
+        if(name == 'profile') {
+          return this.$router.push({ name: name, params: {id: this.$store.state.user._id} });
+        }
         this.$router.push({ name: name });
       }
     },
