@@ -4,11 +4,8 @@ import { Config } from "../config";
 
 export const generateToken = (user: string): string => {
   const secret = "TOKEN_SCRECT";
-  const hash = crypto
-    .createHmac("sha256", secret)
-    .update("I love cupcakes")
-    .digest("hex");
-  return hash;
+  const md5 = crypto.createHash("md5").update(secret, "utf8").digest("hex")
+  return crypto.createHmac("sha512", user).update(md5).digest("hex")
 };
 
 export const uploadFile = async (
@@ -41,6 +38,7 @@ export const uploadFile = async (
       } else {
         console.log(respInfo.statusCode);
         console.log(respBody);
+        reject(respBody)
       }
     });
   });

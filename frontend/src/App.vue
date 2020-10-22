@@ -38,4 +38,8 @@ td._center {
 .fc-header-toolbar, .fc-toolbar, .fc-toolbar-ltr{
   display: none !important;
 }
+.ant-drawer-title {
+  display: flex !important;
+  justify-content: space-between;
+}
 </style>

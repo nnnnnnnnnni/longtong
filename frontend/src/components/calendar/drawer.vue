@@ -9,9 +9,11 @@
     >
       <template slot="title" class="drawer-title">
         <span class="title-content">{{ currentEvent.title }}</span>
-        <span class="title-span">发布者:</span>
-        <img class="title-img" :src="currentEvent.organizer.avator" alt="" />
-        {{ currentEvent.organizer.userName }}
+        <div class="organizer">
+          <span class="title-span">发布者:</span>
+          <img class="title-img" :src="currentEvent.organizer.avator" alt="" />
+          {{ currentEvent.organizer.userName }}
+        </div>
         <div class="button-edit">
           <a-button-group>
             <a-button size="small" type="primary">完成</a-button>
@@ -22,10 +24,7 @@
               @click="openEdit"
               >编辑</a-button
             >
-            <a-button
-              size="small"
-              type="danger"
-              :disabled="currentEvent.isOwn"
+            <a-button size="small" type="danger" :disabled="currentEvent.isOwn"
               >拒绝</a-button
             >
           </a-button-group>
@@ -66,12 +65,16 @@
             class="field"
             v-if="currentEvent.handler && currentEvent.handler.length != 0"
           >
-            <img
+            <a-tooltip
               v-for="handler in currentEvent.handler"
-              :src="handler.user.avator"
               :key="handler._id"
-              alt=""
-            />
+            >
+              <template slot="title">
+                <div style="text-align: center">{{handler.user.userName}}</div>
+                <div style="text-align: center">{{handler.isFinish? '已完成': '未完成'}}</div>
+              </template>
+              <img :src="handler.user.avator" alt="" />
+            </a-tooltip>
           </div>
           <div class="field" v-else>
             <a-tag color="rgb(230, 36, 18)">暂未分配</a-tag>
@@ -250,7 +253,7 @@ export default {
   float: right;
   margin-right: 30px;
 }
-.title-content{
+.title-content {
   width: 200px;
   white-space: nowrap;
   overflow: hidden;
@@ -258,7 +261,7 @@ export default {
   display: inline-block;
   line-height: 29px;
 }
-.drawer-title{
+.drawer-title {
   display: flex;
   align-content: center;
   justify-content: space-between;

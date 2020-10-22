@@ -47,6 +47,7 @@ export default {
 <style scoped>
 .drawer-title {
   display: flex;
+  flex: 1;
   justify-content: space-between;
 }
 .title-sub {

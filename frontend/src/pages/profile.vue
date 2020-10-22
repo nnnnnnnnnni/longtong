@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <div class="menu">
-      <setting-menu />
+      <setting-menu edit_type='profile' />
     </div>
     <div class="profile-container">
       <projects />

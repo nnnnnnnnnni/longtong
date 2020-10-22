@@ -97,36 +97,38 @@ export const missionById = async (ctx: Context): Promise<any> => {
 export const update = async (ctx: Context): Promise<any> => {
   const doc = ctx.request.body;
   const missionId = doc._id;
+  console.log(doc.remark)
   delete doc._id;
   const oldMission: IMission = await db.mission.findOne({ _id: missionId });
-  if (doc.createTime) delete doc.createTime;
-  if (doc.updateTime) delete doc.updateTime;
-  if (doc.organizer) delete doc.organizer;
-  if (doc.comment) delete doc.comment;
   const newHandlersObj: any = {};
+  doc.handler.forEach((user: string) => {
+    newHandlersObj[user] = false;
+  });
   oldMission.handler.forEach((user: any) => {
     newHandlersObj[user.user] = user.isFinish;
-  })
-  doc.handler.forEach((user: string) => {
-    if(!newHandlersObj.hasOwnProperty(user)) {
-      newHandlersObj[user] = false;
-    }
-  })
-  let newHandlersArr: any = []
+  });
+  let newHandlersArr: any = [];
   Object.keys(newHandlersObj).forEach((key: string) => {
     newHandlersArr.push({
       user: key,
-      isFinish: newHandlersObj[key]
-    })
-  })
-  doc.handler = newHandlersArr
+      isFinish: newHandlersObj[key],
+    });
+  });
   const newMission: IMission = await db.mission.updateOne(
     {
       _id: missionId,
     },
     {
       $push: { comment: { user: ctx.user._id, action: "update", time: new Date() } },
-      $set: doc,
+      $set: {
+        title: doc.title,
+        startTime: doc.startTime,
+        endTime: doc.endTime,
+        priority: doc.priority,
+        type: doc.type,
+        handler: newHandlersArr,
+        remark: doc.remark
+      },
     },
     {
       new: true,

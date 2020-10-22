@@ -5,7 +5,7 @@
     </div>
     <div class="name info-item">{{this.$store.state.user.userName}}</div>
     <div class="item-group">
-      <div class="edit info-item" :class="{edit_active: mode == 'edit'}">
+      <div v-if="edit_type == 'setting'" class="edit info-item" :class="{edit_active: mode == 'edit'}">
         <lt-btutton circle="true" title="Edit Profile" @click="changeMode"/>
       </div>
       <div class="info-item _edit quit" :class="{quit_active: mode == 'edit'}">
@@ -70,6 +70,11 @@
 import ltBtutton from "@/components/common/button.vue";
 export default {
   name: "setting-menu",
+  props: {
+    edit_type: {
+      default: 'profile' // profile or setting
+    }
+  },
   data() {
     return {
       mode: "profile", //profile or edit

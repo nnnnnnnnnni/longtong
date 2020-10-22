@@ -19,11 +19,6 @@ export default {
     event: "change" //事件名称
   },
   props: ["body", "mode", "val"],
-  watch: {
-    val: function() {
-      this.contentEditor.setValue("", true);
-    },
-  },
   mounted() {
     let that = this;
     this.contentEditor = new Vditor("vditor", {
@@ -34,6 +29,7 @@ export default {
       cache: {
         enable: false
       },
+      value: this.val,
       mode: this.mode || "wysiwyg",
       toolbar: [
         "emoji",

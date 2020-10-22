@@ -5,6 +5,7 @@
         <div class="form-item-container">
           <a-upload
             name="file"
+            accept="image/*"
             list-type="picture-card"
             class="avatar-uploader"
             :show-upload-list="false"

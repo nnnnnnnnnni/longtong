@@ -62,6 +62,7 @@
     <a-modal
       :title="openType == 1 ? '新建任务' : '编辑任务'"
       :visible="modalVisible"
+      :destroyOnClose='true'
       @ok="handleOk"
       @cancel="handleCancel"
       width="90%"
@@ -194,7 +195,7 @@ export default {
       missionTypes,
       prioritys,
       moment,
-      editerVal: " ",
+      editerVal: "",
       users: [],
       allUsers: [],
       modalVisible: false,
@@ -266,7 +267,8 @@ export default {
         type: "mission"
       };
       this.modalVisible = false;
-      this.editerVal = new Date();
+      this.drawerVisible = false;
+      this.editerVal = '';
     },
     // modal- ok
     handleOk: function() {
@@ -286,7 +288,6 @@ export default {
       } else {
         this.$put("/mission/update", this.missionForm).then(res => {
           if (res.status == 200) {
-            res.data.isOwn = true;
             this.$message.success("更新成功");
             this.handleCancel();
           }
@@ -339,6 +340,7 @@ export default {
     // 打开新建model
     openAddModal: function() {
       this.openType = 1;
+      this.editerVal = '';
       this.modalVisible = true;
     },
     // 日历时间切换
@@ -409,6 +411,7 @@ export default {
             this.currentEvent._typeColor = type.color;
           }
         });
+        this.editerVal = this.currentEvent.remark;
         this.drawerVisible = true;
       });
     },

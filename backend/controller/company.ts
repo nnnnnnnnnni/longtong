@@ -35,8 +35,7 @@ export const create = async (ctx: Context) => {
     )
     .lean()
     .exec();
-  console.log(updatedUser);
-  await redis.set(0, `TOKEN:${generateToken(userId)}`, updatedUser);
+  await redis.set(0, `TOKEN:${generateToken(userId.toString())}`, updatedUser);
   return {
     data: updatedUser,
   };

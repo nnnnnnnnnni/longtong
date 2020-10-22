@@ -1,7 +1,7 @@
 <template>
   <div class="setting">
     <div class="menu">
-      <setting-menu />
+      <setting-menu edit_type='setting' />
     </div>
     <div class="setting-container">
       <router-view />

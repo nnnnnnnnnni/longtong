@@ -7,20 +7,18 @@ export const create = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
   const companyId = ctx.user.company.info._id;
   const doc = ctx.request.body;
-  const admins =
-  doc.admins.indexOf(userId) == -1 ? [...doc.admins, userId] : doc.admins;
   const newProject: Iproject = await db.project.create({
     name: doc.name,
     logo: doc.logo,
     department: doc.department,
-    admins: admins,
+    admins: doc.admins,
     introduction: doc.introduction,
     company: companyId,
     members: [],
   });
-  for (let i = 0; i < admins.length; i++) {
+  for (let i = 0; i < doc.admins.length; i++) {
     await db.user.update(
-      { _id: admins[i] },
+      { _id: doc.admins[i] },
       { $addToSet: { project: { info: newProject._id, role: "admin" } } }
     );
   }
@@ -39,6 +37,31 @@ export const projects = async (ctx: Context): Promise<any> => {
     .populate("department");
   return {
     data: data,
+  };
+};
+
+// 获取某人项目
+export const projectByUser = async (ctx: Context): Promise<any> => {
+  const userId = ctx.user._id;
+  const data: any[] = await db.project
+    .find({
+      $or: [
+        {admins: {$eq: userId}},
+        {members: {$eq: userId}},
+      ]
+    })
+    .populate("department", 'name logo')
+    .lean()
+    .exec();
+  const _data = data.map((project: any) => {
+    console.log(project.admins[0], ObjectId(userId), project.admins[0]==ObjectId(userId))
+    return {
+      ...project,
+      isAdmin: project.admins.indexOf(userId) != -1
+    }
+  })
+  return {
+    data: _data,
   };
 };
 

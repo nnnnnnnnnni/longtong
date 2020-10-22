@@ -118,7 +118,7 @@
     <a-modal :title="openType == 1 ? '新增':'编辑'" :visible="modalVisible" @ok="modalMethodOk" @cancel="modalMtehodCancel" >
       <a-form-model ref='userModal' :model="userForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14,offset: 1 }">
         <a-form-model-item label="头像" required>
-          <a-upload accept='.jpg,.png' name="file" class="avatar-uploader" :before-upload="beforeUpload" :show-upload-list="false" >
+          <a-upload accept='image/*' name="file" class="avatar-uploader" :before-upload="beforeUpload" :show-upload-list="false" >
             <a-button> <a-icon type="upload" /> Select File </a-button>
             <span style="padding-left: 20px" v-if="avatorFile.name && avatorFile.name.length < 12">
               {{avatorFile.name}}

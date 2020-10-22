@@ -119,6 +119,7 @@ export default {
     // 打开新增窗口
     openAddModal: function() {
       this.openType = 1;
+      this.departmentForm = {};
       this.modalVisible = true;
     },
     // add-modal OK-button 

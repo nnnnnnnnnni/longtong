@@ -12,6 +12,11 @@ const router: Irouter = {
     middleware: project.projects,
     allowAnonymous: false,
   },
+  "/project/projectByUser": {
+    method: "GET",
+    middleware: project.projectByUser,
+    allowAnonymous: false,
+  },
   "/project/update": {
     method: "PUT",
     middleware: project.update,

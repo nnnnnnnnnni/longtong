@@ -18,7 +18,7 @@ export const register = async (ctx: Context): Promise<any> => {
     mail: mail,
     password: pass,
   });
-  const token = generateToken(new_user._id);
+  const token = generateToken(new_user._id.toString());
   await redis.set(0, `TOKEN:${token}`, new_user);
   ctx.user = new_user;
   return {
@@ -52,7 +52,7 @@ export const login = async (ctx: Context) => {
       };
     }
     delete user.password;
-    const token = generateToken(user._id);
+    const token = generateToken(user._id.toString());
     await redis.set(0, `TOKEN:${token}`, user);
     ctx.user = user;
     return {

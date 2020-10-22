@@ -13,6 +13,7 @@
         <div class="item-field">
           <a-upload
             name="file"
+            accept="image/*"
             list-type="picture-card"
             class="avatar-uploader"
             :show-upload-list="false"
@@ -57,6 +58,7 @@
         <div class="item-field">
           <a-upload
             name="file"
+            accept="image/*"
             list-type="picture-card"
             class="avatar-uploader"
             :show-upload-list="false"

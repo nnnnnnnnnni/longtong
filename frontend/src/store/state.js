@@ -28,6 +28,6 @@ export default {
   },
   route: "",
   apis: {
-    upload: 'http://localhost:8000/generic/upload'
+    upload: 'http://localhost:8081/generic/upload'
   }
 };

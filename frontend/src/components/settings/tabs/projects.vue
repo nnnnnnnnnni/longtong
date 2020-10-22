@@ -38,7 +38,7 @@
       <a-form-model :model="projectForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 14, offset: 1 }">
         <a-form-model-item label="LOGO" required>
           <a-upload
-            accept=".jpg,.png"
+            accept="image/*"
             name="file"
             class="avatar-uploader"
             :before-upload="beforeUpload"
@@ -263,6 +263,7 @@ export default {
     // 打开新增model
     openAddModal: function() {
       this.openType = 1;
+      this.projectForm = {};
       this.modalVisible = true;
     },
     openEditModal: function(text) {
