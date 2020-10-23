@@ -1,4 +1,4 @@
-export const priority = [
+export const _priority = [
   {
     name: "十分紧急",
     val: 1,
@@ -21,7 +21,7 @@ export const priority = [
   }
 ];
 
-export const missionType = [
+export const _missionType = [
   {
     name: "BUG",
     val: "bug",
@@ -38,3 +38,17 @@ export const missionType = [
     color: "rgb(144, 237, 125)"
   }
 ];
+
+export function getPriority(priority, key) {
+  try {
+    if (key == "name") {
+      return _priority[Number(priority) - 1].name;
+    } else if (key == "color") {
+      return _priority[Number(priority) - 1].color;
+    }
+  } catch (error) {
+    return "";
+  }
+}
+
+export function getMissionType(type, val) {}

@@ -22,6 +22,7 @@ export const create = async (ctx: Context) => {
       return {
         user: user,
         isFinish: false,
+        isReject: false,
       };
     });
   }
@@ -49,7 +50,7 @@ export const create = async (ctx: Context) => {
   };
 };
 
-// 创建
+// 获取个人所有
 export const missions = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
   const missions: any[] = await db.mission
@@ -97,15 +98,16 @@ export const missionById = async (ctx: Context): Promise<any> => {
 export const update = async (ctx: Context): Promise<any> => {
   const doc = ctx.request.body;
   const missionId = doc._id;
-  console.log(doc.remark)
   delete doc._id;
   const oldMission: IMission = await db.mission.findOne({ _id: missionId });
   const newHandlersObj: any = {};
-  doc.handler.forEach((user: string) => {
+  doc.handler?.forEach((user: string) => {
     newHandlersObj[user] = false;
   });
   oldMission.handler.forEach((user: any) => {
-    newHandlersObj[user.user] = user.isFinish;
+    if (newHandlersObj.hasOwnProperty(user.user)) {
+      newHandlersObj[user.user] = user.isFinish;
+    }
   });
   let newHandlersArr: any = [];
   Object.keys(newHandlersObj).forEach((key: string) => {
@@ -127,7 +129,7 @@ export const update = async (ctx: Context): Promise<any> => {
         priority: doc.priority,
         type: doc.type,
         handler: newHandlersArr,
-        remark: doc.remark
+        remark: doc.remark,
       },
     },
     {
@@ -137,4 +139,84 @@ export const update = async (ctx: Context): Promise<any> => {
   return {
     data: newMission,
   };
+};
+
+// 移动修改
+export const moveUpdate = async (ctx: Context): Promise<any> => {
+  const doc = ctx.request.body;
+  const missionId = doc._id;
+  delete doc._id;
+  const newMission: IMission = await db.mission.updateOne(
+    {
+      _id: missionId,
+    },
+    {
+      $push: { comment: { user: ctx.user._id, action: "update", time: new Date() } },
+      $set: {
+        doc,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  return {
+    data: newMission,
+  };
+};
+
+export const lock = async (ctx: Context): Promise<any> => {
+  const { type, id } = ctx.request.body;
+  const userId = ctx.user._id;
+  const mission: IMission = await db.mission.findOne({ _id: id });
+  let include: boolean = false;
+  let handler: any = {};
+  let allFinish: boolean = false;
+  let isOrganizer: boolean = mission.organizer == userId;
+  mission?.handler.forEach((user: any) => {
+    allFinish = user.isFinish;
+    if (user.user == userId) {
+      include = true;
+      handler = user;
+    }
+  });
+  if(isOrganizer) {
+    await db.mission.update({
+      _id: id
+    },{
+      $set: {
+        status: 'closed'
+      }
+    })
+  }
+  if (!include) return { msg: "没有权限" };
+  if (type == "finish") {
+    await db.mission.update(
+      {
+        _id: id,
+        "handler.user": userId,
+      },
+      {
+        $set: {
+          "handler.$.isFinish": !handler.isFinish,
+        },
+        $push: { comment: { user: ctx.user._id, action: "finish", time: new Date() } },
+      }
+    );
+  } else if (type == "reject") {
+    await db.mission.update(
+      {
+        _id: id,
+        "handler.user": userId,
+      },
+      {
+        $set: {
+          "handler.$.isReject": !handler.isReject,
+        },
+        $push: { comment: { user: ctx.user._id, action: "reject", time: new Date() } },
+      }
+    );
+  } else {
+    return { msg: "参数错误" };
+  }
 };

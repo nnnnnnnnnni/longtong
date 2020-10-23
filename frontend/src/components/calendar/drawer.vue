@@ -8,7 +8,7 @@
       @close="closeDrawer"
     >
       <template slot="title" class="drawer-title">
-        <span class="title-content">{{ currentEvent.title }}</span>
+        <span class="title-content" :title="currentEvent.title">{{ currentEvent.title }}</span>
         <div class="organizer">
           <span class="title-span">发布者:</span>
           <img class="title-img" :src="currentEvent.organizer.avator" alt="" />

@@ -15,6 +15,7 @@ export interface IMission extends Document {
     {
       user: ObjectId;
       isFinish: boolean;
+      isReject?: boolean;
     }
   ];
   project?: ObjectId; // 所属项目

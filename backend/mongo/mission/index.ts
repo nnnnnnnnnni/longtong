@@ -40,6 +40,10 @@ const missionSchema = new Schema(
       isFinish: {
         type: Boolean,
         default: false
+      },
+      isReject: {
+        type: Boolean,
+        default: false
       }
     }],
     project: {
