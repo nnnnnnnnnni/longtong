@@ -51,4 +51,10 @@ export function getPriority(priority, key) {
   }
 }
 
-export function getMissionType(type, val) {}
+export function getMissionType(type, val) {
+  for (let i = 0; i < _missionType.length; i++) {
+    if(_missionType[i].val == type) {
+      if()
+    }
+  }
+}
