@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <div class="menu">
-      <setting-menu edit_type='profile' />
+      <profile-menu />
     </div>
     <div class="profile-container">
       <projects />
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import settingMenu from "@/components/settings/menu.vue";
+import profileMenu from "@/components/profile/profileMenu.vue";
 import projects from "@/components/profile/projects";
 export default {
   name: "profile",
@@ -18,7 +18,7 @@ export default {
     return {};
   },
   components: {
-    settingMenu,
+    profileMenu,
     projects
   }
 };

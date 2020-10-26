@@ -1,21 +1,12 @@
 import { IMission } from "@/mongo/mission/interface";
 import { Context } from "koa";
-import dayjs from "dayjs";
+import { getMissionStatus } from "../lib/utils";
 import db from "../mongo/schema";
 
 // 创建任务
 export const create = async (ctx: Context) => {
   const doc = ctx.request.body;
-  let missionStatus: string = "";
-  if (!doc.handler || doc.handler.length == 0) {
-    missionStatus = "needAssign";
-  } else if (dayjs(new Date()) <= dayjs(doc.time[0])) {
-    missionStatus = "upcoming";
-  } else if (dayjs(new Date()) <= dayjs(doc.time[1])) {
-    missionStatus = "processing";
-  } else if (dayjs(new Date()) > dayjs(doc.time[1])) {
-    missionStatus = "overdue";
-  }
+  let missionStatus: string = getMissionStatus(doc.time[0], doc.time[1], doc.handler);
   let handlers: any[] = [];
   if (doc.handler) {
     handlers = doc.handler.map((user: string) => {
@@ -86,10 +77,22 @@ export const missionById = async (ctx: Context): Promise<any> => {
     .populate("comment.user")
     .lean()
     .exec();
+  const newStatus: string = getMissionStatus(mission.startTime, mission.endTime, mission.handler);
+  if (mission.status != newStatus) {
+    db.mission.update({ _id: missionId }, { $set: { status: newStatus } });
+  }
+  let isFinish: boolean = false;
+  let isReject: boolean = false;
+  mission?.handler.forEach((user: any) => {
+    isFinish = user.isFinish;
+    isReject = user.isReject;
+  });
   return {
     data: {
       ...mission,
       isOwn: mission.organizer._id == userId,
+      isFinish,
+      isReject,
     },
   };
 };
@@ -102,19 +105,20 @@ export const update = async (ctx: Context): Promise<any> => {
   const oldMission: IMission = await db.mission.findOne({ _id: missionId });
   const newHandlersObj: any = {};
   doc.handler?.forEach((user: string) => {
-    newHandlersObj[user] = false;
+    newHandlersObj[user] = {
+      user: user,
+      isFinish: false,
+      isReject: false,
+    };
   });
   oldMission.handler.forEach((user: any) => {
     if (newHandlersObj.hasOwnProperty(user.user)) {
-      newHandlersObj[user.user] = user.isFinish;
+      newHandlersObj[user.user] = user;
     }
   });
   let newHandlersArr: any = [];
   Object.keys(newHandlersObj).forEach((key: string) => {
-    newHandlersArr.push({
-      user: key,
-      isFinish: newHandlersObj[key],
-    });
+    newHandlersArr.push(newHandlersObj[key]);
   });
   const newMission: IMission = await db.mission.updateOne(
     {
@@ -141,7 +145,7 @@ export const update = async (ctx: Context): Promise<any> => {
   };
 };
 
-// 移动修改
+// 移动修改时间
 export const moveUpdate = async (ctx: Context): Promise<any> => {
   const doc = ctx.request.body;
   const missionId = doc._id;
@@ -165,29 +169,33 @@ export const moveUpdate = async (ctx: Context): Promise<any> => {
   };
 };
 
+// 任务 完成/拒绝
 export const lock = async (ctx: Context): Promise<any> => {
   const { type, id } = ctx.request.body;
   const userId = ctx.user._id;
   const mission: IMission = await db.mission.findOne({ _id: id });
   let include: boolean = false;
   let handler: any = {};
-  let allFinish: boolean = false;
+  let allFinish: boolean = true;
   let isOrganizer: boolean = mission.organizer == userId;
   mission?.handler.forEach((user: any) => {
-    allFinish = user.isFinish;
+    if (!user.isFinish) allFinish = user.isFinish;
     if (user.user == userId) {
       include = true;
       handler = user;
     }
   });
-  if(isOrganizer) {
-    await db.mission.update({
-      _id: id
-    },{
-      $set: {
-        status: 'closed'
+  if (isOrganizer) {
+    await db.mission.update(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          status: "closed",
+        },
       }
-    })
+    );
   }
   if (!include) return { msg: "没有权限" };
   if (type == "finish") {

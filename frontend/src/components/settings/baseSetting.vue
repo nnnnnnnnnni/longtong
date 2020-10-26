@@ -112,12 +112,13 @@ export default {
   methods: {
     getInfo: function() {
       this.$get("/user/userInfo", {
-        field: "name,userName,mail,phone,job,department,introduction"
+        field: "avator,name,company,userName,mail,phone,job,department,introduction"
       }).then(res => {
         if(!res.data.hasOwnProperty('department')) {
           res.data.department = {info: {name: ''}}
         }
         this.userInfo = res.data;
+        this.$emit('getUserInfo', res.data);
       });
     },
     // 编辑信息

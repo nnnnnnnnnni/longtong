@@ -122,6 +122,9 @@
               <div class="action" v-else-if="item.action == 'finish'">
                 完成了此任务
               </div>
+              <div class="action" v-else-if="item.action == 'reject'">
+                拒绝了此任务
+              </div>
               <div class="time">
                 {{ moment(item.time).format("YYYY-MM-DD HH:mm:ss") }}
               </div>

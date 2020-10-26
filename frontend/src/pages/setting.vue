@@ -1,23 +1,33 @@
 <template>
   <div class="setting">
     <div class="menu">
-      <setting-menu edit_type='setting' />
+      <setting-menu :userInfo='userInfo' edit_type='setting' />
     </div>
     <div class="setting-container">
-      <router-view />
+      <router-view @getUserInfo='getUserInfo' />
     </div>
   </div>
 </template>
 
 <script>
-import settingMenu from "@/components/settings/menu";
+import settingMenu from "@/components/settings/settingMenu";
 export default {
   name: "setting",
   data() {
-    return {};
+    return {
+      userInfo: {
+        company: {info: '', role: 'user'},
+        department: {info: {name: ''}}
+      },
+    };
   },
   components: {
     settingMenu
+  },
+  methods: {
+    getUserInfo: function(data) {
+      this.userInfo = Object.assign(this.userInfo, data);
+    },
   }
 };
 </script>

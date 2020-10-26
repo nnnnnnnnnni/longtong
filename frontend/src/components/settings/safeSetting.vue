@@ -24,7 +24,7 @@
               <a-icon key="disconnect" type="disconnect" />
             </a-tooltip>
           </template>
-          <a-card-meta title="邮箱" :description="userInfo.phone || '暂未设置'" >
+          <a-card-meta title="手机" :description="userInfo.phone || '暂未设置'" >
             <a-avatar slot="avatar" icon="phone" />
           </a-card-meta>
         </a-card>
@@ -52,7 +52,7 @@
               <a-icon key="disconnect" type="disconnect" />
             </a-tooltip>
           </template>
-          <a-card-meta title="手机" :description="userInfo.mail || '暂未设置'" >
+          <a-card-meta title="邮箱" :description="userInfo.mail || '暂未设置'" >
             <a-avatar slot="avatar" icon="mail" />
           </a-card-meta>
         </a-card>

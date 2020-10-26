@@ -31,7 +31,7 @@ export default {
   methods: {
     getProjects: function() {
       this.$get("/project/projectByUser").then(res => {
-        this.projects = [...res.data, ...res.data];
+        this.projects = res.data;
       });
     }
   }
