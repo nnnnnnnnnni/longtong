@@ -77,15 +77,20 @@ export const missionById = async (ctx: Context): Promise<any> => {
     .populate("comment.user")
     .lean()
     .exec();
-  const newStatus: string = getMissionStatus(mission.startTime, mission.endTime, mission.handler);
+  let newStatus: string = mission.status;
+  if (newStatus != "closed") {
+    newStatus = getMissionStatus(mission.startTime, mission.endTime, mission.handler);
+  }
   if (mission.status != newStatus) {
     db.mission.update({ _id: missionId }, { $set: { status: newStatus } });
   }
-  let isFinish: boolean = false;
-  let isReject: boolean = false;
+  let isFinish: boolean;
+  let isReject: boolean;
   mission?.handler.forEach((user: any) => {
-    isFinish = user.isFinish;
-    isReject = user.isReject;
+    if (user.user._id == userId) {
+      isFinish = user.isFinish;
+      isReject = user.isReject;
+    }
   });
   return {
     data: {
@@ -179,13 +184,13 @@ export const lock = async (ctx: Context): Promise<any> => {
   let allFinish: boolean = true;
   let isOrganizer: boolean = mission.organizer == userId;
   mission?.handler.forEach((user: any) => {
-    if (!user.isFinish) allFinish = user.isFinish;
+    if (!user.isFinish || !user.isReject) allFinish = user.isFinish || user.isReject;
     if (user.user == userId) {
       include = true;
       handler = user;
     }
   });
-  if (isOrganizer) {
+  if (isOrganizer && type == "close") {
     await db.mission.update(
       {
         _id: id,
@@ -194,10 +199,14 @@ export const lock = async (ctx: Context): Promise<any> => {
         $set: {
           status: "closed",
         },
+        $push: { comment: { user: ctx.user._id, action: "close", time: new Date() } },
       }
     );
+    return {
+      msg: "关闭成功！关闭",
+    }
   }
-  if (!include) return { msg: "没有权限" };
+  if (!include) return { status: 400, msg: "没有权限" };
   if (type == "finish") {
     await db.mission.update(
       {
@@ -207,10 +216,14 @@ export const lock = async (ctx: Context): Promise<any> => {
       {
         $set: {
           "handler.$.isFinish": !handler.isFinish,
+          status: allFinish ? "closed" : mission.status,
         },
         $push: { comment: { user: ctx.user._id, action: "finish", time: new Date() } },
       }
     );
+    return {
+      msg: "完成成功！完成",
+    };
   } else if (type == "reject") {
     await db.mission.update(
       {
@@ -220,10 +233,14 @@ export const lock = async (ctx: Context): Promise<any> => {
       {
         $set: {
           "handler.$.isReject": !handler.isReject,
+          status: allFinish ? "closed" : mission.status,
         },
         $push: { comment: { user: ctx.user._id, action: "reject", time: new Date() } },
       }
     );
+    return {
+      msg: "拒绝成功！拒绝",
+    };
   } else {
     return { msg: "参数错误" };
   }

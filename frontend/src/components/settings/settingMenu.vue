@@ -1,23 +1,42 @@
 <template>
   <div class="setting-menu">
     <div class="avator">
-      <img :src="userInfo.avator" />
+      <img :src="this.$store.state.user.avator" />
     </div>
-    <div class="username">{{userInfo.userName}}</div>
+    <div class="username">{{ this.$store.state.user.userName }}</div>
     <div class="menu-group">
       <div class="info-item">
-        <a-button type='primary' block @click="exitSetting">EXIT SETTING</a-button>
+        <a-button type="primary" block @click="exitSetting"
+          >EXIT SETTING</a-button
+        >
       </div>
-      <div class="info-item _edit" :class="{checked_active: editActive == 'base'}" @click="changeTab('base')">
+      <div
+        class="info-item _edit"
+        :class="{ checked_active: this.$route.name == 'base' }"
+        @click="changeTab('base')"
+      >
         <div class="info-item-text">基本设置</div>
       </div>
-      <div class="info-item _edit" :class="{checked_active: editActive == 'safe'}" @click="changeTab('safe')">
+      <div
+        class="info-item _edit"
+        :class="{ checked_active: this.$route.name == 'safe' }"
+        @click="changeTab('safe')"
+      >
         <div class="info-item-text">安全设置</div>
       </div>
-      <div class="info-item _edit" :class="{checked_active: editActive == 'bind'}" @click="changeTab('bind')">
+      <div
+        class="info-item _edit"
+        :class="{ checked_active: this.$route.name == 'bind' }"
+        @click="changeTab('bind')"
+      >
         <div class="info-item-text">绑定设置</div>
       </div>
-      <div class="info-item _edit" :class="{checked_active: editActive == 'company'}" @click="changeTab('company')" v-if="userInfo.company.role != 'user'">
+      <div
+        v-if="userInfo.company.role != 'user'"
+        class="info-item _edit"
+        :class="{ checked_active: this.$route.name == 'company' }"
+        @click="changeTab('company')"
+      >
         <div class="info-item-text">公司设置</div>
       </div>
     </div>
@@ -27,32 +46,28 @@
 <script>
 export default {
   name: "setting-menu",
-  props: ['userInfo'],
+  props: ["userInfo"],
   data() {
     return {
       editActive: this.$route.name,
       userId: this.$route.params.id
     };
   },
-  created() {
-    console.log(this.userInfo)
-  },
   methods: {
     exitSetting: function() {
-      this.$router.push({name: 'profile', params: {id: this.userInfo._id}})
+      this.$router.push({ name: "profile", params: { id: this.userInfo._id } });
     },
-    changeTab: function(tab){
-      if(this.editActive == tab){
+    changeTab: function(tab) {
+      if (this.editActive == tab) {
         return;
       } else {
         this.editActive = tab;
-        this.$router.push({name: tab})
+        this.$router.push({ name: tab });
       }
     }
-  },
+  }
 };
 </script>
-
 
 <style scoped>
 .setting-menu {
@@ -81,14 +96,14 @@ export default {
   text-align: center;
   margin-bottom: 10px;
 }
-.menu-group{
+.menu-group {
   overflow: hidden;
   position: absolute;
   width: 100%;
   box-sizing: border-box;
-  transition: all .8s;
+  transition: all 0.8s;
 }
-.ellipsis{
+.ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-all;
@@ -108,13 +123,13 @@ export default {
   color: #666;
   width: 90%;
   user-select: none;
-  transition: all .5s;
+  transition: all 0.5s;
 }
 .info-item .info-item-text {
   flex: 1;
   margin-left: 10px;
 }
-._edit .info-item-text{
+._edit .info-item-text {
   margin-left: 0px;
 }
 ._edit {
@@ -122,7 +137,7 @@ export default {
   cursor: pointer;
   border-radius: 5px;
 }
-.checked_active{
+.checked_active {
   background-color: rgba(0, 0, 0, 0.12);
 }
 </style>

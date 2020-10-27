@@ -111,9 +111,7 @@ export default {
   },
   methods: {
     getInfo: function() {
-      this.$get("/user/userInfo", {
-        field: "avator,name,company,userName,mail,phone,job,department,introduction"
-      }).then(res => {
+      this.$get("/user/userInfo").then(res => {
         if(!res.data.hasOwnProperty('department')) {
           res.data.department = {info: {name: ''}}
         }

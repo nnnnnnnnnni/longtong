@@ -10,13 +10,7 @@
       <span class="item-icon">
         <a-icon type='bars'></a-icon>
       </span>
-      <span class="item-title">我的任务</span>
-    </div>
-    <div class="menu-item" :class="{'menu-active': this.$store.state.route == 'project'}" @click="jump('project')">
-      <span class="item-icon">
-        <a-icon type='appstore'></a-icon>
-      </span>
-      <span class="item-title">我的项目</span>
+      <span class="item-title">我的待办</span>
     </div>
     <div class="menu-item" @click="isDrawerOpen = true">
       <span class="item-icon">

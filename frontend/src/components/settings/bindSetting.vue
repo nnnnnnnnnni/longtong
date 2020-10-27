@@ -73,9 +73,7 @@ export default {
   },
   methods: {
     getInfo: function() {
-      this.$get("/user/userInfo", {
-        field: "wechat,miniProgram"
-      }).then(res => {
+      this.$get("/user/userInfo").then(res => {
         this.userInfo = res.data;
       });
     }

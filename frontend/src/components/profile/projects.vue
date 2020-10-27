@@ -1,7 +1,7 @@
 <template>
   <div class="projects">
     <h2 class="title">负责项目</h2>
-    <div class="list">
+    <div class="list" v-if="projects.length != 0">
       <div v-for="item in projects" :key="item._id" class="item">
         <div class="info">
           <img :src="item.logo" alt="" />
@@ -14,6 +14,9 @@
         </div>
       </div>
     </div>
+    <div v-else class="list-empty">
+      <a-empty description='暂未参与'></a-empty>
+    </div>
   </div>
 </template>
 
@@ -22,7 +25,8 @@ export default {
   name: "projects",
   data() {
     return {
-      projects: []
+      projects: [],
+      userId: this.$route.params.id
     };
   },
   mounted() {
@@ -30,7 +34,9 @@ export default {
   },
   methods: {
     getProjects: function() {
-      this.$get("/project/projectByUser").then(res => {
+      this.$get("/project/projectByUser",{
+        userId: this.userId
+      }).then(res => {
         this.projects = res.data;
       });
     }
@@ -56,7 +62,7 @@ export default {
   justify-content: space-between;
 }
 .list .item {
-  width: 48%;
+  width: 49%;
   border: 1px solid #e1e4e8;
   border-radius: 6px;
   height: 142px;
@@ -97,5 +103,13 @@ export default {
 .list .item .department .text {
   padding-left: 5px;
   font-size: 12px;
+}
+.list-empty {
+  height: 214px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #e3e3e3;
 }
 </style>

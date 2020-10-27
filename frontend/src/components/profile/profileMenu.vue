@@ -3,34 +3,38 @@
     <div class="avator">
       <img :src="userInfo.avator" alt />
     </div>
-    <div class="username">{{userInfo.userName}}</div>
+    <div class="username">{{ userInfo.userName }}</div>
     <div class="menu-group">
-      <div class="info-item">
-        <a-button type='primary' block @click="goSetting">GO SETTING</a-button>
+      <div class="info-item" v-if="userInfo.isOwn">
+        <a-button type="primary" block @click="goSetting">GO SETTING</a-button>
       </div>
       <div class="info-item" :title="userInfo.job">
-        <a-icon style="fontSize: 16px;color: #1890ff" type="idcard" />
-        <span class="info-item-text">{{userInfo.job || '暂未设置'}}</span>
+        <a-icon class="icon-style" type="idcard" />
+        <span class="info-item-text">{{ userInfo.job || "暂未设置" }}</span>
       </div>
       <div class="info-item ellipsis" :title="userInfo.department">
-        <a-icon style="fontSize: 16px;color: #1890ff" type="cluster" />
-        <span class="info-item-text ellipsis">{{userInfo.department.info.name || '暂未设置'}}</span>
+        <a-icon class="icon-style" type="cluster" />
+        <span class="info-item-text ellipsis">{{
+          userInfo.department.info.name || "暂未设置"
+        }}</span>
       </div>
       <div class="info-item" :title="userInfo.mail">
-        <a-icon style="fontSize: 16px;color: #1890ff" type="mail" />
-        <div class="info-item-text">{{userInfo.mail || '暂未设置'}}</div>
+        <a-icon class="icon-style" type="mail" />
+        <div class="info-item-text">{{ userInfo.mail || "暂未设置" }}</div>
       </div>
       <div class="info-item" :title="userInfo.phone">
-        <a-icon style="fontSize: 16px;color: #1890ff" type="phone" />
-        <div class="info-item-text">{{userInfo.phone || '暂未设置'}}</div>
+        <a-icon class="icon-style" type="phone" />
+        <div class="info-item-text">{{ userInfo.phone || "暂未设置" }}</div>
       </div>
-      <div class="info-item" :title="userInfo.timeLine || 0">
-        <a-icon style="fontSize: 16px;color: #1890ff" type="line-chart" />
-        <div class="info-item-text">{{userInfo.timeLine || 0}}</div>
+      <div class="info-item">
+        <a-icon class="icon-style" type="line-chart" />
+        <div class="info-item-text">{{ userInfo.timeLine || 0 }}</div>
       </div>
-      <div class="info-item" :title="userInfo.introduction">
-        <a-icon style="fontSize: 16px;color: #1890ff;padding-top: 4px" type="eye" />
-        <div class="info-item-text">{{userInfo.introduction || '暂未设置'}}</div>
+      <div class="_info-item">
+        <a-icon class="icon-style _icon-style" type="eye" />
+        <div class="info-item-text">
+          {{ userInfo.introduction || "暂未设置" }}
+        </div>
       </div>
     </div>
   </div>
@@ -42,36 +46,39 @@ export default {
   data() {
     return {
       userInfo: {
-        company: {info: '', role: 'user'},
-        department: {info: {name: ''}}
+        company: { info: "", role: "user" },
+        department: { info: { name: "" } }
       },
       userId: this.$route.params.id
     };
   },
-  created() {
-    this.getInfo()
+  mounted() {
+    this.getInfo();
   },
   methods: {
     goSetting: function() {
-      this.$router.push({name: 'setting'})
+      this.$router.push({ name: "setting" });
     },
     getInfo: function() {
       this.$get("/user/userInfo", {
-        field: "avator,name,company,userName,mail,phone,job,department,introduction"
+        userId: this.userId
       }).then(res => {
         this.userInfo = Object.assign(this.userInfo, res.data);
       });
-    },
-  },
+    }
+  }
 };
 </script>
-
 
 <style scoped>
 *,
 *::before,
 *::after {
   box-sizing: content-box;
+}
+.icon-style {
+  font-size: 16px;
+  color: #1890ff;
 }
 .setting-menu {
   width: 100%;
@@ -99,14 +106,14 @@ export default {
   text-align: center;
   margin-bottom: 10px;
 }
-.menu-group{
+.menu-group {
   overflow: hidden;
   position: absolute;
   width: 100%;
   box-sizing: border-box;
-  transition: all .8s;
+  transition: all 0.8s;
 }
-.ellipsis{
+.ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-all;
@@ -126,7 +133,34 @@ export default {
   color: #666;
   width: 90%;
   user-select: none;
-  transition: all .5s;
+  transition: all 0.5s;
+}
+._info-item {
+  box-sizing: border-box;
+  position: relative;
+  text-align: left;
+  font-size: 14px;
+  margin: 0px auto;
+  line-height: 26px;
+  display: flex;
+  align-items: center;
+  color: #666;
+  width: 90%;
+  user-select: none;
+  transition: all 0.5s;
+}
+._info-item .info-item-text {
+  word-break: break-all;
+  margin: 0px 10px 0px 26px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
+._info-item ._icon-style {
+  position: absolute;
+  top: 6px;
 }
 .info-item .info-item-text {
   flex: 1;

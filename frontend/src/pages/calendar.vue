@@ -168,6 +168,7 @@
       :currentEvent="currentEvent"
       @closeDrawer="closeDrawer"
       @editMission="editMission"
+      @actionSuccess="actionSuccess"
     />
   </div>
 </template>
@@ -435,6 +436,10 @@ export default {
     // 关闭Drawer
     closeDrawer: function() {
       this.drawerVisible = false;
+    },
+    // 用户更新状态后重新请求
+    actionSuccess: function(id) {
+      this.handleEventClick({event: {id: id}});
     },
     // 进入编辑模式
     editMission: function() {

@@ -136,14 +136,6 @@ const routerConfig = new Router({
                 pageTitle: '任务'
               },
               component: () => import("@/components/workbench/missions")
-            },
-            {
-              path: "/workbench/project",
-              name: "project",
-              meta: {
-                pageTitle: '项目'
-              },
-              component: () => import("@/components/workbench/projects")
             }
           ]
         }

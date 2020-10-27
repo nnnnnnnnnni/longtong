@@ -8,7 +8,9 @@
       @close="closeDrawer"
     >
       <template slot="title" class="drawer-title">
-        <span class="title-content" :title="currentEvent.title">{{ currentEvent.title }}</span>
+        <span class="title-content" :title="currentEvent.title">{{
+          currentEvent.title
+        }}</span>
         <div class="organizer">
           <span class="title-span">发布者:</span>
           <img class="title-img" :src="currentEvent.organizer.avator" alt="" />
@@ -16,17 +18,72 @@
         </div>
         <div class="button-edit">
           <a-button-group>
-            <a-button size="small" type="primary">完成</a-button>
+            <a-popconfirm
+              :title="currentEvent.isOwn ? '一旦关闭无法恢复,是否继续？' : ''"
+              :visible="closePopVisible"
+              ok-text="确定"
+              cancel-text="取消"
+              @confirm="action('close')"
+              @cancel="closePopVisible = false"
+            >
+              <a-button
+                size="small"
+                type="danger"
+                v-if="currentEvent.isOwn"
+                :disabled="
+                  currentEvent.status == 'closed' || currentEvent.isReject
+                "
+                @click="openAction"
+                >{{
+                  currentEvent.status == "closed" ? "已关闭" : "关闭"
+                }}</a-button
+              >
+              <a-button
+                size="small"
+                type="primary"
+                v-else
+                :disabled="
+                  currentEvent.status == 'closed' || currentEvent.isFinish
+                "
+                @click="action('finish')"
+                >{{
+                  currentEvent.status == "closed"
+                    ? "已关闭"
+                    : currentEvent.isFinish
+                    ? "已完成"
+                    : "完成"
+                }}</a-button
+              >
+            </a-popconfirm>
+
             <a-button
               size="small"
               type="primary"
-              :disabled="!currentEvent.isOwn"
+              :disabled="!currentEvent.isOwn || currentEvent.status == 'closed'"
               @click="openEdit"
               >编辑</a-button
             >
-            <a-button size="small" type="danger" :disabled="currentEvent.isOwn"
-              >拒绝</a-button
+            <a-popconfirm
+              title="一旦拒绝无法恢复,是否继续？"
+              :visible="rejectPopVisible"
+              ok-text="拒绝"
+              cancel-text="取消"
+              @confirm="action('reject')"
+              @cancel="rejectPopVisible = false"
             >
+              <a-button
+                size="small"
+                type="danger"
+                :disabled="
+                  currentEvent.isOwn ||
+                    currentEvent.isReject ||
+                    currentEvent.isFinish ||
+                    currentEvent.status == 'closed'
+                "
+                @click="openRejectPop"
+                >{{ currentEvent.isReject ? "已拒绝" : "拒绝" }}</a-button
+              >
+            </a-popconfirm>
           </a-button-group>
         </div>
       </template>
@@ -70,8 +127,24 @@
               :key="handler._id"
             >
               <template slot="title">
-                <div style="text-align: center">{{handler.user.userName}}</div>
-                <div style="text-align: center">{{handler.isFinish? '已完成': '未完成'}}</div>
+                <div style="text-align: center">
+                  {{ handler.user.userName }}
+                </div>
+                <div
+                  v-if="handler.isFinish"
+                  style="color:#a0d911;text-align: center"
+                >
+                  已完成
+                </div>
+                <div
+                  v-else-if="handler.isReject"
+                  style="color:#ff4d4f;text-align: center"
+                >
+                  已拒绝
+                </div>
+                <div v-else style="color:#85a5ff;text-align: center">
+                  未完成
+                </div>
               </template>
               <img :src="handler.user.avator" alt="" />
             </a-tooltip>
@@ -125,6 +198,9 @@
               <div class="action" v-else-if="item.action == 'reject'">
                 拒绝了此任务
               </div>
+              <div class="action" v-else-if="item.action == 'close'">
+                关闭了此任务
+              </div>
               <div class="time">
                 {{ moment(item.time).format("YYYY-MM-DD HH:mm:ss") }}
               </div>
@@ -143,6 +219,8 @@ export default {
   props: ["drawerVisible", "currentEvent"],
   data() {
     return {
+      closePopVisible: false,
+      rejectPopVisible: false,
       moment,
       visible: false
     };
@@ -150,11 +228,34 @@ export default {
   methods: {
     // 关闭drawer
     closeDrawer: function() {
+      this.rejectPopVisible = false;
+      this.rejectPopVisible = false;
       this.$emit("closeDrawer", false);
     },
     openEdit: function() {
       this.$emit("editMission", true);
-    }
+    },
+    openRejectPop: function() {
+      this.rejectPopVisible = true;
+    },
+    action: function(type) {
+      this.$post("/mission/lock", {
+        type: type,
+        id: this.currentEvent._id
+      }).then(res => {
+        if (res.status == 200) {
+          this.$message.success(res.msg || "操作成功");
+          this.rejectPopVisible = false;
+          this.closePopVisible = false;
+          this.$emit("actionSuccess", this.currentEvent._id);
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
+    },
+    openAction: function(type) {
+      this.closePopVisible = true;
+    },
   }
 };
 </script>

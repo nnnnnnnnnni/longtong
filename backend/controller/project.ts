@@ -42,7 +42,9 @@ export const projects = async (ctx: Context): Promise<any> => {
 
 // 获取某人项目
 export const projectByUser = async (ctx: Context): Promise<any> => {
-  const userId = ctx.user._id;
+  let userId = ctx.user._id;
+  const postUser = ctx.request.query.userId;
+  if(postUser) userId = postUser;
   const data: any[] = await db.project
     .find({
       $or: [
