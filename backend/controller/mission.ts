@@ -41,7 +41,7 @@ export const create = async (ctx: Context) => {
   };
 };
 
-// 获取个人所有
+// 获取个人所有任务
 export const missions = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
   const missions: any[] = await db.mission
@@ -68,7 +68,7 @@ export const missions = async (ctx: Context): Promise<any> => {
 export const missionById = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
   const missionId = ctx.request.query._id;
-  const mission: any = await db.mission
+  let mission: any = await db.mission
     .findOne({
       _id: missionId,
     })
@@ -78,11 +78,20 @@ export const missionById = async (ctx: Context): Promise<any> => {
     .lean()
     .exec();
   let newStatus: string = mission.status;
+  console.log(1,newStatus)
   if (newStatus != "closed") {
     newStatus = getMissionStatus(mission.startTime, mission.endTime, mission.handler);
+    console.log(2,newStatus)
   }
   if (mission.status != newStatus) {
-    db.mission.update({ _id: missionId }, { $set: { status: newStatus } });
+    mission = await db.mission
+      .findOneAndUpdate({ _id: missionId }, { $set: { status: newStatus } }, { new: true })
+      .populate("organizer")
+      .populate("handler.user")
+      .populate("comment.user")
+      .lean()
+      .exec();
+      console.log(3,mission.status)
   }
   let isFinish: boolean;
   let isReject: boolean;
@@ -133,6 +142,7 @@ export const update = async (ctx: Context): Promise<any> => {
       $push: { comment: { user: ctx.user._id, action: "update", time: new Date() } },
       $set: {
         title: doc.title,
+        status: getMissionStatus(doc.startTime, doc.endTime, newHandlersArr),
         startTime: doc.startTime,
         endTime: doc.endTime,
         priority: doc.priority,
@@ -155,15 +165,14 @@ export const moveUpdate = async (ctx: Context): Promise<any> => {
   const doc = ctx.request.body;
   const missionId = doc._id;
   delete doc._id;
+  doc.status = getMissionStatus(doc.startTime, doc.endTime, doc.handler);
   const newMission: IMission = await db.mission.updateOne(
     {
       _id: missionId,
     },
     {
       $push: { comment: { user: ctx.user._id, action: "update", time: new Date() } },
-      $set: {
-        doc,
-      },
+      $set: doc,
     },
     {
       new: true,
@@ -184,7 +193,7 @@ export const lock = async (ctx: Context): Promise<any> => {
   let allFinish: boolean = true;
   let isOrganizer: boolean = mission.organizer == userId;
   mission?.handler.forEach((user: any) => {
-    if (!user.isFinish || !user.isReject) allFinish = user.isFinish || user.isReject;
+    if (!user.isFinish && !user.isReject && user.user != userId) allFinish = false;
     if (user.user == userId) {
       include = true;
       handler = user;
@@ -204,7 +213,7 @@ export const lock = async (ctx: Context): Promise<any> => {
     );
     return {
       msg: "关闭成功！关闭",
-    }
+    };
   }
   if (!include) return { status: 400, msg: "没有权限" };
   if (type == "finish") {

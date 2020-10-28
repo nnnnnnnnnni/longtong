@@ -184,7 +184,9 @@ import drawer from "../components/calendar/drawer";
 import VditorPreview from "vditor/dist/method.min";
 import moment, { locale } from "moment";
 import {
+  getMissionType,
   getPriority,
+  getStatusType,
   _missionType as missionTypes,
   _priority as prioritys
 } from "../lib/type";
@@ -403,16 +405,15 @@ export default {
           body = await VditorPreview.md2html(res.data.remark);
         }
         this.currentEvent = Object.assign(res.data, {
-          _priority: prioritys[res.data.priority - 1].name,
-          _priorityColor: prioritys[res.data.priority - 1].color,
+          _priority: getPriority(res.data.priority, 'name'),
+          _priorityColor: getPriority(res.data.priority, 'color'),
+          _type: getMissionType(res.data.type, 'name'),
+          _typeColor: getMissionType(res.data.type, 'color'),
+          _status: getStatusType(res.data.status, 'name'),
+          _statusColor: getStatusType(res.data.status, 'color'),
           remarkBody: body
         });
-        missionTypes.forEach(type => {
-          if (type.val == res.data.type) {
-            this.currentEvent._type = type.name;
-            this.currentEvent._typeColor = type.color;
-          }
-        });
+        
         this.drawerVisible = true;
       });
     },
@@ -423,6 +424,7 @@ export default {
       this.$put("/mission/moveUpdate", {
         _id: newEvent.id,
         isAllDay: newEvent.allDay,
+        handler: newEvent.extendedProps.handler,
         startTime: moment(moment(newEvent.start).format("YYYY-MM-DD HH:mm:ss")),
         endTime: newEvent.end
           ? moment(moment(newEvent.end).format("YYYY-MM-DD HH:mm:ss"))

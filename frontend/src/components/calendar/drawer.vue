@@ -14,7 +14,7 @@
         <div class="organizer">
           <span class="title-span">发布者:</span>
           <img class="title-img" :src="currentEvent.organizer.avator" alt="" />
-          {{ currentEvent.organizer.userName }}
+          <span class="title-span">{{ currentEvent.organizer.userName }}</span>
         </div>
         <div class="button-edit">
           <a-button-group>
@@ -43,15 +43,11 @@
                 type="primary"
                 v-else
                 :disabled="
-                  currentEvent.status == 'closed' || currentEvent.isFinish
+                  currentEvent.status == 'closed' || currentEvent.isFinish || currentEvent.isReject
                 "
                 @click="action('finish')"
                 >{{
-                  currentEvent.status == "closed"
-                    ? "已关闭"
-                    : currentEvent.isFinish
-                    ? "已完成"
-                    : "完成"
+                  currentEvent.isFinish ? '已完成': currentEvent.start == 'closed' ? '已关闭':'完成'
                 }}</a-button
               >
             </a-popconfirm>
@@ -98,7 +94,7 @@
                   : moment(currentEvent.startTime).format("YYYY-MM-DD HH:mm")
               }}
             </div>
-            <div>~</div>
+            <div class="dot">~</div>
             <div class="endTime">
               {{
                 currentEvent.isAllDay
@@ -150,7 +146,15 @@
             </a-tooltip>
           </div>
           <div class="field" v-else>
-            <a-tag color="rgb(230, 36, 18)">暂未分配</a-tag>
+            <a-tag color="rgb(230, 36, 18)">暂无</a-tag>
+          </div>
+        </div>
+        <div class="status">
+          <div class="icon"><a-icon type="pir-chart" /> 状态 :</div>
+          <div class="field">
+            <a-tag :color="currentEvent._statusColor">{{
+              currentEvent._status
+            }}</a-tag>
           </div>
         </div>
         <div class="priority">
@@ -229,15 +233,18 @@ export default {
     // 关闭drawer
     closeDrawer: function() {
       this.rejectPopVisible = false;
-      this.rejectPopVisible = false;
+      this.closePopVisible = false;
       this.$emit("closeDrawer", false);
     },
+    // 打开编辑框
     openEdit: function() {
       this.$emit("editMission", true);
     },
+    // 打开拒绝二次确认框
     openRejectPop: function() {
       this.rejectPopVisible = true;
     },
+    // 完成/关闭/拒绝 操作
     action: function(type) {
       this.$post("/mission/lock", {
         type: type,
@@ -247,15 +254,17 @@ export default {
           this.$message.success(res.msg || "操作成功");
           this.rejectPopVisible = false;
           this.closePopVisible = false;
+          // 通知父组件更新任务
           this.$emit("actionSuccess", this.currentEvent._id);
         } else {
           this.$message.error(res.msg);
         }
       });
     },
+    // 打开未全部完成时，强制结束二次确认框
     openAction: function(type) {
       this.closePopVisible = true;
-    },
+    }
   }
 };
 </script>
@@ -263,6 +272,7 @@ export default {
 <style scoped>
 .time,
 .handler,
+.status,
 .priority,
 .type {
   line-height: 40px;
@@ -287,6 +297,10 @@ export default {
   box-sizing: border-box;
   padding-left: 20px;
   align-items: center;
+}
+.field .dot {
+  width: 20px;
+  text-align: center;
 }
 .body {
   display: flex;
@@ -341,17 +355,20 @@ export default {
   margin-right: 20px;
   cursor: pointer;
 }
+.organizer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .title-img {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  margin-right: 5px;
   cursor: pointer;
 }
 .title-span {
   font-size: 12px;
-  margin-left: 20px;
-  margin-right: 5px;
+  margin: 0px 5px;
 }
 .button-edit {
   float: right;

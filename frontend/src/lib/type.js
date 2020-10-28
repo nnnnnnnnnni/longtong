@@ -39,6 +39,39 @@ export const _missionType = [
   }
 ];
 
+export const _statusType = [
+  {
+    name: "等待分配",
+    val: "needAssign",
+    color: "#096dd9"
+  },
+  {
+    name: "即将开始",
+    val: "upcoming",
+    color: "#fadb14"
+  },
+  {
+    name: "进行中",
+    val: "processing",
+    color: "#a0d911"
+  },
+  {
+    name: "已逾期",
+    val: "overdue",
+    color: "#f5222d"
+  },
+  {
+    name: "已通过",
+    val: "passed",
+    color: "#52c41a"
+  },
+  {
+    name: "已关闭",
+    val: "closed",
+    color: "#434343"
+  }
+];
+
 export function getPriority(priority, key) {
   try {
     if (key == "name") {
@@ -58,6 +91,18 @@ export function getMissionType(type, key) {
     }
     if (_missionType[i].val == type && key == "color") {
       return _missionType[i].color;
+    }
+  }
+  return "";
+}
+
+export function getStatusType(type, key) {
+  for (let i = 0; i < _statusType.length; i++) {
+    if (_statusType[i].val == type && key == "name") {
+      return _statusType[i].name;
+    }
+    if (_statusType[i].val == type && key == "color") {
+      return _statusType[i].color;
     }
   }
   return "";

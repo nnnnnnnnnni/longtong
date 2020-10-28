@@ -39,13 +39,13 @@ export const uploadFile = async (filePath: string, name: string): Promise<any> =
 };
 
 export const getMissionStatus = (startTime: Date | string, endTime: Date | string, handler: Array<any>): string => {
-  if (!handler || handler.length == 0) {
+  if (dayjs(new Date()) > dayjs(endTime)) {
+    return "overdue";
+  } else if (!handler || handler.length == 0) {
     return "needAssign";
   } else if (dayjs(new Date()) <= dayjs(startTime)) {
     return "upcoming";
   } else if (dayjs(new Date()) <= dayjs(endTime)) {
     return "processing";
-  } else if (dayjs(new Date()) > dayjs(endTime)) {
-    return "overdue";
   }
 };

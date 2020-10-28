@@ -64,6 +64,7 @@ export default {
         userId: this.userId
       }).then(res => {
         this.userInfo = Object.assign(this.userInfo, res.data);
+        console.log(this.userInfo)
       });
     }
   }
