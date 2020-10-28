@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { departmentColumns } from './columns'
 export default {
   name: "department",
   props: ['activeTab'],
@@ -54,37 +55,7 @@ export default {
       confirmLoading: false,
       departmentForm: {},
       users: [],
-      columns: [
-        {
-          title: "名称",
-          className: "_center",
-          dataIndex: "name",
-          key: "name"
-        },
-        {
-          title: "管理数",
-          className: "_center",
-          dataIndex: "adminNum",
-          key: "adminNum"
-        },
-        {
-          title: "成员数",
-          className: "_center",
-          dataIndex: "userNum",
-          key: "userNum"
-        },
-        {
-          title: "上级部门",
-          className: "_center",
-          scopedSlots: { customRender: "attached" }
-        },
-        {
-          title: "操作",
-          className: "_center",
-          scopedSlots: { customRender: "action" },
-          fixed: "right"
-        }
-      ],
+      columns: departmentColumns,
       departmentData: []
     };
   },

@@ -134,7 +134,7 @@ export const update = async (ctx: Context): Promise<any> => {
   };
 };
 
-// 个人详细信息（定制field）
+// 个人详细信息
 export const userInfo = async (ctx: Context): Promise<any> => {
   let userId = ctx.user._id;
   const postUser = ctx.request.query.userId;

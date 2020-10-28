@@ -165,6 +165,7 @@
 </template>
 
 <script>
+import { participantsColumns } from './columns'
 import {ismail} from '../../../lib/utils'
 export default {
   name: "participantsTab",
@@ -182,64 +183,7 @@ export default {
       },
       departments: [],
       jobs: [],
-      columns: [
-        {
-          title: "头像",
-          dataIndex: "avator",
-          key: "avator",
-          className: '_center',
-          scopedSlots: { customRender: "avator" },
-        },
-        {
-          title: "姓名",
-          className: '_center',
-          dataIndex: "name",
-          key: "name",
-          scopedSlots: { customRender: "name" },
-        },
-        {
-          title: "岗位",
-          dataIndex: "job",
-          className: '_center',
-          key: "job",
-        },
-        {
-          title: "部门",
-          className: '_center',
-          dataIndex: "department",
-          key: "department",
-          scopedSlots: { customRender: "department" }
-        },
-        {
-          title: "联系方式",
-          className: '_center',
-          dataIndex: "mail",
-          key: "mail",
-          scopedSlots: { customRender: "contact" }
-        },
-        {
-          title: "公司角色",
-          className: '_center',
-          dataIndex: "company",
-          key: "company",
-          scopedSlots: { customRender: "company" }
-        },
-        {
-          title: "参与项目",
-          className: '_center',
-          dataIndex: "projects",
-          key: "projects",
-          scopedSlots: { customRender: "projects" }
-        },
-        {
-          title: "操作",
-          className: '_center',
-          dataIndex: "_id",
-          key: "_id",
-          scopedSlots: { customRender: "_id" },
-          fixed: 'right'
-        }
-      ],
+      columns: participantsColumns,
       userData: []
     };
   },
@@ -287,6 +231,7 @@ export default {
       this.openType =1;
       this.modalVisible = true;
     },
+    // 打开编辑modal
     openEditModal: function(text) {
       this.openType = 2;
       this.userForm = {

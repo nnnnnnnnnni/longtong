@@ -46,14 +46,14 @@
           <a-icon type="question-circle" />
         </div>
       </a-tooltip>
-      <a-tooltip placement="bottom">
-        <template slot="title">
-          <span>通知</span>
+      <a-dropdown class="profile-item" :trigger="['click']">
+        <a style="color: #2c3e50" @click="e => e.preventDefault()">
+          <a-icon type="bell" class="ant-dropdown-link" />
+        </a>
+        <template slot="overlay">
+          123123123
         </template>
-        <div class="profile-item" @click="jumpPage('help')">
-          <a-icon type="bell" />
-        </div>
-      </a-tooltip>
+      </a-dropdown>
       <a-tooltip placement="bottom">
         <template slot="title">
           <span>设置</span>
@@ -97,8 +97,11 @@ export default {
   methods: {
     jumpPage: function(name) {
       if (name != this.$store.state.route) {
-        if(name == 'profile') {
-          return this.$router.push({ name: name, params: {id: this.$store.state.user._id} });
+        if (name == "profile") {
+          return this.$router.push({
+            name: name,
+            params: { id: this.$store.state.user._id }
+          });
         }
         this.$router.push({ name: name });
       }

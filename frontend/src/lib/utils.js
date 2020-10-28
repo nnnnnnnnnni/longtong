@@ -37,6 +37,7 @@ export const isCode = code => {
   }
 };
 
+// 防抖
 export const debounce = (fnc, wait) => {
   let timer = null;
   return function() {

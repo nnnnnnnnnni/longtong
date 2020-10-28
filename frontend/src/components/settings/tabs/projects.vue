@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import {projectsColumns} from './columns';
 export default {
   name: "projectsTab",
   props: ['activeTab'],
@@ -105,43 +106,7 @@ export default {
       projectForm: {},
       departmentData: [],
       users: [],
-      columns: [
-        {
-          title: "LOGO",
-          className: "_center",
-          dataIndex: "logo",
-          scopedSlots: { customRender: "logo" }
-        },
-        {
-          title: "名称",
-          className: "_center",
-          dataIndex: "name",
-          key: "name"
-        },
-        {
-          title: "管理数",
-          className: "_center",
-          dataIndex: "admins",
-          scopedSlots: { customRender: "admins" }
-        },
-        {
-          title: "成员数",
-          className: "_center",
-          dataIndex: "members",
-          scopedSlots: { customRender: "members" }
-        },
-        {
-          title: "隶属部门",
-          className: "_center",
-          scopedSlots: { customRender: "uppers" }
-        },
-        {
-          title: "操作",
-          className: "_center",
-          scopedSlots: { customRender: "action" },
-          fixed: "right"
-        }
-      ],
+      columns: projectsColumns,
       projectsData: []
     };
   },

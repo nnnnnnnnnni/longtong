@@ -1,4 +1,4 @@
-import { Idepartment, ObjectId } from "@/mongo/department/interface";
+import { Idepartment } from "@/mongo/department/interface";
 import { Context } from "koa";
 import db from "../mongo/schema";
 
@@ -63,22 +63,22 @@ export const deleteDep = async (ctx: Context): Promise<any> => {
   if(department.admins && department.admins.length != 0) {
     return {
       status: 400,
-      msg: "该单位存在管理员，请先移除",
+      msg: "该部门存在管理员，请先移除",
     };
   }
   if(department.members && department.members.length != 0) {
     return {
       status: 400,
-      msg: "该单位存在成员，请先移除",
+      msg: "该部门存在成员，请先移除",
     };
   }
   if (uppers.length != 0) {
     return {
       status: 400,
-      msg: "存在下级单位，请先解绑",
+      msg: "存在下级部门，请先解绑",
     };
   } else {
-    await db.department.remove({ _id: ObjectId(departmentId) }).lean().exec();
+    await db.department.remove({ _id: departmentId }).lean().exec();
     return {
       msg: "删除成功",
     };
