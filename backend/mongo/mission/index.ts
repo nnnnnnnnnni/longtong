@@ -26,7 +26,7 @@ const missionSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ["bug", "demand", "mission"],
+      enum: ["bug", "demand", "mission", "meeting"],
     },
     status: {
       type: String,

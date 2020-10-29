@@ -120,9 +120,10 @@
                   :value="item.val"
                 >
                   <span
-                    :style="{ 'background-color': item.color }"
+                    :style="{ 'color': item.color }"
                     class="option option-dot"
-                  ></span>
+                  >
+                  <a-icon :type='item.icon' /></span>
                   <span
                     :style="{ color: item.color }"
                     class="option option-name"
@@ -409,6 +410,7 @@ export default {
           _priorityColor: getPriority(res.data.priority, 'color'),
           _type: getMissionType(res.data.type, 'name'),
           _typeColor: getMissionType(res.data.type, 'color'),
+          _typeIcon: getMissionType(res.data.type, 'icon'),
           _status: getStatusType(res.data.status, 'name'),
           _statusColor: getStatusType(res.data.status, 'color'),
           remarkBody: body

@@ -50,8 +50,8 @@
         <a style="color: #2c3e50" @click="e => e.preventDefault()">
           <a-icon type="bell" class="ant-dropdown-link" />
         </a>
-        <template slot="overlay">
-          123123123
+        <template slot="overlay" placement='bottomRight'>
+          <notice />
         </template>
       </a-dropdown>
       <a-tooltip placement="bottom">
@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import notice from './notice'
 export default {
   name: "topnav",
   data() {
@@ -90,6 +91,7 @@ export default {
       currentDate: ""
     };
   },
+  components: {notice},
   created() {},
   mounted() {
     this.currentDate = new Date().getDate();

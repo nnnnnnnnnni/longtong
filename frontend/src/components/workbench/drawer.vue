@@ -14,7 +14,7 @@
         </div>
       </template>
       <div class="drawer-contaner">
-        <div class="drawer-item" v-for="item in drawers" :key="item.icon">
+        <div class="drawer-item" v-for="item in drawers" :key="item.icon" @click="item.function(1)">
           <div class="item-icon">
             <a-icon :type="item.icon" />
           </div>

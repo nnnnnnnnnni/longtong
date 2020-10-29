@@ -19,9 +19,9 @@
 </template>
 
 <script>
-import participate from "./tabs/participate";
-import launch from "./tabs/launch";
-import all from "./tabs/all";
+import participate from "./missionTabs/participate";
+import launch from "./missionTabs/launch";
+import all from "./missionTabs/all";
 export default {
   name: "missions",
   data() {

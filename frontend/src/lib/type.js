@@ -25,17 +25,26 @@ export const _missionType = [
   {
     name: "BUG",
     val: "bug",
-    color: "rgb(230, 36, 18)"
+    color: "rgb(230, 36, 18)",
+    icon: 'bug'
   },
   {
     name: "需求",
     val: "demand",
-    color: "rgb(124, 181, 236)"
+    color: "rgb(124, 181, 236)",
+    icon: 'inbox'
   },
   {
     name: "任务",
     val: "mission",
-    color: "rgb(144, 237, 125)"
+    color: "rgb(144, 237, 125)",
+    icon: 'tool'
+  },
+  {
+    name: "会议",
+    val: "meeting",
+    color: "#fa8c16",
+    icon: 'laptop'
   }
 ];
 
@@ -91,6 +100,9 @@ export function getMissionType(type, key) {
     }
     if (_missionType[i].val == type && key == "color") {
       return _missionType[i].color;
+    }
+    if (_missionType[i].val == type && key == "icon") {
+      return _missionType[i].icon;
     }
   }
   return "";

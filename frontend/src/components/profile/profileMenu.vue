@@ -47,7 +47,9 @@ export default {
     return {
       userInfo: {
         company: { info: "", role: "user" },
-        department: { info: { name: "" } }
+        department: { info: { name: "" },role: '' },
+        job: '管理员',
+        introduction: ''
       },
       userId: this.$route.params.id
     };
