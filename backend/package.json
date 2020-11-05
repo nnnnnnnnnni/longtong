@@ -12,7 +12,6 @@
   "devDependencies": {
     "@types/mongoose": "^5.7.36",
     "cross-env": "^7.0.2",
-    "mongoose": "^5.10.0",
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
     "tsconfig-paths": "^3.9.0",
@@ -31,6 +30,7 @@
     "koa-body": "^4.2.0",
     "koa-static": "^5.0.0",
     "koa2-cors": "^2.0.6",
+    "mongoose": "^5.10.0",
     "qiniu": "^7.3.2"
   }
 }

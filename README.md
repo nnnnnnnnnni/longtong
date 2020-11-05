@@ -9,28 +9,33 @@ vue + mongodb + redis
 
 ### Appreciation
 
-|name|url|
+|name|document link|
 |---|---|
 |FullCalendar|https://fullcalendar.io/docs/headerToolbar|
-|css-platfrom|https://www.antdv.com/docs/vue/introduce-cn/|
+|vditor|https://ld246.com/article/1549638745630|
+|css|https://www.antdv.com/docs/vue/introduce-cn/|
 |axios|https://github.com/axios/axios|
 |chart|https://www.highcharts.com/|
+|DB|https://mongoosejs.com/|
+|ioRedis|https://www.npmjs.com/package/ioredis|
+|OSS|https://developer.qiniu.com/kodo|
 
-## Contributor
-
-me
 
 # Usage
 
-> git clone 
+```bash
+cd longtong
+## install module with npm and registry in https://registry.npm.taobao.org
+./build.sh
 
-> cd backend && npm install --save
+## open first terminal and run...
+cd ./backend
+npm run dev
 
-> cp ./config.example.ts comfig.ts
+## open another
+cd ../frontend
+npm run dev
 
-> npm start
-
-> cd ../frontend && npm install --save
-
-> npm run dev
+## then you can open the web server in localhost:8080
+```
 
