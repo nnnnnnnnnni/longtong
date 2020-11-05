@@ -7,9 +7,6 @@
       <div id="problemChart" class="item"></div>
     </div>
     <div class="chart-item">
-      <div id="typeChart" class="item"></div>
-    </div>
-    <div class="chart-item">
       <div id="priorityChart" class="item"></div>
     </div>
     <div class="chart-item">
@@ -20,6 +17,7 @@
 
 <script>
 import * as utils from '../../lib/utils'
+import {getMissionType, getPriority, getStatusType} from '../../lib/type'
 import highchart from "highcharts";
 export default {
   name: "home",
@@ -43,62 +41,39 @@ export default {
       problemChartData: [
         {
           name: "BUG",
+          color: getMissionType('bug', 'color'),
           y: 80,
         },
         {
           name: "需求",
+          color: getMissionType('demand', 'color'),
           y: 20,
         },
         {
           name: "任务",
-          y: 20,
-        },
-      ],
-      typeChartData: [
-        {
-          name: "待分配",
-          y: 20,
-        },
-        {
-          name: "进行中",
-          y: 80,
-        },
-        {
-          name: "待开始",
-          y: 20,
-        },
-        {
-          name: "已完成",
-          y: 20,
-        },
-        {
-          name: "已关闭",
-          y: 20,
-        },
-        {
-          name: "已逾期",
+          color: getMissionType('mission', 'color'),
           y: 20,
         },
       ],
       priorityChartData: [
         {
           name: "十分紧急",
-          color: 'rgb(230, 36, 18)',
+          color: getPriority(1, 'color'),
           y: 80,
         },
         {
           name: "紧急",
-          color: 'rgb(250, 140, 21)',
+          color: getPriority(2, 'color'),
           y: 20,
         },
         {
           name: "普通",
-          color: 'rgb(27, 154, 238)',
+          color: getPriority(3, 'color'),
           y: 20,
         },
         {
           name: "较低",
-          color: 'rgb(140, 140, 140)',
+          color: getPriority(4, 'color'),
           y: 20,
         },
       ],
@@ -107,7 +82,6 @@ export default {
   mounted() {
     this.drawPieChart("projectChart", "项目概况", this.projectchartData);
     this.drawPieChart('problemChart', '类型概况', this.problemChartData);
-    this.drawPieChart('typeChart', '状态概况', this.typeChartData);
     this.drawPieChart('priorityChart', '优先级概况', this.priorityChartData);
     this.drawLineChart('typeTrendChart', '类型趋势')
   },
@@ -215,6 +189,7 @@ export default {
   min-width: 350px;
   margin: 1%;
   width: 30%;
+  height: 48%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -222,12 +197,6 @@ export default {
 }
 .chart-item .item {
   width: 100%;
-  height: 100%;
-}
-.middle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100%;
 }
 </style>

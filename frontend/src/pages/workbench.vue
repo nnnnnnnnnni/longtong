@@ -38,7 +38,7 @@ export default {
 .bench-container {
   flex: 1;
   padding-left: 50px;
-  padding-top: 20px;
+  padding-top: 10px;
   box-sizing: border-box;
   height: 100%;
 }

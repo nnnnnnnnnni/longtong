@@ -6,7 +6,11 @@ import db from "../mongo/schema";
 // 创建任务
 export const create = async (ctx: Context) => {
   const doc = ctx.request.body;
-  let missionStatus: string = getMissionStatus(doc.time[0], doc.time[1], doc.handler);
+  let missionStatus: string = getMissionStatus(
+    doc.time[0],
+    doc.time[1],
+    doc.handler
+  );
   let handlers: any[] = [];
   if (doc.handler) {
     handlers = doc.handler.map((user: string) => {
@@ -49,12 +53,14 @@ export const missions = async (ctx: Context): Promise<any> => {
       $or: [{ organizer: userId }, { "handler.user": userId }],
     })
     .populate("handler.user")
+    .sort({ startTime: -1 })
     .lean()
     .exec();
   let _missions: any[] = [];
   missions.forEach((mission: IMission) => {
+    const isOwn = mission.organizer == userId;
     const _mission = {
-      isOwn: mission.organizer == userId,
+      isOwn,
       ...mission,
     };
     _missions.push(_mission);
@@ -79,11 +85,19 @@ export const missionById = async (ctx: Context): Promise<any> => {
     .exec();
   let newStatus: string = mission.status;
   if (newStatus != "closed") {
-    newStatus = getMissionStatus(mission.startTime, mission.endTime, mission.handler);
+    newStatus = getMissionStatus(
+      mission.startTime,
+      mission.endTime,
+      mission.handler
+    );
   }
   if (mission.status != newStatus) {
     mission = await db.mission
-      .findOneAndUpdate({ _id: missionId }, { $set: { status: newStatus } }, { new: true })
+      .findOneAndUpdate(
+        { _id: missionId },
+        { $set: { status: newStatus } },
+        { new: true }
+      )
       .populate("organizer")
       .populate("handler.user")
       .populate("comment.user")
@@ -136,7 +150,9 @@ export const update = async (ctx: Context): Promise<any> => {
       _id: missionId,
     },
     {
-      $push: { comment: { user: ctx.user._id, action: "update", time: new Date() } },
+      $push: {
+        comment: { user: ctx.user._id, action: "update", time: new Date() },
+      },
       $set: {
         title: doc.title,
         status: getMissionStatus(doc.startTime, doc.endTime, newHandlersArr),
@@ -168,7 +184,9 @@ export const moveUpdate = async (ctx: Context): Promise<any> => {
       _id: missionId,
     },
     {
-      $push: { comment: { user: ctx.user._id, action: "update", time: new Date() } },
+      $push: {
+        comment: { user: ctx.user._id, action: "update", time: new Date() },
+      },
       $set: doc,
     },
     {
@@ -190,7 +208,9 @@ export const lock = async (ctx: Context): Promise<any> => {
   let allFinish: boolean = true;
   let isOrganizer: boolean = mission.organizer == userId;
   mission?.handler.forEach((user: any) => {
-    if (!user.isFinish && !user.isReject && user.user != userId) allFinish = false;
+    if (!user.isFinish && !user.isReject && user.user != userId) {
+      allFinish = false;
+    }
     if (user.user == userId) {
       include = true;
       handler = user;
@@ -205,7 +225,9 @@ export const lock = async (ctx: Context): Promise<any> => {
         $set: {
           status: "closed",
         },
-        $push: { comment: { user: ctx.user._id, action: "close", time: new Date() } },
+        $push: {
+          comment: { user: ctx.user._id, action: "close", time: new Date() },
+        },
       }
     );
     return {
@@ -224,7 +246,9 @@ export const lock = async (ctx: Context): Promise<any> => {
           "handler.$.isFinish": !handler.isFinish,
           status: allFinish ? "closed" : mission.status,
         },
-        $push: { comment: { user: ctx.user._id, action: "finish", time: new Date() } },
+        $push: {
+          comment: { user: ctx.user._id, action: "finish", time: new Date() },
+        },
       }
     );
     return {
@@ -241,7 +265,9 @@ export const lock = async (ctx: Context): Promise<any> => {
           "handler.$.isReject": !handler.isReject,
           status: allFinish ? "closed" : mission.status,
         },
-        $push: { comment: { user: ctx.user._id, action: "reject", time: new Date() } },
+        $push: {
+          comment: { user: ctx.user._id, action: "reject", time: new Date() },
+        },
       }
     );
     return {

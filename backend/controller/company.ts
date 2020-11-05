@@ -3,9 +3,10 @@ import { Context } from "koa";
 import db from "../mongo/schema";
 import redis from "../redis";
 import { generateToken } from "../lib/utils";
+import { Ires } from "@/interface/response";
 
 // 创建公司
-export const create = async (ctx: Context) => {
+export const create = async (ctx: Context): Promise<Ires> => {
   const userId = ctx.user._id;
   const { user, name, logo, introduction } = ctx.request.body;
   const newCompany: Icompany = await db.company.create({
@@ -42,7 +43,7 @@ export const create = async (ctx: Context) => {
 };
 
 // 更新公司信息
-export const update = async (ctx: Context): Promise<any> => {
+export const update = async (ctx: Context): Promise<Ires> => {
   const companyId = ctx.user.company.info._id;
   const doc = ctx.request.body;
   const updatedCompany = await db.company
@@ -64,7 +65,7 @@ export const update = async (ctx: Context): Promise<any> => {
 };
 
 // 获取公司信息
-export const companyInfo = async (ctx: Context): Promise<any> => {
+export const companyInfo = async (ctx: Context): Promise<Ires> => {
   const companyId = ctx.user.company.info._id;
   const field = ctx.request.query.field;
   const fieldArr = field.split(",").join(" ");

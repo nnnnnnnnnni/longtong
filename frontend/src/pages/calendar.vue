@@ -180,6 +180,7 @@ import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import zh from '../lib/zh-cn';
 import editer from "../components/common/editer";
 import drawer from "../components/calendar/drawer";
 import VditorPreview from "vditor/dist/method.min";
@@ -219,6 +220,7 @@ export default {
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay"
         },
+        locale: zh,
         initialView: "timeGridWeek",
         initialEvents: [], // alternatively, use the `events` setting to fetch from a feed
         editable: true,
