@@ -56,7 +56,6 @@ export const projectByUser = async (ctx: Context): Promise<any> => {
     .lean()
     .exec();
   const _data = data.map((project: any) => {
-    console.log(project.admins[0], ObjectId(userId), project.admins[0]==ObjectId(userId))
     return {
       ...project,
       isAdmin: project.admins.indexOf(userId) != -1

@@ -78,10 +78,8 @@ export const missionById = async (ctx: Context): Promise<any> => {
     .lean()
     .exec();
   let newStatus: string = mission.status;
-  console.log(1,newStatus)
   if (newStatus != "closed") {
     newStatus = getMissionStatus(mission.startTime, mission.endTime, mission.handler);
-    console.log(2,newStatus)
   }
   if (mission.status != newStatus) {
     mission = await db.mission
@@ -91,7 +89,6 @@ export const missionById = async (ctx: Context): Promise<any> => {
       .populate("comment.user")
       .lean()
       .exec();
-      console.log(3,mission.status)
   }
   let isFinish: boolean;
   let isReject: boolean;

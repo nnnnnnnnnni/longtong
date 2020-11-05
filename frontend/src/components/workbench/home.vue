@@ -1,13 +1,5 @@
 <template>
   <div class="home">
-    <div class="news">
-      <div class="news-header">与我相关</div>
-      <div class="news-content">
-        <div class="middle" v-if="newsData.length == 0">
-          <a-empty></a-empty>
-        </div>
-      </div>
-    </div>
     <div class="chart-item">
       <div id="projectChart" class="item"></div>
     </div>
@@ -217,31 +209,6 @@ export default {
   overflow-y: auto;
   flex-wrap: wrap;
 }
-.home .news {
-  width: 100%;
-  height: 34%;
-  box-sizing: border-box;
-  overflow: hidden;
-  padding: 5px;
-}
-.news .news-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 40px;
-  user-select: none;
-  line-height: 20px;
-  box-sizing: border-box;
-  padding-left: 1%;
-  font-size: 16px;
-}
-.news .news-content {
-  height: calc(100% - 40px);
-  width: 99%;
-  margin: 0 auto;
-  border-radius: 5px;
-  border: 1px solid #f0f0f0;
-}
 .home .chart-item {
   flex: 1 0 auto;
   border-radius: 5px;
@@ -251,7 +218,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 30%;
   box-shadow: 0px 1px 10px -2px rgba(0, 0, 0, 0.16);
 }
 .chart-item .item {
