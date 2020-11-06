@@ -27,7 +27,9 @@ export const create = async (ctx: Context) => {
     endTime: doc.time[1],
     priority: doc.priority,
     type: doc.type,
+    company: ctx.user.company.info._id,
     organizer: ctx.user._id,
+    project: doc.project,
     isAllDay: doc.isAllDay,
     status: missionStatus,
     remark: doc.remark,
@@ -81,6 +83,7 @@ export const missionById = async (ctx: Context): Promise<any> => {
     .populate("organizer")
     .populate("handler.user")
     .populate("comment.user")
+    .populate("project", "name")
     .lean()
     .exec();
   let newStatus: string = mission.status;
@@ -101,6 +104,7 @@ export const missionById = async (ctx: Context): Promise<any> => {
       .populate("organizer")
       .populate("handler.user")
       .populate("comment.user")
+      .populate("project", "name")
       .lean()
       .exec();
   }
@@ -159,6 +163,8 @@ export const update = async (ctx: Context): Promise<any> => {
         startTime: doc.startTime,
         endTime: doc.endTime,
         priority: doc.priority,
+        isAllDay: doc.isAllDay,
+        project: doc.project,
         type: doc.type,
         handler: newHandlersArr,
         remark: doc.remark,

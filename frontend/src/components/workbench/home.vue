@@ -80,12 +80,18 @@ export default {
     };
   },
   mounted() {
+    this.getInfos();
     this.drawPieChart("projectChart", "项目概况", this.projectchartData);
     this.drawPieChart('problemChart', '类型概况', this.problemChartData);
     this.drawPieChart('priorityChart', '优先级概况', this.priorityChartData);
     this.drawLineChart('typeTrendChart', '类型趋势')
   },
   methods: {
+    getInfos: function() {
+      this.$get('/home').then(res=> {
+        console.log(res)
+      })
+    },
     drawPieChart: function (container, title, data) {
       highchart.chart(container, {
         chart: {
@@ -189,7 +195,7 @@ export default {
   min-width: 350px;
   margin: 1%;
   width: 30%;
-  height: 48%;
+  height: 46%;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -65,6 +65,7 @@
       :destroyOnClose='true'
       @ok="handleOk"
       @cancel="handleCancel"
+      :confirmLoading="confirmLoading"
       width="90%"
     >
       <div class="content">
@@ -79,6 +80,7 @@
             </a-form-model-item>
             <a-form-model-item label="开始/截止时间">
               <a-range-picker
+                :disabled="openType == 2"
                 style="width: calc(100% - 80px);margin-right: 20px"
                 format="YYYY-MM-DD HH:mm"
                 v-model="missionForm.time"
@@ -91,7 +93,7 @@
                   ]
                 }"
               />
-              <a-checkbox v-model="missionForm.isAllDay">全天</a-checkbox>
+              <a-checkbox :disabled="openType == 2" v-model="missionForm.isAllDay">全天</a-checkbox>
             </a-form-model-item>
             <a-form-model-item label="优先级">
               <a-select v-model="missionForm.priority">
@@ -132,6 +134,23 @@
                 </a-select-option>
               </a-select>
             </a-form-model-item>
+            <a-form-model-item label="所属部门">
+              <a-select
+                show-search
+                allow-clear
+                v-model="missionForm.project"
+                placeholder="搜索（部门名称）"
+                :default-active-first-option="false"
+                :show-arrow="false"
+                :filter-option="false"
+                :not-found-content="null"
+                @search="handleProjectSearch"
+              >
+                <a-select-option v-for="d in projects" :value="d._id" :key="d._id">
+                  {{ d.name }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
             <a-form-model-item label="参与者">
               <a-select
                 mode="multiple"
@@ -142,7 +161,7 @@
                 :show-arrow="false"
                 :filter-option="false"
                 :not-found-content="null"
-                @search="handleSearch"
+                @search="handleUserSearch"
               >
                 <a-select-option v-for="d in users" :value="d._id" :key="d._id">
                   {{ d.name }}
@@ -175,7 +194,7 @@
 </template>
 
 <script>
-// https://fullcalendar.io/docs/headerToolbar
+// https://fullcalendar.io/docs
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -203,7 +222,8 @@ export default {
       moment,
       editerVal: "",
       users: [],
-      allUsers: [],
+      projects: [],
+      confirmLoading: false,
       modalVisible: false,
       drawerVisible: false,
       missionForm: {
@@ -220,7 +240,6 @@ export default {
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay"
         },
-        locale: zh,
         initialView: "timeGridWeek",
         initialEvents: [], // alternatively, use the `events` setting to fetch from a feed
         editable: true,
@@ -230,9 +249,7 @@ export default {
         weekends: true,
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents,
         eventChange: this.handleChange,
-        eventDragStop: this.handleDragStop
       },
       currentEvent: {
         organizer: {
@@ -256,14 +273,22 @@ export default {
     this.getMissions();
   },
   methods: {
-    // 下拉框搜索
-    handleSearch: function(value) {
+    // 下拉框搜索用户
+    handleUserSearch: function(value) {
       this.$get("/user/users", {
         options: {
           info: value
         }
       }).then(res => {
         this.users = res.data.users;
+      });
+    },
+    // 下拉框搜索用户
+    handleProjectSearch: function(value) {
+      this.$get("/project/projects", {
+        options: value
+      }).then(res => {
+        this.projects = res.data;
       });
     },
     // modal - cancel
@@ -283,23 +308,28 @@ export default {
       if (!this.missionForm.time || this.missionForm.time.length == 0) {
         return this.$message.error("必须：时间");
       }
-      if (this.openType == 1) {
-        this.$post("/mission/create", this.missionForm).then(res => {
-          if (res.status == 200) {
-            res.data.isOwn = true;
-            this.addEvent(res.data);
-            this.$message.success("添加成功");
-            this.handleCancel();
-          }
-        });
-      } else {
-        this.$put("/mission/update", this.missionForm).then(res => {
-          if (res.status == 200) {
-            this.$message.success("更新成功");
-            this.handleCancel();
-          }
-        });
-      }
+      if (!this.missionForm.project) return this.$message.error("必须：所属部门");
+      this.confirmLoading = true;
+      setTimeout(()=> {
+        if (this.openType == 1) {
+          this.$post("/mission/create", this.missionForm).then(res => {
+            if (res.status == 200) {
+              res.data.isOwn = true;
+              this.addEvent(res.data);
+              this.$message.success("添加成功");
+              this.handleCancel();
+            }
+          });
+        } else {
+          this.$put("/mission/update", this.missionForm).then(res => {
+            if (res.status == 200) {
+              this.$message.success("更新成功");
+              this.handleCancel();
+            }
+          });
+        }
+        this.confirmLoading =false;
+      }, 1000)
     },
     // 插入新event
     addEvent: function(e) {
@@ -390,7 +420,6 @@ export default {
     },
     // 选择日期则弹出新增框
     handleDateSelect: function(selectInfo) {
-      console.log(selectInfo);
       let calendarApi = selectInfo.view.calendar;
       calendarApi.unselect(); // clear date selection
       this.openType = 1;
@@ -424,7 +453,6 @@ export default {
     // 事件变更更新
     handleChange(info) {
       const newEvent = info.event;
-      console.log(info);
       this.$put("/mission/moveUpdate", {
         _id: newEvent.id,
         isAllDay: newEvent.allDay,
@@ -455,6 +483,7 @@ export default {
         if (typeof user == "string") return user;
         else return user.user._id;
       });
+      const projectName = this.currentEvent.project.name
       this.$get("/user/users", {
         options: {
           userIds: userIds
@@ -462,10 +491,16 @@ export default {
       }).then(res => {
         this.users = res.data.users;
       });
+      this.$get("/project/projects", {
+        options: projectName
+      }).then(res => {
+        this.projects = res.data;
+      });
       const _mission = JSON.parse(JSON.stringify(this.currentEvent));
       this.missionForm = Object.assign(_mission, {
         time: [this.currentEvent.startTime, this.currentEvent.endTime],
         handler: userIds,
+        project: this.currentEvent.project._id,
         priority: this.currentEvent.priority.toString()
       });
       this.modalVisible = true;

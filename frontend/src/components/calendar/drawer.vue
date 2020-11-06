@@ -4,7 +4,7 @@
       placement="right"
       width="600"
       :visible="drawerVisible"
-      :body-style="{ paddingBottom: '80px' }"
+      :body-style="{ paddingTop: '20px' }"
       @close="closeDrawer"
     >
       <template slot="title" class="drawer-title">
@@ -87,6 +87,14 @@
         <div class="time">
           <div class="icon"><a-icon type="clock-circle" /> 时间 :</div>
           <div class="field">
+            <div class="isAllDay" v-if="currentEvent.isAllDay">
+              <a-tooltip>
+                <template slot="title">
+                  全天
+                </template>
+                <a-icon type="fire" theme="twoTone" two-tone-color="#eb2f96" />
+              </a-tooltip>
+            </div>
             <div class="startTime">
               {{
                 currentEvent.isAllDay
@@ -101,14 +109,6 @@
                   ? moment(currentEvent.endTime).format("YYYY-MM-DD")
                   : moment(currentEvent.endTime).format("YYYY-MM-DD HH:mm")
               }}
-            </div>
-            <div class="isAllDay" v-if="currentEvent.isAllDay">
-              <a-tooltip>
-                <template slot="title">
-                  全天
-                </template>
-                <a-icon type="fire" theme="twoTone" two-tone-color="#eb2f96" />
-              </a-tooltip>
             </div>
           </div>
         </div>
@@ -172,6 +172,10 @@
               currentEvent._type
             }}</a-tag>
           </div>
+        </div>
+        <div class="project">
+          <div class="icon"><a-icon type="check-square" /> 所属项目 :</div>
+          <div class="field">{{currentEvent.project? currentEvent.project.name: ''}}</div>
         </div>
         <div class="body">
           <div class="icon">
@@ -240,7 +244,7 @@ export default {
     openEdit: function() {
       this.$emit("editMission", true);
     },
-    // 打开拒绝二次确认框
+    // 打开(拒绝二次确认框)
     openRejectPop: function() {
       this.rejectPopVisible = true;
     },
@@ -261,7 +265,7 @@ export default {
         }
       });
     },
-    // 打开未全部完成时，强制结束二次确认框
+    // 打开(未全部完成时，强制结束二次确认框)
     openAction: function(type) {
       this.closePopVisible = true;
     }
@@ -274,13 +278,14 @@ export default {
 .handler,
 .status,
 .priority,
+.project,
 .type {
   line-height: 40px;
   display: flex;
 }
 .drawer-container .icon {
   padding: 0px 10px;
-  width: 90px;
+  width: 100px;
   display: flex;
   float: left;
   flex-wrap: nowrap;
@@ -288,14 +293,14 @@ export default {
   align-items: center;
 }
 .drawer-container .isAllDay {
-  margin-left: 10px;
+  margin-right: 10px;
   cursor: pointer;
 }
 .field {
   display: flex;
   flex: 1 0 auto;
   box-sizing: border-box;
-  padding-left: 20px;
+  padding-left: 10px;
   align-items: center;
 }
 .field .dot {

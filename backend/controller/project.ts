@@ -30,8 +30,15 @@ export const create = async (ctx: Context): Promise<any> => {
 // 获取所有项目
 export const projects = async (ctx: Context): Promise<any> => {
   const companyId = ctx.user.company.info._id;
+  const options = ctx.request.query.options;
+  const params: any = {
+    company: companyId
+  }
+  if(options) {
+    params.name = { $regex: options, $options: "i" }
+  }
   const data: Iproject[] = await db.project
-    .find({ company: companyId })
+    .find(params)
     .populate("admins", "name")
     .populate("members", "name")
     .populate("department");

@@ -78,6 +78,7 @@ export default {
         }
       },
       input: (val, pre) => {
+        console.log(val, pre)
         this.$emit("change", val);
       }
     });
