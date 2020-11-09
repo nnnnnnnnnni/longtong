@@ -24,72 +24,33 @@ export default {
   data() {
     return {
       newsData: [],
-      projectchartData: [
-        {
-          name: "Chrome",
-          y: 80,
-        },
-        {
-          name: "Internet Explorer",
-          y: 20,
-        },
-        {
-          name: "Internet Explorer",
-          y: 20,
-        },
-      ],
-      problemChartData: [
-        {
-          name: "BUG",
-          color: getMissionType('bug', 'color'),
-          y: 80,
-        },
-        {
-          name: "需求",
-          color: getMissionType('demand', 'color'),
-          y: 20,
-        },
-        {
-          name: "任务",
-          color: getMissionType('mission', 'color'),
-          y: 20,
-        },
-      ],
-      priorityChartData: [
-        {
-          name: "十分紧急",
-          color: getPriority(1, 'color'),
-          y: 80,
-        },
-        {
-          name: "紧急",
-          color: getPriority(2, 'color'),
-          y: 20,
-        },
-        {
-          name: "普通",
-          color: getPriority(3, 'color'),
-          y: 20,
-        },
-        {
-          name: "较低",
-          color: getPriority(4, 'color'),
-          y: 20,
-        },
-      ],
+      projectchartData: [],
+      problemChartData: [],
+      priorityChartData: [],
     };
   },
   mounted() {
     this.getInfos();
-    this.drawPieChart("projectChart", "项目概况", this.projectchartData);
-    this.drawPieChart('problemChart', '类型概况', this.problemChartData);
-    this.drawPieChart('priorityChart', '优先级概况', this.priorityChartData);
-    this.drawLineChart('typeTrendChart', '类型趋势')
   },
   methods: {
     getInfos: function() {
       this.$get('/home').then(res=> {
-        console.log(res)
+        this.projectchartData = res.data.projectCount;
+        this.problemChartData = res.data.TypeCount.map(item => {
+          item.name = getMissionType(item._id, 'name')
+          item.color = getMissionType(item._id, 'color')
+          return item
+        })
+        this.priorityChartData = res.data.priorityCount.map(item => {
+          item.name = getPriority(item._id, 'name')
+          item.color = getPriority(item._id, 'color')
+          return item
+        })
+        console.log(this.priorityChartData)
+        this.drawPieChart("projectChart", "项目任务概况", this.projectchartData);
+        this.drawPieChart('problemChart', '任务类型概况', this.problemChartData);
+        this.drawPieChart('priorityChart', '任务优先级概况', this.priorityChartData);
+        this.drawLineChart('typeTrendChart', '任务类型趋势')
       })
     },
     drawPieChart: function (container, title, data) {
@@ -104,7 +65,7 @@ export default {
         },
         tooltip: {
           headerFormat: "<br>",
-          pointFormat: "{point.name}<br/>{series.name}: <b>{point.percentage:.1f}%</b>",
+          pointFormat: "{point.name}<br/>{series.name}: <b>{point.percentage:.1f}%</b><b>（{point.y}）</b>",
         },
         credits: {
           enabled: false,

@@ -6,11 +6,7 @@ import db from "../mongo/schema";
 // 创建任务
 export const create = async (ctx: Context) => {
   const doc = ctx.request.body;
-  let missionStatus: string = getMissionStatus(
-    doc.time[0],
-    doc.time[1],
-    doc.handler
-  );
+  let missionStatus: string = getMissionStatus(doc.time[0], doc.time[1], doc.handler);
   let handlers: any[] = [];
   if (doc.handler) {
     handlers = doc.handler.map((user: string) => {
@@ -50,15 +46,38 @@ export const create = async (ctx: Context) => {
 // 获取个人所有任务
 export const missions = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
-  const missions: any[] = await db.mission
-    .find({
-      $or: [{ organizer: userId }, { "handler.user": userId }],
-    })
-    .populate("handler.user")
-    .sort({ startTime: -1 })
-    .lean()
-    .exec();
+  const { isHome, homeTab } = ctx.request.query;
+  let missions: any[] = [];
   let _missions: any[] = [];
+  if (isHome) {
+    if (homeTab == 1) {
+      console.log(1)
+      missions = await db.mission.find({ organizer: userId })
+        .populate("handler.user")
+        .populate("organizer")
+        .sort({ startTime: -1 })
+        .lean()
+        .exec();
+    } else if (homeTab == 2) {
+      console.log(2)
+      missions = await db.mission.find({ "handler.user": userId })
+        .populate("handler.user")
+        .populate("organizer")
+        .sort({ startTime: -1 })
+        .lean()
+        .exec();
+    }
+  } else {
+    missions = await db.mission
+      .find({
+        $or: [{ organizer: userId }, { "handler.user": userId }],
+      })
+      .populate("handler.user")
+      .populate("organizer")
+      .sort({ startTime: -1 })
+      .lean()
+      .exec();
+  }
   missions.forEach((mission: IMission) => {
     const isOwn = mission.organizer == userId;
     const _mission = {
@@ -88,19 +107,11 @@ export const missionById = async (ctx: Context): Promise<any> => {
     .exec();
   let newStatus: string = mission.status;
   if (newStatus != "closed") {
-    newStatus = getMissionStatus(
-      mission.startTime,
-      mission.endTime,
-      mission.handler
-    );
+    newStatus = getMissionStatus(mission.startTime, mission.endTime, mission.handler);
   }
   if (mission.status != newStatus) {
     mission = await db.mission
-      .findOneAndUpdate(
-        { _id: missionId },
-        { $set: { status: newStatus } },
-        { new: true }
-      )
+      .findOneAndUpdate({ _id: missionId }, { $set: { status: newStatus } }, { new: true })
       .populate("organizer")
       .populate("handler.user")
       .populate("comment.user")
