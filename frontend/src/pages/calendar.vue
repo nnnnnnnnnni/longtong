@@ -67,6 +67,7 @@
       @cancel="handleCancel"
       :confirmLoading="confirmLoading"
       width="90%"
+      height='400px'
     >
       <div class="content">
         <div class="form flex-item">
@@ -134,7 +135,7 @@
                 </a-select-option>
               </a-select>
             </a-form-model-item>
-            <a-form-model-item label="所属部门">
+            <a-form-model-item label="所属项目">
               <a-select
                 show-search
                 allow-clear
@@ -549,7 +550,7 @@ export default {
 .add {
   position: absolute;
   bottom: 60px;
-  left: 125px;
+  left: 104px;
   background-color: rgb(24, 144, 255);
   width: 50px;
   height: 50px;
@@ -574,6 +575,9 @@ export default {
   height: 100%;
   width: 50%;
   flex: 1 0 auto;
+}
+.msg {
+  height: 360px;
 }
 .option-dot {
   margin-right: 5px;

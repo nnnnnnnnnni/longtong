@@ -12,7 +12,7 @@ const routerConfig = new Router({
       name: "err403",
       meta: {
         allowAnonymous: true,
-        pageTitle: '4 0 3!'
+        pageTitle: "4 0 3!"
       },
       component: () => import("@/pages/error/403")
     },
@@ -21,7 +21,7 @@ const routerConfig = new Router({
       name: "login",
       meta: {
         allowAnonymous: true,
-        pageTitle: '登录'
+        pageTitle: "登录"
       },
       component: () => import("@/pages/login")
     },
@@ -30,7 +30,7 @@ const routerConfig = new Router({
       name: "help",
       meta: {
         allowAnonymous: true,
-        pageTitle: 'H E L P!'
+        pageTitle: "H E L P!"
       },
       component: () => import("@/pages/help")
     },
@@ -39,7 +39,7 @@ const routerConfig = new Router({
       name: "guide",
       meta: {
         allowAnonymous: false,
-        pageTitle: '使用指南!'
+        pageTitle: "使用指南!"
       },
       component: () => import("@/pages/guide")
     },
@@ -47,11 +47,11 @@ const routerConfig = new Router({
       path: "/",
       name: "index",
       redirect: {
-        name: 'calendar'
+        name: "calendar"
       },
       meta: {
         allowAnonymous: false,
-        pageTitle: '首页'
+        pageTitle: "首页"
       },
       component: () => import("@/pages/index"),
       children: [
@@ -60,7 +60,7 @@ const routerConfig = new Router({
           name: "profile",
           meta: {
             allowAnonymous: false,
-            pageTitle: '日历'
+            pageTitle: "个人中心"
           },
           component: () => import("@/pages/profile")
         },
@@ -69,7 +69,7 @@ const routerConfig = new Router({
           name: "calendar",
           meta: {
             allowAnonymous: false,
-            pageTitle: '日历'
+            pageTitle: "日历"
           },
           component: () => import("@/pages/calendar")
         },
@@ -78,7 +78,7 @@ const routerConfig = new Router({
           name: "chat",
           meta: {
             allowAnonymous: false,
-            pageTitle: '交流'
+            pageTitle: "交流"
           },
           component: () => import("@/pages/chat")
         },
@@ -87,7 +87,7 @@ const routerConfig = new Router({
           name: "setting",
           component: () => import("@/pages/setting"),
           redirect: {
-            name: 'base'
+            name: "base"
           },
           children: [
             {
@@ -95,7 +95,7 @@ const routerConfig = new Router({
               name: "base",
               meta: {
                 allowAnonymous: false,
-                pageTitle: '基本设置'
+                pageTitle: "基本设置"
               },
               component: () => import("@/components/settings/baseSetting")
             },
@@ -104,7 +104,7 @@ const routerConfig = new Router({
               name: "safe",
               meta: {
                 allowAnonymous: false,
-                pageTitle: '安全设置'
+                pageTitle: "安全设置"
               },
               component: () => import("@/components/settings/safeSetting")
             },
@@ -113,7 +113,7 @@ const routerConfig = new Router({
               name: "bind",
               meta: {
                 allowAnonymous: false,
-                pageTitle: '绑定设置'
+                pageTitle: "绑定设置"
               },
               component: () => import("@/components/settings/bindSetting")
             },
@@ -122,10 +122,10 @@ const routerConfig = new Router({
               name: "company",
               meta: {
                 allowAnonymous: false,
-                pageTitle: '公司设置'
+                pageTitle: "公司设置"
               },
               component: () => import("@/components/settings/companySetting")
-            },
+            }
           ]
         },
         {
@@ -138,7 +138,7 @@ const routerConfig = new Router({
               name: "home",
               meta: {
                 allowAnonymous: false,
-                pageTitle: '首页'
+                pageTitle: "首页"
               },
               component: () => import("@/components/workbench/home")
             },
@@ -147,16 +147,45 @@ const routerConfig = new Router({
               name: "mission",
               meta: {
                 allowAnonymous: false,
-                pageTitle: '任务'
+                pageTitle: "任务"
               },
               component: () => import("@/components/workbench/missions")
             }
           ]
         },
         {
-          path: "document",
-          name: 'document',
-          component: () => import("@/pages/document")
+          path: "/document",
+          name: "document",
+          component: () => import("@/pages/document"),
+          children: [
+            {
+              path: "/document/list",
+              name: "document_list",
+              meta: {
+                allowAnonymous: false,
+                pageTitle: "文档列表"
+              },
+              component: () => import("@/components/document/list") 
+            },
+            {
+              path: "/document/add",
+              name: "document_add",
+              meta: {
+                allowAnonymous: false,
+                pageTitle: "写文档"
+              },
+              component: () => import("@/components/document/add") 
+            },
+            {
+              path: "/document/:id",
+              name: "document_detail",
+              meta: {
+                allowAnonymous: false,
+                pageTitle: "文档详情"
+              },
+              component: () => import("@/components/document/detail") 
+            }
+          ]
         }
       ]
     },
@@ -165,7 +194,7 @@ const routerConfig = new Router({
       name: "err404",
       meta: {
         allowAnonymous: true,
-        pageTitle: '4 0 4!'
+        pageTitle: "4 0 4!"
       },
       component: () => import("@/pages/error/404")
     }
@@ -174,9 +203,9 @@ const routerConfig = new Router({
 
 routerConfig.beforeEach((to, from, next) => {
   store.commit("CHANGE_ROUTE", to.name);
-  if(!to.meta.allowAnonymous && !localStorage.getItem('token')) {
-    document.title = '登录';
-    next('login')
+  if (!to.meta.allowAnonymous && !localStorage.getItem("token")) {
+    document.title = "登录";
+    next("login");
   }
   document.title = to.meta.pageTitle;
   next();

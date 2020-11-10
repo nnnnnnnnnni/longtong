@@ -3,6 +3,7 @@ import { company } from "./company";
 import { project } from "./project";
 import { department } from "./department";
 import { mission } from "./mission";
+import { document } from "./document";
 
 export default {
   user: user,
@@ -10,4 +11,5 @@ export default {
   project: project,
   department: department,
   mission: mission,
+  document: document,
 };

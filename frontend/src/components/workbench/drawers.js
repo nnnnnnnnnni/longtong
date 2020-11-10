@@ -1,3 +1,4 @@
+import router from '../../router'
 export default [
   {
     val: 'meetting',
@@ -15,7 +16,7 @@ export default [
     val: 'document',
     icon: "file",
     title: "文档",
-    function: ()=> {alert('文档')}
+    function: ()=> {router.push({ name: "document_list" })}
   },
   {
     val: 'cloud',

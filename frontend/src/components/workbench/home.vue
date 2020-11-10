@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import * as utils from '../../lib/utils'
-import {getMissionType, getPriority, getStatusType} from '../../lib/type'
+import * as utils from "../../lib/utils";
+import { getMissionType, getPriority, getStatusType } from "../../lib/type";
 import highchart from "highcharts";
 export default {
   name: "home",
@@ -26,7 +26,7 @@ export default {
       newsData: [],
       projectchartData: [],
       problemChartData: [],
-      priorityChartData: [],
+      priorityChartData: []
     };
   },
   mounted() {
@@ -34,83 +34,108 @@ export default {
   },
   methods: {
     getInfos: function() {
-      this.$get('/home').then(res=> {
+      this.$get("/home").then(res => {
         this.projectchartData = res.data.projectCount;
         this.problemChartData = res.data.TypeCount.map(item => {
-          item.name = getMissionType(item._id, 'name')
-          item.color = getMissionType(item._id, 'color')
-          return item
-        })
+          item.name = getMissionType(item._id, "name");
+          item.color = getMissionType(item._id, "color");
+          return item;
+        });
         this.priorityChartData = res.data.priorityCount.map(item => {
-          item.name = getPriority(item._id, 'name')
-          item.color = getPriority(item._id, 'color')
-          return item
-        })
-        console.log(this.priorityChartData)
-        this.drawPieChart("projectChart", "项目任务概况", this.projectchartData);
-        this.drawPieChart('problemChart', '任务类型概况', this.problemChartData);
-        this.drawPieChart('priorityChart', '任务优先级概况', this.priorityChartData);
-        this.drawLineChart('typeTrendChart', '任务类型趋势')
-      })
+          item.name = getPriority(item._id, "name");
+          item.color = getPriority(item._id, "color");
+          return item;
+        });
+        this.drawPieChart(
+          "projectChart",
+          "项目任务概况",
+          this.projectchartData
+        );
+        this.drawPieChart(
+          "problemChart",
+          "任务类型概况",
+          this.problemChartData
+        );
+        this.drawPieChart(
+          "priorityChart",
+          "任务优先级概况",
+          this.priorityChartData
+        );
+        this.drawLineChart("typeTrendChart", "任务类型趋势");
+      });
     },
-    drawPieChart: function (container, title, data) {
+    drawPieChart: function(container, title, data) {
       highchart.chart(container, {
         chart: {
           plotShadow: false,
-          type: "pie",
+          type: "pie"
         },
         title: {
           text: title,
-          align: "center",
+          align: "center"
         },
         tooltip: {
           headerFormat: "<br>",
-          pointFormat: "{point.name}<br/>{series.name}: <b>{point.percentage:.1f}%</b><b>（{point.y}）</b>",
+          pointFormat:
+            "{point.name}<br/>{series.name}: <b>{point.percentage:.1f}%</b><b>（{point.y}）</b>"
         },
         credits: {
-          enabled: false,
+          enabled: false
         },
         plotOptions: {
           pie: {
             allowPointSelect: false,
             cursor: "pointer",
             dataLabels: {
-              enabled: false,
+              enabled: false
             },
-            showInLegend: true,
-          },
+            showInLegend: true
+          }
         },
         series: [
           {
             name: "占比",
-            data: data,
-          },
-        ],
+            data: data
+          }
+        ]
       });
     },
     drawLineChart(container, title, dataX, dataY) {
       const chart = highchart.chart(container, {
         chart: {
-          type: 'spline'
+          type: "spline"
         },
         animation: {
-          defer: '2000'
+          defer: "2000"
         },
         title: {
           text: title
         },
         xAxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+          categories: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ]
         },
         credits: {
           enabled: false
         },
         yAxis: {
           title: {
-              text: '数量'
+            text: "数量"
           },
           labels: {
-            formatter: function () {
+            formatter: function() {
               return this.value;
             }
           }
@@ -119,25 +144,41 @@ export default {
           crosshairs: true,
           shared: true
         },
-        series: [{
-          name: 'Tokyo',
-          marker: {
-            symbol: 'circle'
+        series: [
+          {
+            name: "Tokyo",
+            marker: {
+              symbol: "circle"
+            },
+            data: [
+              7.0,
+              6.9,
+              9.5,
+              14.5,
+              18.2,
+              21.5,
+              25.2,
+              23.3,
+              18.3,
+              1.9,
+              9.6,
+              9.6,
+              9.6
+            ]
           },
-          data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 23.3, 18.3, 1.9, 9.6, 9.6, 9.6]
-        }, {
-          name: 'London',
-          marker: {
-            symbol: 'circle'
-          },
-          data: [4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-        }]
-    })
-    },
-  },
+          {
+            name: "London",
+            marker: {
+              symbol: "circle"
+            },
+            data: [4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+          }
+        ]
+      });
+    }
+  }
 };
 </script>
-
 
 <style scoped>
 .home {

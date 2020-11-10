@@ -1,7 +1,5 @@
 <template>
-  <div class='document'>
-    <router-view />
-  </div>
+  <div class='document'>detail</div>
 </template>
 
 <script>
@@ -15,9 +13,5 @@ export default {
 
 
 <style scoped>
-.document{
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
+
 </style>

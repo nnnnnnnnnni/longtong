@@ -42,4 +42,7 @@ td._center {
   display: flex !important;
   justify-content: space-between;
 }
+.vditor-preview__action{
+  display: none !important;
+}
 </style>

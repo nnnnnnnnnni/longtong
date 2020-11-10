@@ -51,16 +51,27 @@ export const missions = async (ctx: Context): Promise<any> => {
   let _missions: any[] = [];
   if (isHome) {
     if (homeTab == 1) {
-      console.log(1)
-      missions = await db.mission.find({ organizer: userId })
+      missions = await db.mission
+        .find({ organizer: userId, status: { $ne: "closed" } })
         .populate("handler.user")
         .populate("organizer")
         .sort({ startTime: -1 })
         .lean()
         .exec();
     } else if (homeTab == 2) {
-      console.log(2)
-      missions = await db.mission.find({ "handler.user": userId })
+      missions = await db.mission
+        .find({ "handler.user": userId, status: { $ne: "closed" } })
+        .populate("handler.user")
+        .populate("organizer")
+        .sort({ startTime: -1 })
+        .lean()
+        .exec();
+    } else {
+      missions = await db.mission
+        .find({
+          $or: [{ organizer: userId }, { "handler.user": userId }],
+          status: { $ne: "closed" }
+        })
         .populate("handler.user")
         .populate("organizer")
         .sort({ startTime: -1 })
@@ -78,8 +89,8 @@ export const missions = async (ctx: Context): Promise<any> => {
       .lean()
       .exec();
   }
-  missions.forEach((mission: IMission) => {
-    const isOwn = mission.organizer == userId;
+  missions.forEach((mission: any) => {
+    const isOwn = mission.organizer._id == userId;
     const _mission = {
       isOwn,
       ...mission,

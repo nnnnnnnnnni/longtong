@@ -1,12 +1,15 @@
 <template>
   <div class="all">
     <a-table :columns="columns" :data-source="data">
-      <template slot="action" slot-scope="text">
-        <span @click="action(text, 1)" class="action red">
-          <a-icon type="close"/>
+      <template slot="action" slot-scope="text,t">
+        <span v-if="t.isOwn" @click="action(text, 'close')" class="action red">
+          <a-icon type="stop" />
         </span>
-        <span @click="action(text, 2)" class="action green">
-          <a-icon type="check"/>
+        <span v-else @click="action(text, 'reject')" class="action red">
+          <a-icon type="close" />
+        </span>
+        <span v-if="!t.isOwn" @click="action(text, 'finish')" class="action green">
+          <a-icon type="check" />
         </span>
       </template>
       <template slot="priority" slot-scope="val, text">
@@ -17,7 +20,7 @@
       </template>
       <template slot="handler" slot-scope="text">
         <div class="handlers">
-          <div class="handler" v-for="(hander) in text" :key="hander._id">
+          <div class="handler" v-for="hander in text" :key="hander._id">
             <img :src="hander.user.avator" alt="" />
           </div>
         </div>
@@ -85,7 +88,7 @@ export default {
   },
   methods: {
     getInfos: function() {
-      this.$get("/mission/missions").then(res => {
+      this.$get("/mission/missions", { isHome: true }).then(res => {
         this.data = res.data.map(item => {
           item.time = `${moment(item.startTime).format(
             "MM-DD HH:mm"
@@ -97,11 +100,24 @@ export default {
           item.organizer = item.organizer.name;
           return item;
         });
-        console.log(this.data);
       });
     },
-    action: function(data) {
-      console.log(data);
+    // 完成/关闭/拒绝 操作
+    action: function(id, type) {
+      this.$post("/mission/lock", {
+        type: type,
+        id: id
+      }).then(res => {
+        if (res.status == 200) {
+          for(let i=0;i<this.data.length; i++ ){ 
+            if(this.data[i]._id == id) {
+              this.data.splice(i, 1);
+              break;
+            }
+          }
+          this.$message.success(res.msg || "操作成功");
+        }
+      });
     }
   }
 };

@@ -22,7 +22,7 @@ export default {
   mounted() {
     let that = this;
     this.contentEditor = new Vditor("vditor", {
-      height: 360,
+      height: 'auto',
       toolbarConfig: {
         pin: true
       },
@@ -87,6 +87,9 @@ export default {
 </script>
 
 <style scoped>
+#vditor {
+  height: 100%;
+}
 .vditor-reset {
   background-color: transparent !important;
 }
