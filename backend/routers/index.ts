@@ -5,6 +5,8 @@ import generic from "./generic";
 import department from "./department";
 import project from "./project";
 import home from "./home";
+import document from "./document";
+import profile from "./profile";
 import { Iroute, Irouter } from "../interface/router";
 import { Context } from "koa";
 import redis from "../redis";
@@ -36,6 +38,8 @@ export const getAllRouter = (): Irouter => {
   addRouter(department);
   addRouter(project);
   addRouter(home);
+  addRouter(document);
+  addRouter(profile);
 
   return allRoutes;
 };

@@ -62,8 +62,8 @@ export default {
   align-items: center;
 }
 .drawer-contaner .drawer-item {
-  width: 25%;
-  height: 80px;
+  width: 33%;
+  height: 116px;
   display: flex;
   justify-content: center;
   align-items: center;

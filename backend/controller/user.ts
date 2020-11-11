@@ -141,6 +141,7 @@ export const userInfo = async (ctx: Context): Promise<any> => {
   const isOwn = userId == postUser
   if (postUser) userId = postUser;
   const userInfo = await db.user.findOne({ _id: userId }).populate("department.info", "name").lean().exec();
+  delete userInfo.password;
   return {
     data: Object.assign(userInfo, {
       isOwn: isOwn,

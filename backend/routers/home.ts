@@ -6,7 +6,7 @@ const router: Irouter = {
     method: "GET",
     middleware: home.infos,
     allowAnonymous: false,
-  },
+  }
 };
 
 export default router;

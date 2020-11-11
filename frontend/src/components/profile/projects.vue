@@ -15,7 +15,31 @@
       </div>
     </div>
     <div v-else class="list-empty">
-      <a-empty description='暂未参与'></a-empty>
+      <a-empty description="暂未参与"></a-empty>
+    </div>
+
+    <h2 class="title">文章/文档</h2>
+    <div class="list" v-if="documents.length != 0">
+      <div v-for="item in documents" :key="item._id" class="doc">
+        <div class="title">
+          <router-link :to="'/document/' + item._id">{{
+            item.title
+          }}</router-link>
+        </div>
+        <div class="info">
+          <div class="time">
+            <a-icon type="calendar"></a-icon>
+            {{ item.time }}
+          </div>
+          <div class="read">
+            <a-icon type="eye"></a-icon>
+            {{ item.visitors.length }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="list-empty">
+      <a-empty description="暂无文章"></a-empty>
     </div>
   </div>
 </template>
@@ -26,6 +50,7 @@ export default {
   data() {
     return {
       projects: [],
+      documents: [],
       userId: this.$route.params.id
     };
   },
@@ -34,10 +59,11 @@ export default {
   },
   methods: {
     getProjects: function() {
-      this.$get("/project/projectByUser",{
+      this.$get("/profileInfos", {
         userId: this.userId
       }).then(res => {
-        this.projects = res.data;
+        this.projects = res.data.projects;
+        this.documents = res.data.documents;
       });
     }
   }
@@ -80,7 +106,7 @@ export default {
   font-weight: 600;
   margin-bottom: 10px;
 }
-.info img {
+.item .info img {
   height: 30px;
   width: 30px;
   border-radius: 50%;
@@ -111,5 +137,44 @@ export default {
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid #e3e3e3;
+}
+
+.doc {
+  width: 100%;
+  display: flex;
+  height: 40px;
+  padding: 10px;
+  justify-content: space-between;
+  box-sizing: border-box;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid #eee;
+  line-height: 40px;
+  margin-bottom: 10px;
+}
+.doc .title {
+  margin: 0;
+  font-size: 14px;
+}
+.doc a {
+  display: inline-block;
+}
+.doc a:hover {
+  text-decoration: underline;
+}
+.doc .info {
+  display: flex;
+}
+.doc .info .time {
+  margin: 0px 10px;
+  width: 100px;
+  text-align: center;
+  font-size: 12px;
+}
+.doc .info .read {
+  margin: 0px 10px;
+  width: 40px;
+  text-align: center;
+  font-size: 12px;
 }
 </style>

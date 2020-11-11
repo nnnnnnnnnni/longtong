@@ -7,15 +7,9 @@ export default [
     function: ()=> {console.log()}
   },
   {
-    val: 'live',
-    icon: "audio",
-    title: "直播",
-    function: ()=> {alert('直播')}
-  },
-  {
     val: 'document',
     icon: "file",
-    title: "文档",
+    title: "文档/文章",
     function: ()=> {router.push({ name: "document_list" })}
   },
   {
@@ -23,18 +17,6 @@ export default [
     icon: "hdd",
     title: "云盘",
     function: ()=> {alert('云盘')}
-  },
-  {
-    val: 'mail',
-    icon: "mail",
-    title: "邮箱",
-    function: ()=> {alert('邮箱')}
-  },
-  {
-    val: 'notice',
-    icon: "notification",
-    title: "通知",
-    function: ()=> {alert('通知')}
   },
   {
     val: 'address',
@@ -64,18 +46,12 @@ export default [
     val: 'setting',
     icon: "setting",
     title: "设置",
-    function: ()=> {alert('设置')}
+    function: ()=> {router.push({ name: "base" })}
   },
   {
     val: 'process',
     icon: "profile",
     title: "流程",
     function: ()=> {alert('流程')}
-  },
-  {
-    val: 'publicity',
-    icon: "fire",
-    title: "宣传",
-    function: ()=> {alert('宣传')}
   }
 ];

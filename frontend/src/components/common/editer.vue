@@ -11,7 +11,6 @@ export default {
   data() {
     return {
       contentEditor: "",
-      ca: 1
     };
   },
   model: {
@@ -29,6 +28,10 @@ export default {
       cache: {
         enable: false
       },
+      preview: {
+        hljs: true
+      },
+      counter: true,
       value: this.val,
       mode: this.mode || "wysiwyg",
       toolbar: [
@@ -54,7 +57,7 @@ export default {
       upload: {
         fieldName: "file",
         accept: "image/*",
-        url: "http://localhost:8000/generic/upload",
+        url: "http://localhost:8081/generic/upload",
         filename(name) {
           return name
             .replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, "")
@@ -78,7 +81,6 @@ export default {
         }
       },
       input: (val, pre) => {
-        console.log(val, pre)
         this.$emit("change", val);
       }
     });

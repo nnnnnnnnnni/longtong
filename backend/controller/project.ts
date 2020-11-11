@@ -47,32 +47,6 @@ export const projects = async (ctx: Context): Promise<any> => {
   };
 };
 
-// 获取某人项目
-export const projectByUser = async (ctx: Context): Promise<any> => {
-  let userId = ctx.user._id;
-  const postUser = ctx.request.query.userId;
-  if(postUser) userId = postUser;
-  const data: any[] = await db.project
-    .find({
-      $or: [
-        {admins: {$eq: userId}},
-        {members: {$eq: userId}},
-      ]
-    })
-    .populate("department", 'name logo')
-    .lean()
-    .exec();
-  const _data = data.map((project: any) => {
-    return {
-      ...project,
-      isAdmin: project.admins.indexOf(userId) != -1
-    }
-  })
-  return {
-    data: _data,
-  };
-};
-
 // 更新项目
 export const update = async (ctx: Context): Promise<any> => {
   const doc = ctx.request.body;

@@ -8,6 +8,10 @@ const documentSchema = new Schema(
       type: String,
       ref: "user",
     },
+    company: {
+      type: String,
+      ref: "company",
+    },
     body: String,
     visitors: [
       {

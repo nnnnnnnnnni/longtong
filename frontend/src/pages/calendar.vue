@@ -176,7 +176,6 @@
           <editer
             :val="editerVal"
             mode="ir"
-            ref="refEditer"
             v-model="missionForm.remark"
           />
         </div>
@@ -200,7 +199,6 @@ import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import zh from '../lib/zh-cn';
 import editer from "../components/common/editer";
 import drawer from "../components/calendar/drawer";
 import VditorPreview from "vditor/dist/method.min";
@@ -335,37 +333,16 @@ export default {
     // 插入新event
     addEvent: function(e) {
       const calendarApi = this.$refs.calendarRef.getApi();
-      if (!e.isOwn) {
-        calendarApi.addEvent({
-          id: e._id,
-          title: e.title,
-          start: e.startTime,
-          end: e.endTime,
-          allDay: e.isAllDay,
-          extendedProps: e,
-          constraint: e._id,
-          backgroundColor: getPriority(e.priority, 'color'),
-          borderColor: getPriority(e.priority, 'color')
-        });
-        calendarApi.addEvent({
-          groupId: e._id,
-          start: e.startTime,
-          end: e.startTime,
-          display: "background",
-          backgroundColor: getPriority(e.priority, 'color')
-        });
-      } else {
-        calendarApi.addEvent({
-          id: e._id,
-          title: e.title,
-          start: e.startTime,
-          end: e.endTime,
-          allDay: e.isAllDay,
-          extendedProps: e,
-          backgroundColor: getPriority(e.priority, 'color'),
-          borderColor: getPriority(e.priority, 'color')
-        });
-      }
+      calendarApi.addEvent({
+        id: e._id,
+        title: e.title,
+        start: e.startTime,
+        end: e.endTime,
+        allDay: e.isAllDay,
+        extendedProps: e,
+        backgroundColor: getPriority(e.priority, 'color'),
+        borderColor: getPriority(e.priority, 'color')
+      });
     },
     // 获取所有mission
     getMissions: function() {
@@ -453,7 +430,9 @@ export default {
     },
     // 事件变更更新
     handleChange(info) {
+      const calendarApi = this.$refs.calendarRef.getApi();
       const newEvent = info.event;
+      console.log(info)
       this.$put("/mission/moveUpdate", {
         _id: newEvent.id,
         isAllDay: newEvent.allDay,
@@ -465,6 +444,9 @@ export default {
       }).then(res => {
         if (res.status == 200) {
           this.$message.success("更新成功");
+        } else {
+          calendarApi.getEventById(info.event.id).remove();
+          calendarApi.addEvent(info.oldEvent)
         }
       });
     },

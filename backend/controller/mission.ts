@@ -207,6 +207,13 @@ export const moveUpdate = async (ctx: Context): Promise<any> => {
   const missionId = doc._id;
   delete doc._id;
   doc.status = getMissionStatus(doc.startTime, doc.endTime, doc.handler);
+  const oldMission: IMission = await db.mission.findOne({_id: missionId})
+  if(oldMission.organizer != ctx.user._id){
+    return {
+      status: 400,
+      msg: '权限不足'
+    }
+  }
   const newMission: IMission = await db.mission.updateOne(
     {
       _id: missionId,

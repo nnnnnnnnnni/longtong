@@ -4,6 +4,7 @@ export import ObjectId = Types.ObjectId;
 export interface IDocument extends Document {
   title: string;          // 标题
   author: ObjectId;       // 作者
+  company: ObjectId;      // 公司
   body: string;           // 正文
   visitors: ObjectId[];   // 浏览者
   createTime?: Date;      // 创建时间
