@@ -13,6 +13,8 @@ export default {
 <style>
 @import url('//fonts.googleapis.com/css?family=Montserrat:300,400,500,600');
 @import url('./assets/scroll.css');
+/* @import url('https://fonts.yecdn.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap');
+@import url('https://fonts.yecdn.com/css2?family=Noto+Sans+SC&display=swap'); */
 
 html,
 body {
@@ -23,7 +25,7 @@ body {
   min-width: 1250px;
 }
 #app {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat', 'Noto Sans SC', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;

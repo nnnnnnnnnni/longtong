@@ -4,13 +4,14 @@
 
 <script>
 // https://ld246.com/article/1549638745630#--%E7%AE%80%E4%BB%8B
+import { uploadPath } from "../../lib/config";
 import Vditor from "vditor";
 import "vditor/dist/index.css";
 export default {
   name: "editer",
   data() {
     return {
-      contentEditor: "",
+      contentEditor: ""
     };
   },
   model: {
@@ -21,7 +22,7 @@ export default {
   mounted() {
     let that = this;
     this.contentEditor = new Vditor("vditor", {
-      height: 'auto',
+      height: "auto",
       toolbarConfig: {
         pin: true
       },
@@ -57,7 +58,7 @@ export default {
       upload: {
         fieldName: "file",
         accept: "image/*",
-        url: "http://localhost:8081/generic/upload",
+        url: uploadPath,
         filename(name) {
           return name
             .replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, "")

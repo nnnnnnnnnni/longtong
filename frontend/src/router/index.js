@@ -165,7 +165,8 @@ const routerConfig = new Router({
                 allowAnonymous: false,
                 pageTitle: "文档列表"
               },
-              component: () => import("@/components/document/list") 
+              component: () =>
+                import("@/components/workbench/drawerTabs/document/list")
             },
             {
               path: "/document/add",
@@ -174,7 +175,8 @@ const routerConfig = new Router({
                 allowAnonymous: false,
                 pageTitle: "写文档"
               },
-              component: () => import("@/components/document/add") 
+              component: () =>
+                import("@/components/workbench/drawerTabs/document/add")
             },
             {
               path: "/document/:id",
@@ -183,9 +185,20 @@ const routerConfig = new Router({
                 allowAnonymous: false,
                 pageTitle: "文档详情"
               },
-              component: () => import("@/components/document/detail") 
+              component: () =>
+                import("@/components/workbench/drawerTabs/document/detail")
             }
           ]
+        },
+        {
+          path: "/pan",
+          name: "pans",
+          meta: {
+            allowAnonymous: false,
+            pageTitle: "云盘"
+          },
+          component: () =>
+            import("@/components/workbench/drawerTabs/pan/list")
         }
       ]
     },

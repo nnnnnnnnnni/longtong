@@ -10,7 +10,6 @@
       <template slot="title">
         <div class="drawer-title">
           <span class="title-text">更多 More</span>
-          <span class="title-sub"><a-button size="small" type="link">编辑</a-button></span>
         </div>
       </template>
       <div class="drawer-contaner">
@@ -49,11 +48,6 @@ export default {
   display: flex;
   flex: 1;
   justify-content: space-between;
-}
-.title-sub {
-  font-size: 12px;
-  margin-right: 30px;
-  cursor: pointer;
 }
 .drawer-contaner {
   display: flex;

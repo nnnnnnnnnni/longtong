@@ -16,7 +16,7 @@ export default [
     val: 'cloud',
     icon: "hdd",
     title: "云盘",
-    function: ()=> {alert('云盘')}
+    function: ()=> {router.push({ name: "pans" })}
   },
   {
     val: 'address',

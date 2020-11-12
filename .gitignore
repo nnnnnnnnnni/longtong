@@ -2,6 +2,7 @@
 node_modules/
 backend/config.js
 backend/config.ts
+backend/static/*
 dist/
 dist-ts/
 apidoc/

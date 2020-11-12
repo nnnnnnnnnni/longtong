@@ -62,7 +62,7 @@ export default {
       this.$get("/document/docs", params).then(res => {
         let data = [...res.data];
         data.map(item => {
-          item.body = item.body.slice(0, 200);
+          item.body = item.body.slice(0, 300);
           return item;
         });
         this.docs = data;
@@ -88,13 +88,19 @@ export default {
 .doc {
   padding: 10px 20px;
   border: 1px solid #eee;
-  border-radius: 10px;
+  border-radius: 5px;
   margin-bottom: 10px;
+  transition: all 0.3s;
+}
+.doc:hover {
+  border-color: #40a9ff;
+  cursor: pointer;
 }
 .doc a {
   font-size: 20px;
   margin-bottom: 10px;
   display: inline-block;
+  transition: all 0.3s;
 }
 .doc a:hover {
   text-decoration: underline;
@@ -103,6 +109,7 @@ export default {
   height: 60px;
   line-height: 30px;
   margin-bottom: 10px;
+  overflow: hidden;
 }
 .doc .infos {
   display: flex;
@@ -116,14 +123,17 @@ export default {
 }
 .doc .infos .item {
   margin-right: 10px;
+  font-size: 12px;
 }
 .doc .infos .avator {
-  height: 30px;
-  width: 30px;
+  height: 20px;
+  width: 20px;
+  margin: 5px;
 }
 .doc .infos .avator img {
   height: inherit;
   width: inherit;
   border-radius: 50%;
+  float: left;
 }
 </style>

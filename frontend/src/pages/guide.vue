@@ -140,6 +140,7 @@
 </template>
 
 <script>
+import {uploadPath} from '../lib/config'
 export default {
   name: "guide",
   data() {
@@ -154,7 +155,7 @@ export default {
       name: "",
       introduction: "",
       logo: "",
-      upload: this.$store.state.apis.upload,
+      upload: uploadPath,
       currentStep: 0
     };
   },

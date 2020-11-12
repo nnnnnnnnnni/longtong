@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import { uploadPath } from '../../../lib/config'
 export default {
   name: "baseTab",
   props: ["activeTab"],
@@ -62,7 +63,7 @@ export default {
         members: []
       },
       loading: false,
-      upload: this.$store.state.apis.upload
+      upload: uploadPath,
     };
   },
   created() {
