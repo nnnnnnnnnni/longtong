@@ -10,7 +10,17 @@ const router: Irouter = {
   "/generic/panUpload": {
     method: "POST",
     middleware: generic.panUpload,
+    allowAnonymous: false,
+  },
+  "/generic/pans": {
+    method: "GET",
+    middleware: generic.pans,
     allowAnonymous: true,
+  },
+  "/generic/deleteFile": {
+    method: "DELETE",
+    middleware: generic.deleteFile,
+    allowAnonymous: false,
   },
 };
 

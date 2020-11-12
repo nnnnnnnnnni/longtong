@@ -8,6 +8,10 @@ const panSchema = new Schema(
       type: SchemaTypes.ObjectId,
       ref: "user",
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     url: String,
     size: Number,
   },

@@ -4,6 +4,7 @@ import { project } from "./project";
 import { department } from "./department";
 import { mission } from "./mission";
 import { document } from "./document";
+import { pan } from "./pan";
 
 export default {
   user: user,
@@ -12,4 +13,5 @@ export default {
   department: department,
   mission: mission,
   document: document,
+  pan: pan,
 };

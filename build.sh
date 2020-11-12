@@ -13,6 +13,10 @@ PRINT() {
 
 NPM=${NPM:="npm --registry=https://registry.npm.taobao.org"}
 
+
+PRINT "COPY CONFIG FIEL"
+RUN_IN "copy config.example.ts config.ts" "../backend"
+
 PRINT "install backend module"
 RUN_IN "$NPM install" "../backend"
 

@@ -1,9 +1,10 @@
 # longtong(笼统)
 
-### A project management platform, It can be used as a process management program for small companies or teams to facilitate the most efficient things in the least time.
+### A internal management platform, It can be used as a process management program for small companies or teams to facilitate the most efficient things in the least time.
+### 一个内部管理平台，可以用作小型公司或团队的过程管理程序，以在最短的时间内促进最高效的事情。
 
 ### technology
-vue + mongodb + redis
+vue2.x + vuex + mongodb + redis
 
 <hr/>
 
@@ -13,12 +14,12 @@ vue + mongodb + redis
 |---|---|
 |FullCalendar|https://fullcalendar.io/docs/headerToolbar|
 |vditor|https://ld246.com/article/1549638745630|
-|css|https://www.antdv.com/docs/vue/introduce-cn/|
-|axios|https://github.com/axios/axios|
-|chart|https://www.highcharts.com/|
-|DB|https://mongoosejs.com/|
-|ioRedis|https://www.npmjs.com/package/ioredis|
-|OSS|https://developer.qiniu.com/kodo|
+|css (ant-design-vue)|https://www.antdv.com/docs/vue/introduce-cn/|
+|http (highcharts)|https://github.com/axios/axios|
+|chart (highcharts)|https://www.highcharts.com/|
+|DB (mongoose)|https://mongoosejs.com/|
+|redis (ioredis)|https://www.npmjs.com/package/ioredis|
+|OSS (qiniu)|https://developer.qiniu.com/kodo|
 
 
 # Usage

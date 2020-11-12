@@ -198,7 +198,7 @@ const routerConfig = new Router({
             pageTitle: "云盘"
           },
           component: () =>
-            import("@/components/workbench/drawerTabs/pan/list")
+            import("@/components/workbench/drawerTabs/pan")
         }
       ]
     },
