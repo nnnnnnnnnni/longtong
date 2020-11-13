@@ -18,6 +18,7 @@ export const register = async (ctx: Context): Promise<any> => {
     mail: mail,
     password: pass,
   });
+  delete new_user.password;
   const token = generateToken(new_user._id.toString());
   await redis.set(0, `TOKEN:${token}`, new_user);
   ctx.user = new_user;
@@ -128,6 +129,7 @@ export const update = async (ctx: Context): Promise<any> => {
     .populate("department.info", "name")
     .lean()
     .exec();
+  delete updatedUser.password;
   await redis.set(0, `TOKEN:${token}`, updatedUser);
   return {
     data: updatedUser,

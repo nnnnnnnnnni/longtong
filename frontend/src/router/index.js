@@ -197,8 +197,16 @@ const routerConfig = new Router({
             allowAnonymous: false,
             pageTitle: "云盘"
           },
-          component: () =>
-            import("@/components/workbench/drawerTabs/pan")
+          component: () => import("@/components/workbench/drawerTabs/pan")
+        },
+        {
+          path: "/approve",
+          name: "approve",
+          meta: {
+            allowAnonymous: false,
+            pageTitle: "审批"
+          },
+          component: () => import("@/pages/approve")
         }
       ]
     },

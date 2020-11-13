@@ -1,3 +1,4 @@
+// 优先级类型
 export const _priority = [
   {
     name: "十分紧急",
@@ -21,33 +22,35 @@ export const _priority = [
   }
 ];
 
+// 任务类型
 export const _missionType = [
   {
     name: "BUG",
     val: "bug",
     color: "rgb(230, 36, 18)",
-    icon: 'bug'
+    icon: "bug"
   },
   {
     name: "需求",
     val: "demand",
     color: "rgb(124, 181, 236)",
-    icon: 'inbox'
+    icon: "inbox"
   },
   {
     name: "任务",
     val: "mission",
     color: "rgb(144, 237, 125)",
-    icon: 'tool'
+    icon: "tool"
   },
   {
     name: "会议",
     val: "meeting",
     color: "#fa8c16",
-    icon: 'laptop'
+    icon: "laptop"
   }
 ];
 
+// 状态类型
 export const _statusType = [
   {
     name: "等待分配",
@@ -78,6 +81,30 @@ export const _statusType = [
     name: "已关闭",
     val: "closed",
     color: "#434343"
+  }
+];
+
+// 请假类型
+export const _leaveType = [
+  {
+    name: "年假",
+    val: 1
+  },
+  {
+    name: "事假",
+    val: 2
+  },
+  {
+    name: "病假",
+    val: 3
+  },
+  {
+    name: "调休假",
+    val: 4
+  },
+  {
+    name: "其他假",
+    val: 5
   }
 ];
 
@@ -118,4 +145,12 @@ export function getStatusType(type, key) {
     }
   }
   return "";
+}
+
+export function getLeaveType(val) {
+  try {
+    return _leaveType[Number(val) - 1].name;
+  } catch (error) {
+    return "";
+  }
 }

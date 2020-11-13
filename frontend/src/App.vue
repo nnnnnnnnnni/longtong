@@ -47,4 +47,11 @@ td._center {
 .vditor-preview__action{
   display: none !important;
 }
+.vditor-reset img {
+  margin: 0 auto;
+  display: inherit;
+}
+.vditor-reset table {
+  margin: 0 auto;
+}
 </style>

@@ -5,6 +5,7 @@ import { department } from "./department";
 import { mission } from "./mission";
 import { document } from "./document";
 import { pan } from "./pan";
+import { approve } from "./approve";
 
 export default {
   user: user,
@@ -14,4 +15,5 @@ export default {
   mission: mission,
   document: document,
   pan: pan,
+  approve: approve,
 };

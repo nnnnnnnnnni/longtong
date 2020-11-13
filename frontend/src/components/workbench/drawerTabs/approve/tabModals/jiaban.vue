@@ -1,27 +1,29 @@
 <template>
-  <div class="address">
+  <div class="jiaban">
     <a-modal
-      title="Title"
+      title="加班申请"
       :visible="visible"
-      :confirm-loading="confirmLoading"
       @ok="handleOk"
       @cancel="handleCancel"
     >
-      <p>{{ ModalText }}</p>
+      <p>jiaban</p>
     </a-modal>
   </div>
 </template>
 
 <script>
 export default {
-  name: "address",
-  props: ['visible'],
+  name: "jiaban",
+  props: ["visible"],
   data() {
     return {};
   },
-  mounted() {
-
-  },
+  methods: {
+    handleOk: function() {},
+    handleCancel: function() {
+      this.$emit('cancel')
+    }
+  }
 };
 </script>
 

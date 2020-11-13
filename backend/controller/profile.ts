@@ -1,6 +1,5 @@
 import { Ires } from "@/interface/response";
 import { Idepartment, ObjectId } from "@/mongo/department/interface";
-import { IDocument } from "@/mongo/document/interface";
 import dayjs from "dayjs";
 import { Context } from "koa";
 import db from "../mongo/schema";
@@ -43,28 +42,70 @@ export const infos = async (ctx: Context): Promise<any> => {
 export const address = async (ctx: Context): Promise<Ires> => {
   const companyId = ctx.user.company.info._id;
   const departments: any = await db.department
-  .find({ company: companyId })
-  .select("upper name admins members")
-  .populate('admins', 'userName avator mail phone')
-  .populate('members', 'userName avator mail phone')
-  .lean();
+    .find({ company: companyId })
+    .select("upper name admins members")
+    .populate("admins", "userName avator mail phone")
+    .populate("members", "userName avator mail phone")
+    .lean();
   let upperst: string = "";
   const obj: any = {};
-  departments.forEach((dep: IDocument) => {
-    obj[dep._id] = Object.assign(dep, {
-      chilern: [],
-    });
+  departments.forEach((dep: Idepartment) => {
+    obj[dep._id] = {
+      _id: dep._id,
+      admins: dep.admins,
+      members: dep.members,
+      slots: {icon: 'bank'},
+      key: dep._id,
+      title: dep.name,
+      upper: dep.upper,
+      children: [],
+      isCheck: false
+    };
   });
   Object.keys(obj).forEach((key) => {
     const dep = obj[key];
-    if(!dep.upper || dep.upper == '') {
+    if (!dep.upper || dep.upper == "") {
+      delete dep.admins;
+      delete dep.members;
       upperst = dep._id;
     } else {
-      obj[dep.upper].chilern.push(dep)
+      if(!obj[dep.upper].isCheck){
+        if(obj[dep.upper].admins) {
+          obj[dep.upper].admins.forEach((admin: any) => {
+            obj[dep.upper].children.push({
+              _id: admin._id,
+              key: `admin_${admin._id}_${Math.random()}`,
+              slots: { icon: 'star'},
+              title: `${admin.userName}  -- ${admin.mail}`,
+              children: [],
+            });
+          })
+        }
+        if(obj[dep.upper].members) {
+          obj[dep.upper].members.forEach((member: any) => {
+            obj[dep.upper].children.push({
+              _id: member._id,
+              key: `member_${member._id}_${Math.random()}`,
+              slots: { icon: 'smile'},
+              title: `${member.userName}  -- ${member.mail}`,
+              children: [],
+            });
+          })
+        }
+        obj[dep.upper].isCheck = true;
+      }
+      obj[dep.upper].children.push({
+        _id: dep._id,
+        slots: {icon: 'bank'},
+        key: `department_${dep._id}_${Math.random()}`,
+        title: dep.title,
+        upper: dep.upper,
+        children: dep.children,
+      });
     }
   });
 
   return {
-    data: obj[upperst],
+    data: obj[upperst].children,
   };
 };

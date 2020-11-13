@@ -13,18 +13,20 @@
         </div>
       </template>
       <div class="drawer-contaner">
-        <div class="drawer-item" v-for="item in drawers" :key="item.icon" @click="item.function(1)">
+        <div class="drawer-item" v-for="item in drawers" :key="item.icon" @click="action(item.function, item.val)">
           <div class="item-icon">
             <a-icon :type="item.icon" />
           </div>
           <div class="item-title">{{ item.title }}</div>
         </div>
       </div>
+      <address-modal :visible='visible' @modalCancel='modalCancel' @okClick='okClick' />
     </a-drawer>
   </div>
 </template>
 
 <script>
+import addressModal from './drawerTabs/addressModal'
 import drawers from "./drawers";
 export default {
   name: "drawer",
@@ -32,12 +34,35 @@ export default {
   data() {
     return {
       drawers: drawers,
+      visible: false,
     };
   },
+  components: {
+    addressModal
+  },
   methods: {
+    // 通知父组件，drawer关闭
     onClose: function() {
       this.$emit("drawerClosed", false);
       console.log("closed");
+    },
+    okClick: function() {
+      this.$router.push({ name: "chat" });
+    },
+    // 点击 通讯录 方法
+    address: function() {
+      this.visible = true;
+    },
+    // 处理每个tab的方法
+    action: function(action, val) {
+      if (val === "address") action(this.address);
+      else {
+        action()
+      }
+    },
+    // 通讯录modal关闭通知
+    modalCancel: function (){
+      this.visible = false;
     }
   }
 };

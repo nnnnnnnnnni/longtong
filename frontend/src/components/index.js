@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {message,Dropdown, Checkbox,Popconfirm,Radio ,Modal, Tag,Table, Button, Input, FormModel, Card, Icon, Tooltip, Avatar, DatePicker, Upload, Calendar, Tabs, Empty, Select, Drawer, Steps } from 'ant-design-vue'
+import {Tree, message,Dropdown, Checkbox,Popconfirm,Radio ,Modal, Tag,Table, Button, Input, FormModel, Card, Icon, Tooltip, Avatar,TimePicker, DatePicker, Upload, Calendar, Tabs, Empty, Select, Drawer, Steps } from 'ant-design-vue'
 Vue.use(FormModel)
 Vue.use(Button)
 Vue.use(Input)
@@ -8,6 +8,7 @@ Vue.use(Icon)
 Vue.use(Tooltip)
 Vue.use(Avatar)
 Vue.use(DatePicker)
+Vue.use(TimePicker)
 Vue.use(Upload)
 Vue.use(Calendar)
 Vue.use(Tabs)
@@ -22,4 +23,5 @@ Vue.use(Radio)
 Vue.use(Popconfirm)
 Vue.use(Checkbox)
 Vue.use(Dropdown)
+Vue.use(Tree)
 Vue.prototype.$message = message;

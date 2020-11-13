@@ -16,19 +16,19 @@ export default [
     val: 'cloud',
     icon: "hdd",
     title: "云盘",
-    function: ()=> {router.push({ name: "document_list" })}
+    function: ()=> {router.push({ name: "pans" })}
   },
   {
     val: 'address',
     icon: "team",
     title: "通讯录",
-    function: ()=> {alert('通讯录')}
+    function: (cb)=> {cb()}
   },
   {
     val: 'approve',
     icon: "audit",
     title: "审批",
-    function: ()=> {alert('审批')}
+    function: ()=> {router.push({ name: "approve" })}
   },
   {
     val: 'performance',

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Config} from '../config'
+import { Config } from "../config";
 
 export default (host: string, port: string, name: string) => {
   const connect = () => {
