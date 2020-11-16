@@ -1,64 +1,101 @@
 <template>
   <div class="myStart">
     <div class="tab-contaner">
-      <div
-        class="tab-item"
-        v-for="item in tabs"
-        :key="item.icon"
-        @click="action(item.val)"
-      >
-        <div class="item-icon">
-          <a-icon :type="item.icon" />
-        </div>
+      <div class="tab-item" v-for="item in tabs" :key="item.icon" @click="action(item)">
+        <div class="item-icon"><a-icon :type="item.icon" /></div>
         <div class="item-title">{{ item.title }}</div>
       </div>
     </div>
-    <caigou :visible='caigouVisible' @cancel="cancel('caigou')" />
-    <waichu :visible='waichuVisible' @cancel="cancel('waichu')" />
-    <qingjia :visible='qingjiaVisible' @cancel="cancel('qingjia')" />
-    <jiaban :visible='jiabanVisible' @cancel="cancel('jiaban')" />
-    <zhaopin :visible='zhaopinVisible' @cancel="cancel('zhaopin')" />
-    <zhuanzheng :visible='zhuanzhengVisible' @cancel="cancel('zhuanzheng')" />
+    <a-modal :title="title" :visible="visible" okText="提交" cancelText="取消" @ok="handleOk" @cancel="visible = false">
+      <a-form-model :model="form" :label-col="{ span: 6 }" :wrapper-col="{ span: 14, offset: 1 }">
+        <a-form-model-item label="请假类型" required>
+          <a-select placeholder="选择请假类型" v-model="form.extra.type">
+            <a-select-option v-for="i in leaveTypes" :key="i.val" :value='i.val'>
+              {{i.name}}
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+        <a-form-model-item label="开始时间" required>
+          <a-date-picker placeholder="选择日期" style="width: 49%;margin-right:2%" v-model="form.startDate" />
+          <a-time-picker placeholder="选择时间" style="width: 49%" v-model="form.startTime" format="HH:mm" :minuteStep='30' />
+        </a-form-model-item>
+        <a-form-model-item label="结束时间" required>
+          <a-date-picker placeholder="选择日期" style="width: 49%;margin-right:2%" v-model="form.endDate" :disabledDate="disabledDate" />
+          <a-time-picker placeholder="选择时间" style="width: 49%" v-model="form.endTime" format="HH:mm" :minuteStep='30' />
+        </a-form-model-item>
+        <a-form-model-item label="请假时长">
+          <a-input v-model="lastTime" disabled>
+            <template slot="suffix">小时</template>  
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="备注">
+          <a-textarea v-model="form.notice" placeholder="填写备注"> </a-textarea>
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
   </div>
 </template>
 
 <script>
-import caigou from './tabModals/caigou';
-import waichu from './tabModals/waichu';
-import qingjia from './tabModals/qingjia';
-import jiaban from './tabModals/caigou';
-import zhaopin from './tabModals/zhaopin';
-import zhuanzheng from './tabModals/zhuanzheng';
+import { _leaveType } from "@/lib/type";
 import tabs from "./tabs";
 export default {
   name: "myStart",
   data() {
     return {
+      title: '',
       tabs: tabs,
-      caigouVisible: false,
-      waichuVisible: false,
-      qingjiaVisible: false,
-      jiabanVisible: false,
-      zhaopinVisible: false,
-      zhuanzhengVisible: false,
-      tabsVisible: false,
+      visible: false,
+      approvers: [],
+      leaveTypes: _leaveType,
+      fileList: [],
+      form: {
+        type: 1,
+        extra: {
+          type: 1
+        }
+      },
     };
   },
-  components: {
-    caigou,
-    waichu,
-    qingjia,
-    jiaban,
-    zhaopin,
-    zhuanzheng,
-    tabs,
+  mounted() {
+    this.getApprovers();
+  },
+  computed: {
+    lastTime: function() {
+      if(!this.form.startTime || !this.form.endTime || !this.form.endDate || !this.form.startDate) {
+        return '0.0'
+      } else {
+        const startDate = moment(this.form.startDate).format('YYYY-MM-DD');
+        const startTime = moment(this.form.startTime).format('HH:mm');
+        const endDate = moment(this.form.endDate).format('YYYY-MM-DD');
+        const endTime = moment(this.form.endTime).format('HH:mm');
+        const start = moment(`${startDate} ${startTime}`).format('x');
+        const end = moment(`${endDate} ${endTime}`).format('x');
+        const tmp = moment.duration(end - start);
+        return tmp.days() * 24 + tmp.hours() + tmp.minutes() /60;
+      }
+    }
   },
   methods: {
     action: function(val) {
-      this[`${val}Visible`] = true;
+      this.title = val.title + '申请';
+      this.visible = true;
+      console.log(val)
     },
-    cancel: function(val) {
-      this[`${val}Visible`] = false;
+    // 禁用时间
+    disabledDate: function(endValue) {
+      const startValue = this.form.startDate;
+      if (!endValue || !startValue) {
+        return false;
+      }
+      return startValue.valueOf() >= endValue.valueOf();
+    },
+    handleOk: function() {},
+    //获取审批人员
+    getApprovers: function (){
+      this.$get('/approve/approvers').then(res => {
+        this.approvers = res.data
+      })
     }
   }
 };

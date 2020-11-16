@@ -46,6 +46,7 @@ export const create = async (ctx: Context) => {
 // 获取个人所有任务
 export const missions = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
+  console.log(userId)
   const { isHome, homeTab } = ctx.request.query;
   let missions: any[] = [];
   let _missions: any[] = [];
@@ -60,7 +61,7 @@ export const missions = async (ctx: Context): Promise<any> => {
         .exec();
     } else if (homeTab == 2) {
       missions = await db.mission
-        .find({ "handler.user": userId, status: { $ne: "closed" } })
+        .find({ handler: {user: userId, isFinish: false, isReject: false}, status: { $ne: "closed" }, })
         .populate("handler.user")
         .populate("organizer")
         .sort({ startTime: -1 })
@@ -69,7 +70,7 @@ export const missions = async (ctx: Context): Promise<any> => {
     } else {
       missions = await db.mission
         .find({
-          $or: [{ organizer: userId }, { "handler.user": userId }],
+          $or: [{ organizer: userId }, { handler: {user: userId, isFinish: false, isReject: false} }],
           status: { $ne: "closed" }
         })
         .populate("handler.user")
