@@ -1,6 +1,6 @@
 <template>
   <div class="companySetting">
-    <a-tabs default-active-key="1" @change="changeTab">
+    <a-tabs defaultActiveKey="1" @change="changeTab">
       <a-tab-pane key="1" tab="基本设置">
         <baseTab :activeTab='activeTab' />
       </a-tab-pane>
@@ -13,6 +13,9 @@
       <a-tab-pane key="4" tab="部门设置">
         <departmentTab :activeTab='activeTab' />
       </a-tab-pane>
+      <a-tab-pane key="5" tab="审批设置">
+        <approveTab :activeTab='activeTab' />
+      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
@@ -23,6 +26,7 @@ import baseTab from "./tabs/base";
 import projectTab from "./tabs/projects";
 import participantsTab from "./tabs/participants";
 import departmentTab from "./tabs/department";
+import approveTab from "./tabs/approve";
 export default {
   name: "companySetting",
   data() {
@@ -34,7 +38,10 @@ export default {
     baseTab,
     projectTab,
     participantsTab,
+    approveTab,
     departmentTab
+  },
+  created() {
   },
   methods: {
     // tab 切换通知

@@ -12,7 +12,7 @@ export default [
   {
     val: 'caigou',
     icon: "shopping-cart",
-    title: "采购",
+    title: "采购/报销",
   },
   {
     val: 'waichu',

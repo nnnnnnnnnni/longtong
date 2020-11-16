@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 export const create = async (ctx: Context): Promise<Ires> => {
   const { title, body, id } = ctx.request.body;
   const userId = ctx.user._id;
-  const companyId = ctx.user.company.info._id;
   let newDoc: IDocument;
   if(id) {
     const has = await db.document.find({_id: id, author: userId})
@@ -27,7 +26,6 @@ export const create = async (ctx: Context): Promise<Ires> => {
     newDoc = await db.document.create({
       title: title,
       author: userId,
-      company: companyId,
       body: body,
       visitors: [],
     });
@@ -41,10 +39,7 @@ export const create = async (ctx: Context): Promise<Ires> => {
 // 查询文档列表
 export const docs = async (ctx: Context): Promise<Ires> => {
   const { text } = ctx.request.query;
-  const companyId = ctx.user.company.info._id;
-  const params: any = {
-    company: companyId,
-  };
+  const params: any = {};
   if (text) {
     params.title = { $regex: text, $options: "i" };
   }
@@ -88,9 +83,7 @@ export const docById = async (ctx: Context): Promise<Ires> => {
 // 查询某人文档
 export const docsByUser = async (ctx: Context): Promise<Ires> => {
   const userId = ctx.user._id;
-  const companyId = ctx.user.company.info._id;
   const params: any = {
-    company: companyId,
     author: userId
   };
   const docs: any[] = await db.document.find(params).sort({ createTime: -1 }).lean().exec();

@@ -23,6 +23,7 @@ const companySchema: Schema = new Schema(
         ref: "project",
       },
     ],
+    approve: Object,
     introduction: String,
     createTime: {
       type: Date,

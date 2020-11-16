@@ -8,10 +8,6 @@ const missionSchema = new Schema(
       type: SchemaTypes.ObjectId,
       ref: "user",
     },
-    company: {
-      type: SchemaTypes.ObjectId,
-      ref: "company",
-    },
     isAllDay: {
       type: Boolean,
       default: false,

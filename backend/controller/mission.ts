@@ -23,7 +23,6 @@ export const create = async (ctx: Context) => {
     endTime: doc.time[1],
     priority: doc.priority,
     type: doc.type,
-    company: ctx.user.company.info._id,
     organizer: ctx.user._id,
     project: doc.project,
     isAllDay: doc.isAllDay,

@@ -4,11 +4,8 @@ import db from "../mongo/schema";
 
 // 获取pie图三个信息
 export const infos = async (ctx: Context): Promise<any> => {
-  const companyId = ctx.user.company.info._id;
-  const userId = ctx.user._id;
   const [projectCount, TypeCount, priorityCount] = await Promise.all([
     db.mission.aggregate([
-      { $match: { company: ObjectId(companyId) } },
       {
         $lookup: {
           from: "projects",
@@ -21,11 +18,9 @@ export const infos = async (ctx: Context): Promise<any> => {
       { $group: { _id: "$project_info.name", y: { $sum: 1 } } },
     ]),
     db.mission.aggregate([
-      { $match: { company: ObjectId(companyId) } },
       { $group: { _id: "$type", y: { $sum: 1 } } },
     ]),
     db.mission.aggregate([
-      { $match: { company: ObjectId(companyId) } },
       { $group: { _id: "$priority", y: { $sum: 1 } } },
     ]),
   ]);

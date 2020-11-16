@@ -40,9 +40,8 @@ export const infos = async (ctx: Context): Promise<any> => {
 
 // 获取通讯录
 export const address = async (ctx: Context): Promise<Ires> => {
-  const companyId = ctx.user.company.info._id;
   const departments: any = await db.department
-    .find({ company: companyId })
+    .find()
     .select("upper name admins members")
     .populate("admins", "userName avator mail phone")
     .populate("members", "userName avator mail phone")

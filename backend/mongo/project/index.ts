@@ -22,10 +22,6 @@ const projectSchema = new Schema(
       type: SchemaTypes.ObjectId,
       ref: "department",
     },
-    company: {
-      type: SchemaTypes.ObjectId,
-      ref: "company",
-    },
     createTime: {
       type: Date,
       default: Date.now(),

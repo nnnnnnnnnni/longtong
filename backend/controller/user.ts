@@ -161,7 +161,7 @@ export const users = async (ctx: Context): Promise<any> => {
   let params: any = {
     "company.info": companyId,
   };
-  departmentData = await db.department.find({ company: companyId }).select("name").lean().exec();
+  departmentData = await db.department.find().select("name").lean().exec();
   if (options.role) {
     params["company.role"] = options.role;
   }

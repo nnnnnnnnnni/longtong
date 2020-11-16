@@ -7,10 +7,6 @@ const departmentSchema = new Schema(
       type: String,
       unique: true
     },
-    company: {
-      type: SchemaTypes.ObjectId,
-      ref: "company",
-    },
     admins: [
       {
         type: SchemaTypes.ObjectId,

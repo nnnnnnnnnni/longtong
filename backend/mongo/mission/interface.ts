@@ -4,7 +4,6 @@ export import ObjectId = Types.ObjectId;
 export interface IMission extends Document {
   title: string;              // 标题
   organizer: ObjectId;        // 发起者
-  company: ObjectId;          // 所属公司
   isAllDay: Boolean;          // 是否全天
   startTime: Date;            // 开始时间
   endTime: Date;              // 截止时间

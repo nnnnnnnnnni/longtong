@@ -4,8 +4,6 @@ import { Iproject, ObjectId } from "@/mongo/project/interface";
 
 // 创建项目
 export const create = async (ctx: Context): Promise<any> => {
-  const userId = ctx.user._id;
-  const companyId = ctx.user.company.info._id;
   const doc = ctx.request.body;
   const newProject: Iproject = await db.project.create({
     name: doc.name,
@@ -13,7 +11,6 @@ export const create = async (ctx: Context): Promise<any> => {
     department: doc.department,
     admins: doc.admins,
     introduction: doc.introduction,
-    company: companyId,
     members: [],
   });
   for (let i = 0; i < doc.admins.length; i++) {
@@ -29,11 +26,8 @@ export const create = async (ctx: Context): Promise<any> => {
 
 // 获取所有项目
 export const projects = async (ctx: Context): Promise<any> => {
-  const companyId = ctx.user.company.info._id;
   const options = ctx.request.query.options;
-  const params: any = {
-    company: companyId
-  }
+  const params: any = {}
   if(options) {
     params.name = { $regex: options, $options: "i" }
   }

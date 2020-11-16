@@ -7,7 +7,10 @@ const approveSchema: Schema = new Schema(
       type: SchemaTypes.ObjectId,
       ref: "user",
     },
-    type: Number,
+    type: {
+      type: String,
+      enum: ["qingjia", "jiaban", "caigou", "waichu", "zhaopin", "zhuanzheng"],
+    },
     startTime: Date,
     endTime: Date,
     notice: String,
@@ -16,6 +19,11 @@ const approveSchema: Schema = new Schema(
     disabled: {
       type: Boolean,
       default: false,
+    },
+    status: {
+      type: String,
+      enum: ['posted', 'processing', 'passed', 'rejected'],
+      default: ['posted']
     },
     approvers: [
       {

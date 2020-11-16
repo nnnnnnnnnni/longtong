@@ -5,10 +5,8 @@ import db from "../mongo/schema";
 // 创建部门
 export const create = async (ctx: Context): Promise<any> => {
   const doc: Idepartment = ctx.request.body;
-  const companyId = ctx.user.company.info._id;
   const userId = ctx.user._id;
   doc.admins = [userId];
-  doc.company = companyId;
   const newDepartment = await db.department.create(doc);
   return {
     data: newDepartment,
@@ -17,8 +15,7 @@ export const create = async (ctx: Context): Promise<any> => {
 
 // 部门信息列表
 export const departments = async (ctx: Context): Promise<any> => {
-  const companyId = ctx.user.company.info._id;
-  const departmentData = await db.department.find({ company: companyId })
+  const departmentData = await db.department.find()
   .populate("upper")
   .populate('admins', 'name')
   .populate('members', 'name')
