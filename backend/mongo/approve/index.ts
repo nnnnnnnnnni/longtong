@@ -11,8 +11,6 @@ const approveSchema: Schema = new Schema(
       type: String,
       enum: ["qingjia", "jiaban", "caigou", "waichu", "zhaopin", "zhuanzheng"],
     },
-    startTime: Date,
-    endTime: Date,
     notice: String,
     files: [String],
     extra: Object,
@@ -22,10 +20,28 @@ const approveSchema: Schema = new Schema(
     },
     status: {
       type: String,
-      enum: ['posted', 'processing', 'passed', 'rejected'],
-      default: ['posted']
+      enum: ["posted", "processing", "passed", "rejected"],
+      default: "posted",
     },
+    agrees: [
+      {
+        type: SchemaTypes.ObjectId,
+        ref: "user",
+      },
+    ],
     approvers: [
+      {
+        user: {
+          type: SchemaTypes.ObjectId,
+          ref: "user",
+        },
+        isAgree: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
+    keys: [
       {
         user: {
           type: SchemaTypes.ObjectId,

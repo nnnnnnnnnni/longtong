@@ -2,11 +2,6 @@ import { Irouter } from "../interface/router";
 import * as approve from "../controller/approve";
 
 const router: Irouter = {
-  "/approve/approvers": {
-    method: "GET",
-    middleware: approve.approvers,
-    allowAnonymous: false,
-  },
   "/approve/info": {
     method: "GET",
     middleware: approve.approveSetting,
@@ -15,6 +10,26 @@ const router: Irouter = {
   "/approve/update": {
     method: "PUT",
     middleware: approve.approveUpdate,
+    allowAnonymous: false,
+  },
+  "/approve/create": {
+    method: "POST",
+    middleware: approve.create,
+    allowAnonymous: false,
+  },
+  "/approve/approves": {
+    method: "GET",
+    middleware: approve.myApproves,
+    allowAnonymous: false,
+  },
+  "/approve/posts": {
+    method: "GET",
+    middleware: approve.myposted,
+    allowAnonymous: false,
+  },
+  "/approve/status": {
+    method: "PUT",
+    middleware: approve.status,
     allowAnonymous: false,
   },
 };

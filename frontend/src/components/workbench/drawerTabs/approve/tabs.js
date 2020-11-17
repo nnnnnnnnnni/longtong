@@ -1,4 +1,5 @@
-export default [
+
+const leaveType = [
   {
     val: 'qingjia',
     icon: "calendar",
@@ -30,3 +31,32 @@ export default [
     title: "转正",
   },
 ];
+export default leaveType
+
+export const statusType = {
+  posted: {
+    title: '已申请',
+    color: '#1890ff'
+  },
+  processing: {
+    title: '处理中',
+    color: '#722ed1'
+  },
+  passed: {
+    title: '已通过',
+    color: '#52c41a'
+  },
+  rejected: {
+    title: '已拒绝',
+    color: '#f5222d'
+  }
+}
+
+export function getApproveType(type) {
+  for (let i = 0; i < leaveType.length; i++) {
+    if (leaveType[i].val == type) {
+      return leaveType[i].title;
+    }
+  }
+  return "";
+}

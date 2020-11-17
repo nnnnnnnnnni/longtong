@@ -58,8 +58,25 @@ export const address = async (ctx: Context): Promise<Ires> => {
       title: dep.name,
       upper: dep.upper,
       children: [],
-      isCheck: false
     };
+    obj[dep._id].admins.forEach((admin: any) => {
+      obj[dep._id].children.push({
+        _id: admin._id,
+        key: `admin_${admin._id}_${Math.random()}`,
+        slots: { icon: 'star'},
+        title: `${admin.userName}  -- ${admin.mail}`,
+        children: [],
+      });
+    })
+    obj[dep._id].members.forEach((member: any) => {
+      obj[dep._id].children.push({
+        _id: member._id,
+        key: `member_${member._id}_${Math.random()}`,
+        slots: { icon: 'smile'},
+        title: `${member.userName}  -- ${member.mail}`,
+        children: [],
+      });
+    })
   });
   Object.keys(obj).forEach((key) => {
     const dep = obj[key];
@@ -68,31 +85,6 @@ export const address = async (ctx: Context): Promise<Ires> => {
       delete dep.members;
       upperst = dep._id;
     } else {
-      if(!obj[dep.upper].isCheck){
-        if(obj[dep.upper].admins) {
-          obj[dep.upper].admins.forEach((admin: any) => {
-            obj[dep.upper].children.push({
-              _id: admin._id,
-              key: `admin_${admin._id}_${Math.random()}`,
-              slots: { icon: 'star'},
-              title: `${admin.userName}  -- ${admin.mail}`,
-              children: [],
-            });
-          })
-        }
-        if(obj[dep.upper].members) {
-          obj[dep.upper].members.forEach((member: any) => {
-            obj[dep.upper].children.push({
-              _id: member._id,
-              key: `member_${member._id}_${Math.random()}`,
-              slots: { icon: 'smile'},
-              title: `${member.userName}  -- ${member.mail}`,
-              children: [],
-            });
-          })
-        }
-        obj[dep.upper].isCheck = true;
-      }
       obj[dep.upper].children.push({
         _id: dep._id,
         slots: {icon: 'bank'},

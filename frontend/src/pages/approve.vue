@@ -44,6 +44,6 @@ export default {
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: auto;
 }
 </style>
