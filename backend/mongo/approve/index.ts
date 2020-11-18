@@ -23,12 +23,26 @@ const approveSchema: Schema = new Schema(
       enum: ["posted", "processing", "passed", "rejected"],
       default: "posted",
     },
-    agrees: [
-      {
-        type: SchemaTypes.ObjectId,
-        ref: "user",
+    agree: {
+      approve: {
+        user: {
+          type: SchemaTypes.ObjectId,
+          ref: "user",
+        },
+        isAgree: {
+          type: Boolean,
+        }
       },
-    ],
+      key: {
+        user: {
+          type: SchemaTypes.ObjectId,
+          ref: "user",
+        },
+        isAgree: {
+          type: Boolean,
+        }
+      },
+    },
     approvers: [
       {
         user: {

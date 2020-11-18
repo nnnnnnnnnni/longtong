@@ -147,6 +147,16 @@ export const create = async (ctx: Context): Promise<Ires> => {
       msg: "未知错误！",
     };
   }
+  const agree: any = {
+    approve: {
+      isAgree: false,
+    }
+  }
+  if(keys.length != 0) {
+    agree.keys = {
+      isAgree: false,
+    }
+  }
   await db.approve.create({
     user: ctx.user._id,
     type: data.type,
@@ -154,8 +164,8 @@ export const create = async (ctx: Context): Promise<Ires> => {
     notice: data.notice,
     status: "posted",
     approvers: approvers,
-    agrees: [],
     keys: keys,
+    agree: agree,
     cc: cc,
     files: [],
   });
@@ -174,7 +184,8 @@ export const myApproves = async (ctx: Context): Promise<Ires> => {
       disabled: false,
     })
     .sort({ createTime: -1 })
-    .populate("agrees", "userName avator")
+    .populate("agree.approve.user", "userName avator")
+    .populate("agree.key.user", "userName avator")
     .populate('user', 'userName avator');
   return {
     data: approvers,
@@ -186,8 +197,8 @@ export const myposted = async (ctx: Context): Promise<Ires> => {
   const userId = ctx.user._id;
   const approvers: Iapprove[] = await db.approve.find({ user: userId })
   .sort({ createTime: -1 })
-  .populate("agrees", "userName avator")
-  .populate('user', 'userName avator');
+  .populate("agree.approve.user", "userName avator")
+  .populate("agree.key.user", "userName avator")
   return {
     data: approvers,
   };

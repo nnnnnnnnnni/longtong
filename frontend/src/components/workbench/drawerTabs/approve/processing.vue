@@ -6,7 +6,10 @@
           {{ item._type }}
           <span class="sub" v-if="item.type =='qingjia'">({{item._type_}})</span>
         </div>
-        <div class="item-status">
+        <div class="item-process">
+          <div class="process" v-if="item.approvers && item.approvers.length != 0">1</div>
+          <div class="process" v-if="item.keys && item.keys.length != 0">2</div>
+          <div class="process" v-if="item.cc && item.cc.length != 0">3</div>
         </div>
         <div class="item-status" v-if="item.disabled">
           <a-tag color='#595959' size='large'>已撤销</a-tag>
@@ -148,7 +151,7 @@ export default {
   font-size: 20px;
   font-weight: bold;
 }
-.item .top .sub {
+.item .top .item-type .sub {
   font-weight: normal;
   font-size: 12px;
   color: #722ed1;
