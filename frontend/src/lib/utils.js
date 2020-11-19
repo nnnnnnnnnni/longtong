@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from 'moment';
 export const isEmpty = val => {
   return val === "" || val === null || val === undefined || val === [] || val === {};
 };
@@ -40,7 +41,7 @@ export const isCode = code => {
 // 防抖
 export const debounce = (fnc, wait) => {
   let timer = null;
-  return function() {
+  return function () {
     if (timer) {
       clearTimeout(timer);
     }
@@ -49,3 +50,21 @@ export const debounce = (fnc, wait) => {
     }, wait);
   };
 };
+
+// 时间格式化
+export const timeFormat = (time) => {
+  const timeX = new Date().getTime() - new Date(time).getTime();
+  if (timeX < 0) {
+    return moment(time).format('MM-DD HH:mm:ss');
+  } else if (timeX <= 1000 * 60) {
+    return moment().diff(moment(time), 'second') + '秒前'
+  } else if (timeX <= 1000 * 60 * 60) {
+    return moment().diff(moment(time), "minute") + '分钟前'
+  } else if (timeX <= 1000 * 60 * 60 * 24) {
+    return moment().diff(moment(time), 'hour') + '小时前'
+  } else if (timeX <= 1000 * 60 * 60 * 24 * 30) {
+    return moment().diff(moment(time), 'day') + '天前'
+  } else {
+    return moment(time).format('MM-DD HH:mm:ss');
+  }
+}

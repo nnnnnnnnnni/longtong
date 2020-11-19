@@ -1,91 +1,98 @@
 <template>
   <div class="processing">
-    <div class="item" v-for="item in data" :key="item._id">
-      <div class="top">
-        <div class="item-type">
-          {{ item._type }}
-          <span class="sub" v-if="item.type =='qingjia'">({{item._type_}})</span>
+    <div class="list" v-if='data.length'>
+      <div class="item" v-for="item in data" :key="item._id">
+        <div class="top">
+          <div class="item-type">
+            {{ item._type }}
+            <span class="sub" v-if="item.type =='qingjia'">({{item._type_}})</span>
+          </div>
+          <div class="item-process">
+            <div
+              class="process"
+              :class="{
+                'pass': item.agree.approve.user && item.agree.approve.isAgree,
+                'reject': item.agree.approve.user && !item.agree.approve.isAgree
+              }"
+              v-if="item.approvers && item.approvers.length != 0"
+            >1</div>
+            <div
+              class="process" 
+              :class="{
+                'pass': item.agree.key && item.agree.key.user && item.agree.key.isAgree,
+                'reject': item.agree.key && item.agree.key.user && !item.agree.key.isAgree
+              }"
+              v-if="item.keys && item.keys.length != 0"
+            >2</div>
+            <div 
+              class="process"
+              :class="{'pass': item.status == 'passed'}"
+              v-if="item.cc && item.cc.length != 0"
+            >cc</div>
+          </div>
+          <div class="item-status" v-if="item.disabled">
+            <a-tag color='#595959' size='large'>已撤销</a-tag>
+          </div>
+          <div class="item-status" v-else>
+            <a-tag color='#FF4D4F' @click="setStatus(item._id)"  v-if="item.status == 'posted'">撤销</a-tag>
+            <a-tag :color='statusType[item.status].color'>{{ statusType[item.status].title }}</a-tag>
+          </div>
         </div>
-        <div class="item-process">
-          <div
-            class="process"
-            :class="{
-              'pass': item.agree.approve.user && item.agree.approve.isAgree,
-              'reject': item.agree.approve.user && !item.agree.approve.isAgree
-            }"
-            v-if="item.approvers && item.approvers.length != 0"
-          >1</div>
-          <div
-            class="process" 
-            :class="{
-              'pass': item.agree.key && item.agree.key.user && item.agree.key.isAgree,
-              'reject': item.agree.key && item.agree.key.user && !item.agree.key.isAgree
-            }"
-            v-if="item.keys && item.keys.length != 0"
-          >2</div>
-          <div 
-            class="process"
-            :class="{'pass': item.status == 'passed'}"
-            v-if="item.cc && item.cc.length != 0"
-          >cc</div>
-        </div>
-        <div class="item-status" v-if="item.disabled">
-          <a-tag color='#595959' size='large'>已撤销</a-tag>
-        </div>
-        <div class="item-status" v-else>
-          <a-tag color='#FF4D4F' @click="setStatus(item._id)"  v-if="item.status == 'posted'">撤销</a-tag>
-          <a-tag :color='statusType[item.status].color'>{{ statusType[item.status].title }}</a-tag>
+        <div class="content">
+          <div class="item-time" v-if="item.type == 'qingjia' || item.type == 'jiaban' || item.type == 'waichu' || item.type == 'zhuanzheng'">
+            <div class="title">时间：</div>
+            <div class="item-time-start">
+              <span class="startDate">{{item._startDate}}</span>
+              <span class="startTime" v-if="item.type != 'zhuanzheng'">{{item._startTime}}</span>
+            </div>
+            <span class="dot"> ~ </span>
+            <div class="item-time-end">
+              <span class="endDate">{{item._endDate}}</span>
+              <span class="endTime" v-if="item.type != 'zhuanzheng'">{{item._endTime}}</span>
+            </div>
+          </div>
+          <div class="item-caigou" v-if="item.type == 'caigou'">
+            <div class="key item-info-name">
+              <span class="title">名称：</span>
+              {{item.extra.name}}
+            </div>
+            <div class="key item-info-price">
+              <span class="title">价格：</span>
+              {{item.extra.price}} 元
+            </div>
+            <div class="key item-info-number">
+              <div class="title">数量：</div>
+              {{item.extra.number}}
+              </div>
+            <div class="key item-info-link">
+              <span class="title">链接：</span>
+              <a :href="item.extra.link" target="_black">链接</a>
+            </div>
+          </div>
+          <div class="item-zhaopin" v-if="item.type == 'zhaopin'">
+            <div class="key item-info-department">
+              <div class="title">部门：</div>
+              {{item.extra.department? item.extra.department.name : ''}}
+            </div>
+            <div class="key item-info-job">
+              <div class="title">职位：</div>
+              {{item.extra.job}}
+            </div>
+            <div class="key item-info-number">
+              <div class="title">人数：</div>
+              {{item.extra.number}}
+            </div>
+          </div>
+          <div class="item-notice">
+            <div class="title">备注：</div>
+            {{item.notice || '无备注'}}
+          </div>
         </div>
       </div>
-      <div class="content">
-        <div class="item-time" v-if="item.type == 'qingjia' || item.type == 'jiaban' || item.type == 'waichu' || item.type == 'zhuanzheng'">
-          <div class="title">时间：</div>
-          <div class="item-time-start">
-            <span class="startDate">{{item._startDate}}</span>
-            <span class="startTime" v-if="item.type != 'zhuanzheng'">{{item._startTime}}</span>
-          </div>
-          <span class="dot"> ~ </span>
-          <div class="item-time-end">
-            <span class="endDate">{{item._endDate}}</span>
-            <span class="endTime" v-if="item.type != 'zhuanzheng'">{{item._endTime}}</span>
-          </div>
-        </div>
-        <div class="item-caigou" v-if="item.type == 'caigou'">
-          <div class="key item-info-name">
-            <span class="title">名称：</span>
-            {{item.extra.name}}
-          </div>
-          <div class="key item-info-price">
-            <span class="title">价格：</span>
-            {{item.extra.price}} 元
-          </div>
-          <div class="key item-info-number">
-            <div class="title">数量：</div>
-            {{item.extra.number}}
-            </div>
-          <div class="key item-info-link">
-            <span class="title">链接：</span>
-            <a :href="item.extra.link" target="_black">链接</a>
-          </div>
-        </div>
-        <div class="item-zhaopin" v-if="item.type == 'zhaopin'">
-          <div class="key item-info-department">
-            <div class="title">部门：</div>
-            {{item.extra.department? item.extra.department.name : ''}}
-          </div>
-          <div class="key item-info-job">
-            <div class="title">职位：</div>
-            {{item.extra.job}}
-          </div>
-          <div class="key item-info-number">
-            <div class="title">人数：</div>
-            {{item.extra.number}}
-          </div>
-        </div>
-        <div class="item-notice">
-          <div class="title">备注：</div>
-          {{item.notice || '无备注'}}
-        </div>
+    </div>
+    <div class="processing" v-else>
+      <div class="list-empty">
+        <a-empty description="你还没有提交过审批"></a-empty>
       </div>
     </div>
   </div>

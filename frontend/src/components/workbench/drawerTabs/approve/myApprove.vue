@@ -1,6 +1,6 @@
 <template>
   <div class="myApprove">
-    <div class="list">
+    <div class="list" v-if="data.length">
       <div class="item" v-for="item in data" :key="item._id">
         <div class="top">
           <div class="item-type">
@@ -76,6 +76,11 @@
             {{item.notice || '无备注'}}
           </div>
         </div>
+      </div>
+    </div>
+    <div class="processing" v-else>
+      <div class="list-empty">
+        <a-empty description="暂无需要您处理的审批"></a-empty>
       </div>
     </div>
   </div>

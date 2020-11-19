@@ -186,6 +186,7 @@
         <div class="comment">
           <div class="icon">
             <a-icon type="profile" style="margin-top: 4px" /> 记录 :
+            <a-button size='small' type='primary' class="comment">评论</a-button>
           </div>
           <div class="comment-field">
             <div
@@ -194,6 +195,9 @@
               :key="item._id"
             >
               <div class="name">{{ item.user.userName }}</div>
+              <div class="time">
+                {{ timeFormat(item.time) }}
+              </div>
               <div class="action" v-if="item.action == 'create'">
                 创建了此任务
               </div>
@@ -209,9 +213,6 @@
               <div class="action" v-else-if="item.action == 'close'">
                 关闭了此任务
               </div>
-              <div class="time">
-                {{ moment(item.time).format("YYYY-MM-DD HH:mm:ss") }}
-              </div>
             </div>
           </div>
         </div>
@@ -221,6 +222,7 @@
 </template>
 
 <script>
+import {timeFormat} from '@/lib/utils';
 import moment from "moment";
 export default {
   name: "drawer",
@@ -234,6 +236,7 @@ export default {
     };
   },
   methods: {
+    timeFormat: timeFormat,
     // 关闭drawer
     closeDrawer: function() {
       this.rejectPopVisible = false;
@@ -268,7 +271,7 @@ export default {
     // 打开(未全部完成时，强制结束二次确认框)
     openAction: function(type) {
       this.closePopVisible = true;
-    }
+    },
   }
 };
 </script>
@@ -332,6 +335,7 @@ export default {
   width: 90px;
   display: flex;
   align-items: flex-start;
+  flex-wrap: wrap;
 }
 .comment-field {
   overflow-y: scroll;
@@ -342,16 +346,27 @@ export default {
   padding: 10px;
 }
 .comment-field .comment-item {
-  height: 40px;
   display: flex;
   line-height: 40px;
 }
 .comment-field .comment-item .name {
-  padding-right: 20px;
+  margin-right: 10px;
+  width: 60px;
+  min-width: 60px;
+  word-break: break-all;
+  overflow: hidden;
+  font-size: 16px;
+  text-overflow: ellipsis;
+}
+.comment-field .comment-item .time {
+  margin-right: 20px;
+  font-size: 12px;
+  width: 100px;
+  min-width: 60px;
 }
 .comment-field .comment-item .action {
-  color: #000000;
-  padding-right: 20px;
+  font-size: 14px;
+  color: #000;
 }
 .drawer-container .handler img {
   width: 30px;

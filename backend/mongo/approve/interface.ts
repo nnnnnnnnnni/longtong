@@ -9,7 +9,7 @@ export interface Iapprove extends Document {
   notice?: string;          // 备注
   status: string;           // 状态
   disabled?: Boolean;       // 已撤销
-  agree: {                 // 经手人
+  agree: {                  // 经手人
     approve: {
       user?: ObjectId,
       isAgree: boolean
