@@ -28,7 +28,7 @@ const router: Irouter = {
     allowAnonymous: false,
   },
   "/approve/status": {
-    method: "PUT",
+    method: "POST",
     middleware: approve.status,
     allowAnonymous: false,
   },

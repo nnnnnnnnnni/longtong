@@ -64,17 +64,11 @@ export const create = async (ctx: Context): Promise<Ires> => {
     // 若为本部门的管理员，则提交给上级部门管理员
     if (role == "admin") {
       upper.admins.forEach((admin: ObjectId) => {
-        approvers.push({
-          user: admin,
-          isAgree: false,
-        });
+        approvers.push(admin);
       });
     } else {
       departmentInfo.admins.forEach((admin: ObjectId) => {
-        approvers.push({
-          user: admin,
-          isAgree: false,
-        });
+        approvers.push(admin);
       });
     }
   } else if (keySetting.admin && keySetting.admin == 2) {
@@ -82,23 +76,14 @@ export const create = async (ctx: Context): Promise<Ires> => {
     // 若为本部门的管理员， 则无需keys审批，直接上级审批
     if (role == "admin") {
       upper.admins.forEach((admin: ObjectId) => {
-        approvers.push({
-          user: admin,
-          isAgree: false,
-        });
+        approvers.push(admin);
       });
     } else {
       departmentInfo.admins.forEach((admin: ObjectId) => {
-        approvers.push({
-          user: admin,
-          isAgree: false,
-        });
+        approvers.push(admin);
       });
       upper.admins.forEach((admin: ObjectId) => {
-        keys.push({
-          user: admin,
-          isAgree: false,
-        });
+        keys.push(admin);
       });
     }
   } else if (keySetting.admin && keySetting.admin == 3 && keySetting.adminBind) {
@@ -106,23 +91,14 @@ export const create = async (ctx: Context): Promise<Ires> => {
     const bind: Idepartment = await db.department.findOne({ _id: keySetting.adminBind });
     if (role == "admin") {
       bind.admins.forEach((admin: ObjectId) => {
-        approvers.push({
-          user: admin,
-          isAgree: false,
-        });
+        approvers.push(admin);
       });
     } else {
       departmentInfo.admins.forEach((admin: ObjectId) => {
-        approvers.push({
-          user: admin,
-          isAgree: false,
-        });
+        approvers.push(admin);
       });
       bind.admins.forEach((admin: ObjectId) => {
-        keys.push({
-          user: admin,
-          isAgree: false,
-        });
+        keys.push(admin);
       });
     }
   } else {
@@ -179,13 +155,13 @@ export const myApproves = async (ctx: Context): Promise<Ires> => {
   const userId = ctx.user._id;
   const approvers: Iapprove[] = await db.approve
     .find({
-      $or: [{ "approvers.user": userId }, { "keys.user": userId, status: "processing" }],
+      $or: [{ approvers: {$elemMatch: {$eq: userId}}, status: "posted" }, { keys: {$elemMatch: {$eq: userId}}, status: "processing" }],
       status: { $nin: ["rejected", "passed"] },
       disabled: false,
     })
     .sort({ createTime: -1 })
-    .populate("agree.approve.user", "userName avator")
-    .populate("agree.key.user", "userName avator")
+    .populate("agree.approve", "userName avator")
+    .populate("agree.key", "userName avator")
     .populate('user', 'userName avator');
   return {
     data: approvers,
@@ -197,38 +173,142 @@ export const myposted = async (ctx: Context): Promise<Ires> => {
   const userId = ctx.user._id;
   const approvers: Iapprove[] = await db.approve.find({ user: userId })
   .sort({ createTime: -1 })
-  .populate("agree.approve.user", "userName avator")
-  .populate("agree.key.user", "userName avator")
+  .populate("agree.approve", "userName avator")
+  .populate("agree.key", "userName avator")
   return {
     data: approvers,
   };
 };
 
+const checkApproveRole = (userId: ObjectId, approve: Iapprove): any => {
+  if(approve.approvers.includes(userId)) return 1
+  else if(approve.keys.includes(userId)) return 2
+  else return 3
+}
+
 // 设置状态
 export const status = async (ctx: Context): Promise<Ires> => {
   const {status, id} = ctx.request.body;
   const userId = ctx.user._id;
+  const approve: Iapprove = await db.approve.findOne({_id: id});
   if(status == 'disabled') {
-    const approve: Iapprove = await db.approve.findOne({_id: id, user: userId});
-    if(!approve) {
+    if(!approve.user != userId) {
       return {
         status: 400,
         msg: '权限不足'
+      }
+    } else if (approve.status != 'posted'){
+      return {
+        status: 400,
+        msg: '无法撤销'
       }
     } else {
       await db.approve.findOneAndUpdate({_id: id},{$set: {disabled: true}})
     }
   } else if(status == 'agree') {
-    const approve: Iapprove = await db.approve.findOne({_id: id});
     if(approve.user == userId) {
       return {
         status: 400,
         msg: '无法通过自己的申请'
       }
     }
-
+    const role = checkApproveRole(userId, approve);
+    if(role == 1) {
+      if(approve.agree.approve.isAgree) {
+        return {
+          status: 400,
+          msg: '同级审批已通过'
+        }
+      } else {
+        await db.approve.update({
+          _id: id,
+        }, {
+          $set: {
+            'agree.approve': {
+              user: userId,
+              isAgree: true
+            },
+            status: approve.keys.length > 0? 'processing': 'passed'
+          }
+        })
+      }
+    } else if (role == 2) {
+      if(approve.agree.key.isAgree) {
+        return {
+          status: 400,
+          msg: '同级审批已通过'
+        }
+      } else {
+        await db.approve.update({
+          _id: id,
+        }, {
+          $set: {
+            'agree.key': {
+              user: userId,
+              isAgree: true
+            },
+            status: 'passed'
+          }
+        })
+      }
+    } else {
+      return {
+        status: 400,
+        msg: '权限不足'
+      }
+    }
   } else if (status == 'reject'){
-
+    if(approve.user == userId) {
+      return {
+        status: 400,
+        msg: '无法拒绝自己的申请'
+      }
+    }
+    const role = checkApproveRole(userId, approve);
+    if(role == 1) {
+      if(approve.agree.approve.isAgree) {
+        return {
+          status: 400,
+          msg: '同级审批已通过'
+        }
+      } else {
+        await db.approve.update({
+          _id: id,
+        }, {
+          $set: {
+            'agree.approve': {
+              user: userId,
+              isAgree: false
+            },
+            status: 'rejected'
+          }
+        })
+      }
+    } else if (role == 2) {
+      if(approve.agree.key.isAgree) {
+        return {
+          status: 400,
+          msg: '同级审批已被拒绝'
+        }
+      } else {
+        await db.approve.update({
+          _id: id,
+        }, {
+          $set: {
+            'agree.key': {
+              user: userId,
+              isAgree: false
+            },
+            status: 'rejected'
+          }
+        })
+      }
+    } else {
+      return {
+        status: 400,
+        msg: '权限不足'
+      }
+    }
   } else {
     return {
       status: 400,

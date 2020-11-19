@@ -43,30 +43,14 @@ const approveSchema: Schema = new Schema(
         }
       },
     },
-    approvers: [
-      {
-        user: {
-          type: SchemaTypes.ObjectId,
-          ref: "user",
-        },
-        isAgree: {
-          type: Boolean,
-          default: false,
-        },
-      },
-    ],
-    keys: [
-      {
-        user: {
-          type: SchemaTypes.ObjectId,
-          ref: "user",
-        },
-        isAgree: {
-          type: Boolean,
-          default: false,
-        },
-      },
-    ],
+    approvers: [{
+      type: SchemaTypes.ObjectId,
+      ref: "user",
+    }],
+    keys: [{
+      type: SchemaTypes.ObjectId,
+      ref: "user",
+    }],
     cc: [
       {
         type: SchemaTypes.ObjectId,

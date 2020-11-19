@@ -19,13 +19,7 @@ export interface Iapprove extends Document {
       isAgree: boolean
     },
   };
-  approvers: [{             // 审批人
-    user: ObjectId,
-    isApprove: boolean
-  }];
-  keys?: [{                 // 决定者
-    user: ObjectId,
-    isApprove: boolean
-  }];
+  approvers: [ObjectId];
+  keys?: [ObjectId];
   cc: [ObjectId]            // 抄送人
 }

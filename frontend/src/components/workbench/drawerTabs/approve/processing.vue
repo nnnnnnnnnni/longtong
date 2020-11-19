@@ -9,17 +9,23 @@
         <div class="item-process">
           <div
             class="process"
-            :class="{'pass': item.agree.approve.isAgree || false}"
+            :class="{
+              'pass': item.agree.approve.user && item.agree.approve.isAgree,
+              'reject': item.agree.approve.user && !item.agree.approve.isAgree
+            }"
             v-if="item.approvers && item.approvers.length != 0"
           >1</div>
           <div
             class="process" 
-            :class="{'pass': item.agree && item.agree.key && item.agree.key.isAgree || false}"
+            :class="{
+              'pass': item.agree.key && item.agree.key.user && item.agree.key.isAgree,
+              'reject': item.agree.key && item.agree.key.user && !item.agree.key.isAgree
+            }"
             v-if="item.keys && item.keys.length != 0"
           >2</div>
           <div 
             class="process"
-            :class="{'pass': item.agree && item.agree.key && item.agree.key.isAgree || false}"
+            :class="{'pass': item.status == 'passed'}"
             v-if="item.cc && item.cc.length != 0"
           >cc</div>
         </div>
@@ -27,7 +33,7 @@
           <a-tag color='#595959' size='large'>已撤销</a-tag>
         </div>
         <div class="item-status" v-else>
-          <a-tag color='#FF4D4F' @click="setStatus(item._id)">撤销</a-tag>
+          <a-tag color='#FF4D4F' @click="setStatus(item._id)"  v-if="item.status == 'posted'">撤销</a-tag>
           <a-tag :color='statusType[item.status].color'>{{ statusType[item.status].title }}</a-tag>
         </div>
       </div>
@@ -124,7 +130,7 @@ export default {
       })
     },
     setStatus: function(id) {
-      this.$put('/approve/status',{
+      this.$post('/approve/status',{
         status: 'disabled',
         id: id
       }).then(res => {
@@ -182,9 +188,15 @@ export default {
   margin: 0px 10px;
   border-radius: 50%;
   background-color: #bfbfbf;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
 }
 .item .top .item-process .pass {
   background-color: #73d13d;
+}
+.item .top .item-process .reject {
+  background-color: #f5222d;
 }
 .item .top .item-status {
   width: 120px;

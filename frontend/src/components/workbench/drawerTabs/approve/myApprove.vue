@@ -22,8 +22,8 @@
             </div>
           </div>
           <div class="item-status">
-            <a-button size='small' type='primary'>同意</a-button>
-            <a-button size='small' type='danger'>拒绝</a-button>
+            <a-button size='small' type='primary' @click="action('agree', item._id)">同意</a-button>
+            <a-button size='small' type='danger' @click="action('reject', item._id)">拒绝</a-button>
           </div>
         </div>
         <div class="content">
@@ -118,7 +118,18 @@ export default {
         });
         this.data = data
       });
-    }
+    },
+    action: function (type, id) {
+      this.$post('/approve/status',{
+        status: type,
+        id: id
+      }).then(res => {
+        if(res.status == 200) {
+          this.getApprovers();
+          this.$message.success('操作成功')
+        }
+      })
+    },
   }
 };
 </script>
