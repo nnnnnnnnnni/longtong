@@ -34,11 +34,11 @@ export default {
 
 <style scoped>
 .setting {
-  width: 1250px;
+  width: 65%;
+  min-width: 1000px;
   margin: 0 auto;
   height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: auto;
 }
 .setting .menu {
   position: absolute;
@@ -49,7 +49,7 @@ export default {
 .setting-container {
   margin-left: 300px;
   height: 100%;
-  width: 950px;
+  width: auto;
   box-sizing: border-box;
   padding: 10px 15px 10px 50px;
 }

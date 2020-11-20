@@ -22,7 +22,7 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
-  min-width: 1250px;
+  min-width: 1000px;
 }
 #app {
   font-family: 'Montserrat', 'Noto Sans SC', sans-serif;
@@ -44,6 +44,7 @@ td._center {
   display: flex !important;
   justify-content: space-between;
 }
+.ant-table td { white-space: nowrap; }
 .vditor-preview__action{
   display: none !important;
 }

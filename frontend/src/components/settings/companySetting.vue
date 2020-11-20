@@ -42,6 +42,9 @@ export default {
     departmentTab
   },
   created() {
+    if(localStorage.getItem('USER_ROLE') == 'user') {
+      this.$router.push({name: 'err403'});
+    }
   },
   methods: {
     // tab 切换通知

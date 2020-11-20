@@ -1,30 +1,32 @@
 <template>
   <div class="list">
-    <div class="nav">
-      <a-input
-        v-model="text"
-        style="width:300px;margin-right: 50px"
-        placeholder="请输入标题"
-      ></a-input>
-      <a-button-group>
-        <a-button type="primary" icon="sync" @click="reset">重置</a-button>
-        <a-button type="primary" icon="search" @click="search">查询</a-button>
-        <a-button type="primary" icon="edit" @click="jump">写文档</a-button>
-      </a-button-group>
-    </div>
-    <div class="doc" v-for="doc in docs" :key="doc._id">
-      <div class="top">
-        <router-link :to="{name: 'document_detail',params: {id: doc._id}}">{{ doc.title }}</router-link>
+    <div class="container">
+      <div class="nav">
+        <a-input
+          v-model="text"
+          style="width:300px;margin-right: 50px"
+          placeholder="请输入标题"
+        ></a-input>
+        <a-button-group>
+          <a-button type="primary" icon="sync" @click="reset">重置</a-button>
+          <a-button type="primary" icon="search" @click="search">查询</a-button>
+          <a-button type="primary" icon="edit" @click="jump">写文档</a-button>
+        </a-button-group>
       </div>
-      <div class="preview">{{ doc.body }}</div>
-      <div class="infos">
-        <div class="avator item">
-          <img :src="doc.author.avator" alt="" />
+      <div class="doc" v-for="doc in docs" :key="doc._id">
+        <div class="top">
+          <router-link :to="{name: 'document_detail',params: {id: doc._id}}">{{ doc.title }}</router-link>
         </div>
-        <div class="name item"><a-icon type="user" />{{ doc.author.name }}</div>
-        <div class="time item"><a-icon type="calendar" />{{ doc.time }}</div>
-        <div class="red item">
-          <a-icon type="eye" />{{ doc.visitors.length }}
+        <div class="preview">{{ doc.body }}</div>
+        <div class="infos">
+          <div class="avator item">
+            <img :src="doc.author.avator" alt="" />
+          </div>
+          <div class="name item"><a-icon type="user" />{{ doc.author.name }}</div>
+          <div class="time item"><a-icon type="calendar" />{{ doc.time }}</div>
+          <div class="red item">
+            <a-icon type="eye" />{{ doc.visitors.length }}
+          </div>
         </div>
       </div>
     </div>
@@ -75,10 +77,14 @@ export default {
 <style scoped>
 .list {
   height: 100%;
-  overflow-y: auto;
-  width: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 20px;
+}
+.container {
+  width: 60%;
   margin: 0 auto;
-  padding: 20px 18%;
+  min-width: 1000px;
 }
 .nav {
   display: flex;

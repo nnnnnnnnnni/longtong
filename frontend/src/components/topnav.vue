@@ -50,7 +50,7 @@
         <a style="color: #2c3e50" @click="e => e.preventDefault()">
           <a-icon type="bell" class="ant-dropdown-link" />
         </a>
-        <template slot="overlay" placement='bottomRight'>
+        <template slot="overlay" placement="bottomRight">
           <notice />
         </template>
       </a-dropdown>
@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import notice from './notice'
+import notice from "./notice";
 export default {
   name: "topnav",
   data() {
@@ -91,7 +91,7 @@ export default {
       currentDate: ""
     };
   },
-  components: {notice},
+  components: { notice },
   created() {},
   mounted() {
     this.currentDate = new Date().getDate();
@@ -113,6 +113,7 @@ export default {
         token: localStorage.getItem("token")
       }).then(res => {
         localStorage.removeItem("token");
+        localStorage.removeItem("USER_ROLE");
         setTimeout(() => {
           this.$router.push({ name: "login" });
           this.$store.commit("CHANGE_USER", {});
@@ -131,16 +132,17 @@ export default {
   box-shadow: 0 2px 8px #f0f1f2;
   position: relative;
   z-index: 999;
+  display: flex;
+  background-color: #fff;
 }
 .company {
-  position: absolute;
   height: inherit;
-  width: 200px;
+  width: 220px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
-  left: 6%;
+  margin-left: 6%;
   user-select: none;
 }
 .company .company-logo img {
@@ -152,7 +154,7 @@ export default {
   font-size: 14px;
 }
 .tabs {
-  width: 40%;
+  flex: 1;
   max-width: 750px;
   height: inherit;
   margin: 0 auto;
@@ -187,11 +189,10 @@ export default {
 }
 
 .profiles {
-  position: absolute;
-  top: 0;
+  width: 220px;
   height: inherit;
-  right: 6%;
   display: flex;
+  margin-right: 6%;
 }
 .profiles .profile-item {
   flex: 1 0 auto;

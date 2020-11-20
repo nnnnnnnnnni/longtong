@@ -25,6 +25,7 @@ export default {
 <style scoped>
 .workbench {
   width: 85%;
+  min-width: 1000px;
   height: 100%;
   margin: 0 auto;
   display: flex;
@@ -37,7 +38,7 @@ export default {
 }
 .bench-container {
   flex: 1;
-  padding-left: 50px;
+  padding-left: 10px;
   padding-top: 10px;
   box-sizing: border-box;
   height: 100%;

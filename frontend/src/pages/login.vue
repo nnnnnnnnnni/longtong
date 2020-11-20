@@ -172,36 +172,36 @@ export default {
 </script>
 
 <style scoped>
-.ant-tabs-bar {
-  border: none !important;
-}
 .login {
   height: 100%;
   width: 100%;
   display: flex;
-  min-width: 1250px;
   justify-content: center;
   align-items: center;
+  overflow: auto;
 }
 .login .img {
-  height: 800px;
-  width: 700px;
+  height: 450px;
+  width: 550px;
   margin-right: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   user-select: none;
-}
-.login .img .title {
-  width: 100%;
-  font-size: 50px;
-  text-align: center;
+  position: relative;
 }
 .login .img img {
   display: block;
-  height: 500px;
-  width: 700px;
+  height: 450px;
+  width: inherit;
+}
+.login .img .title {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  font-size: 50px;
+  text-align: center;
 }
 .login .container {
   height: 100%;

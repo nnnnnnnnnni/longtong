@@ -3,7 +3,7 @@ import db from "../mongo/schema";
 import { Ires } from "@/interface/response";
 import { Idepartment } from "@/mongo/department/interface";
 import { Icompany, ObjectId } from "@/mongo/company/interface";
-import { Iapprove } from "@/mongo/approve/interface";
+import { Iagree, Iapprove } from "@/mongo/approve/interface";
 
 // 获取审批信息(admin)
 export const approveSetting = async (ctx: Context): Promise<Ires> => {
@@ -37,11 +37,11 @@ export const approveUpdate = async (ctx: Context): Promise<Ires> => {
   };
 };
 
-// TODO 创建审批
+// 创建审批
 export const create = async (ctx: Context): Promise<Ires> => {
   const data = ctx.request.body;
-  let approvers: any = [];
-  let keys: any = [];
+  let approvers: ObjectId[] = [];
+  let keys: ObjectId[] = [];
   let cc: ObjectId[] = [];
   let setting: Icompany = await db.company.findOne({ _id: ctx.user.company.info._id });
   const department = ctx.user.department;
@@ -57,7 +57,7 @@ export const create = async (ctx: Context): Promise<Ires> => {
   }
   const role: string = department.role;
   const departmentInfo: Idepartment = await db.department.findOne({ _id: department.info._id }).populate("upper");
-  const upper: any = departmentInfo.upper;
+  const upper: Idepartment = departmentInfo.upper as Idepartment;
   // 审批人员
   if (keySetting.admin && keySetting.admin == 1) {
     // 1: 仅本部门管理员
@@ -123,13 +123,13 @@ export const create = async (ctx: Context): Promise<Ires> => {
       msg: "未知错误！",
     };
   }
-  const agree: any = {
+  const agree: Iagree = {
     approve: {
       isAgree: false,
     }
   }
   if(keys.length != 0) {
-    agree.keys = {
+    agree.key = {
       isAgree: false,
     }
   }

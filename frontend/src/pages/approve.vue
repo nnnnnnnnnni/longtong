@@ -40,7 +40,8 @@ export default {
 <style scoped>
 .approve {
   height: 100%;
-  width: 50%;
+  width: 60%;
+  min-width: 1000px;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;

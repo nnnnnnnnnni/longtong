@@ -1,9 +1,9 @@
 <template>
   <div class="approve">
     <div class="approve-item">
-      <div class="item name">审批名称</div>
-      <div class="item admin">直接审批人</div>
-      <div class="item cc">抄送人</div>
+      <div class="item title name">审批名称</div>
+      <div class="item title admin">直接审批人</div>
+      <div class="item title cc">抄送人</div>
     </div>
     <div class="approve-item" v-for="tab in tabs" :key="tab.val">
       <div class="item name">{{ tab.title }}</div>
@@ -134,5 +134,9 @@ export default {
 }
 .approve-item .item {
   flex: 1 0 auto;
+}
+.approve-item .title {
+  
+  text-align: center;
 }
 </style>

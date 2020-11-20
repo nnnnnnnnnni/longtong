@@ -114,6 +114,7 @@ export default {
 <style scoped>
 .pan-list {
   width: 60%;
+  min-width: 1000px;
   margin: 0 auto;
   overflow-y: auto;
   padding: 20px;

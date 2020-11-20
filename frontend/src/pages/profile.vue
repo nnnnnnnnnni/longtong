@@ -26,7 +26,8 @@ export default {
 
 <style scoped>
 .profile {
-  width: 1250px;
+  width: 65%;
+  min-width: 1000px;
   margin: 0 auto;
   height: 100%;
   overflow-y: auto;
@@ -41,7 +42,7 @@ export default {
 .profile-container {
   margin-left: 300px;
   height: 100%;
-  width: 950px;
+  width: auto;
   box-sizing: border-box;
   padding: 10px 15px 10px 50px;
 }

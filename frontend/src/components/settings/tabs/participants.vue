@@ -52,7 +52,7 @@
       </div>
     </div>
     <div class="list">
-      <a-table align='center' :columns="columns" :data-source="userData">
+      <a-table align='center' :columns="columns" :data-source="userData" :scroll="{ x: true }">
         <span slot="avator" slot-scope="text">
           <img :src="text" alt="" />
         </span>
@@ -310,21 +310,21 @@ export default {
 .participants {
   width: 100%;
   height: 100%;
-  overflow-y: auto;
+  overflow: auto;
 }
 .filters {
   display: flex;
   border-bottom: 1px solid #e3e3e3;
-  padding-bottom: 15px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 .filter-item {
-  display: flex;
-  align-items: center;
   flex: 1 0 auto;
+  padding-bottom: 10px;
 }
 .filter-item .item-title {
-  font-size: 12px;
-  margin-right: 5px;
+  font-size: 14px;
+  margin-right: 10px;
 }
 img {
   height: 40px;

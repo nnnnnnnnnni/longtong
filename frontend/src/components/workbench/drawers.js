@@ -34,7 +34,7 @@ export default [
     val: 'performance',
     icon: "solution",
     title: "绩效",
-    function: ()=> {alert('绩效')}
+    function: ()=> {router.push({ name: "performance" })}
   },
   {
     val: 'interview',
@@ -47,11 +47,5 @@ export default [
     icon: "setting",
     title: "设置",
     function: ()=> {router.push({ name: "base" })}
-  },
-  {
-    val: 'process',
-    icon: "profile",
-    title: "流程",
-    function: ()=> {alert('流程')}
   }
 ];

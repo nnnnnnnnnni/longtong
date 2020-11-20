@@ -1,4 +1,4 @@
-import { IMission } from "@/mongo/mission/interface";
+import { Ihandler, IMission } from "@/mongo/mission/interface";
 import { Context } from "koa";
 import { getMissionStatus } from "../lib/utils";
 import db from "../mongo/schema";
@@ -7,7 +7,7 @@ import db from "../mongo/schema";
 export const create = async (ctx: Context) => {
   const doc = ctx.request.body;
   let missionStatus: string = getMissionStatus(doc.time[0], doc.time[1], doc.handler);
-  let handlers: any[] = [];
+  let handlers: Ihandler[] = [];
   if (doc.handler) {
     handlers = doc.handler.map((user: string) => {
       return {
@@ -45,7 +45,6 @@ export const create = async (ctx: Context) => {
 // 获取个人所有任务
 export const missions = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
-  console.log(userId)
   const { isHome, homeTab } = ctx.request.query;
   let missions: any[] = [];
   let _missions: any[] = [];
@@ -167,7 +166,7 @@ export const update = async (ctx: Context): Promise<any> => {
       newHandlersObj[user.user] = user;
     }
   });
-  let newHandlersArr: any = [];
+  let newHandlersArr: Ihandler[] = [];
   Object.keys(newHandlersObj).forEach((key: string) => {
     newHandlersArr.push(newHandlersObj[key]);
   });
@@ -239,7 +238,7 @@ export const lock = async (ctx: Context): Promise<any> => {
   const userId = ctx.user._id;
   const mission: IMission = await db.mission.findOne({ _id: id });
   let include: boolean = false;
-  let handler: any = {};
+  let handler: Ihandler;
   let allFinish: boolean = true;
   let isOrganizer: boolean = mission.organizer == userId;
   mission?.handler.forEach((user: any) => {

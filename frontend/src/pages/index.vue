@@ -26,6 +26,7 @@ export default {
     } else {
       this.$get('/user/main',{}).then(res => {
         this.$store.commit("CHANGE_USER", Object.assign({}, res.data));
+        localStorage.setItem('USER_ROLE', res.data.company.role)
         const {company, role} = res.data;
         if(isEmpty(company)) {
           this.$router.push({ name: "guide" });

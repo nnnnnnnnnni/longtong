@@ -207,6 +207,15 @@ const routerConfig = new Router({
             pageTitle: "审批"
           },
           component: () => import("@/pages/approve")
+        },
+        {
+          path: "/performance",
+          name: "performance",
+          meta: {
+            allowAnonymous: false,
+            pageTitle: "绩效"
+          },
+          component: () => import("@/pages/performance")
         }
       ]
     },
