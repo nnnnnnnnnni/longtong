@@ -1,10 +1,12 @@
 <template>
   <div class="profile">
-    <div class="menu">
-      <profile-menu />
-    </div>
-    <div class="profile-container">
-      <projects />
+    <div class="container">
+      <div class="menu">
+        <profile-menu />
+      </div>
+      <div class="profile-container">
+        <projects />
+      </div>
     </div>
   </div>
 </template>
@@ -26,12 +28,15 @@ export default {
 
 <style scoped>
 .profile {
-  width: 65%;
-  min-width: 1000px;
-  margin: 0 auto;
+  width: 100%;
   height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: auto;
+}
+.container {
+  width: 65%;
+  height: 100%;
+  margin: 0 auto;
+  min-width: 1000px;
 }
 .profile .menu {
   position: absolute;

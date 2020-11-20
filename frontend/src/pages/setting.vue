@@ -1,10 +1,12 @@
 <template>
   <div class="setting">
-    <div class="menu">
-      <setting-menu :userInfo='userInfo' edit_type='setting' />
-    </div>
-    <div class="setting-container">
-      <router-view @getUserInfo='getUserInfo' />
+    <div class="container">
+      <div class="menu">
+        <setting-menu :userInfo="userInfo" edit_type="setting" />
+      </div>
+      <div class="setting-container">
+        <router-view @getUserInfo="getUserInfo" />
+      </div>
     </div>
   </div>
 </template>
@@ -16,9 +18,9 @@ export default {
   data() {
     return {
       userInfo: {
-        company: {info: '', role: 'user'},
-        department: {info: {name: ''}}
-      },
+        company: { info: "", role: "user" },
+        department: { info: { name: "" } }
+      }
     };
   },
   components: {
@@ -27,18 +29,22 @@ export default {
   methods: {
     getUserInfo: function(data) {
       this.userInfo = Object.assign(this.userInfo, data);
-    },
+    }
   }
 };
 </script>
 
 <style scoped>
 .setting {
-  width: 65%;
-  min-width: 1000px;
-  margin: 0 auto;
+  width: 100%;
   height: 100%;
   overflow: auto;
+}
+.container {
+  width: 65%;
+  height: 100%;
+  margin: 0 auto;
+  min-width: 1000px;
 }
 .setting .menu {
   position: absolute;

@@ -1,17 +1,53 @@
 <template>
-  <div class='performance'>performance</div>
+  <div class="performance">
+    <div class="container">
+      <div class="performance-menu">
+        <performance-menu />
+      </div>
+      <div class="performance-container">
+        <router-view />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import performanceMenu from "@/components/workbench/drawerTabs/performance/menu";
 export default {
-  name: 'performance',
+  name: "performance",
   data() {
     return {};
   },
+  components: {
+    performanceMenu
+  }
 };
 </script>
 
-
 <style scoped>
-
+.performance {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.container {
+  width: 65%;
+  min-width: 1000px;
+  margin: 0 auto;
+  height: 100%;
+  overflow: auto;
+}
+.container .performance-menu {
+  position: absolute;
+  width: 300px;
+  top: 60px;
+  bottom: 0;
+}
+.container .performance-container {
+  margin-left: 300px;
+  height: 100%;
+  width: auto;
+  box-sizing: border-box;
+  padding: 10px 15px;
+}
 </style>
