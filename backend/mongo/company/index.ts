@@ -24,7 +24,6 @@ const companySchema: Schema = new Schema(
       },
     ],
     approve: Object,
-    performance: Object,
     introduction: String,
     createTime: {
       type: Date,

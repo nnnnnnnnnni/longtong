@@ -12,30 +12,30 @@
       </div>
       <div
         class="info-item _edit"
-        :class="{ checked_active: this.$route.name == 'base' }"
-        @click="changeTab('base')"
+        :class="{ checked_active: this.$route.name == 'setting_base' }"
+        @click="changeTab('setting_base')"
       >
         <div class="info-item-text">基本设置</div>
       </div>
       <div
         class="info-item _edit"
-        :class="{ checked_active: this.$route.name == 'safe' }"
-        @click="changeTab('safe')"
+        :class="{ checked_active: this.$route.name == 'setting_safe' }"
+        @click="changeTab('setting_safe')"
       >
         <div class="info-item-text">安全设置</div>
       </div>
       <div
         class="info-item _edit"
-        :class="{ checked_active: this.$route.name == 'bind' }"
-        @click="changeTab('bind')"
+        :class="{ checked_active: this.$route.name == 'setting_bind' }"
+        @click="changeTab('setting_bind')"
       >
         <div class="info-item-text">绑定设置</div>
       </div>
       <div
         v-if="userInfo.company.role != 'user'"
         class="info-item _edit"
-        :class="{ checked_active: this.$route.name == 'company' }"
-        @click="changeTab('company')"
+        :class="{ checked_active: this.$route.name == 'setting_company' }"
+        @click="changeTab('setting_company')"
       >
         <div class="info-item-text">公司设置</div>
       </div>

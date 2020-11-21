@@ -6,8 +6,7 @@ Vue.use(Router);
 
 const routerConfig = new Router({
   mode: "history",
-  routes: [
-    {
+  routes: [{
       path: "/403",
       name: "err403",
       meta: {
@@ -54,8 +53,7 @@ const routerConfig = new Router({
         pageTitle: "首页"
       },
       component: () => import("@/pages/index"),
-      children: [
-        {
+      children: [{
           path: "/profile/:id",
           name: "profile",
           meta: {
@@ -87,12 +85,11 @@ const routerConfig = new Router({
           name: "setting",
           component: () => import("@/pages/setting"),
           redirect: {
-            name: "base"
+            name: "setting_base"
           },
-          children: [
-            {
+          children: [{
               path: "/setting/base",
-              name: "base",
+              name: "setting_base",
               meta: {
                 allowAnonymous: false,
                 pageTitle: "基本设置"
@@ -101,7 +98,7 @@ const routerConfig = new Router({
             },
             {
               path: "/setting/safe",
-              name: "safe",
+              name: "setting_safe",
               meta: {
                 allowAnonymous: false,
                 pageTitle: "安全设置"
@@ -110,7 +107,7 @@ const routerConfig = new Router({
             },
             {
               path: "/setting/bind",
-              name: "bind",
+              name: "setting_bind",
               meta: {
                 allowAnonymous: false,
                 pageTitle: "绑定设置"
@@ -119,7 +116,7 @@ const routerConfig = new Router({
             },
             {
               path: "/setting/company",
-              name: "company",
+              name: "setting_company",
               meta: {
                 allowAnonymous: false,
                 pageTitle: "公司设置"
@@ -132,10 +129,9 @@ const routerConfig = new Router({
           path: "/workbench",
           name: "workbench",
           component: () => import("@/pages/workbench"),
-          children: [
-            {
+          children: [{
               path: "/workbench/home",
-              name: "home",
+              name: "workbench_home",
               meta: {
                 allowAnonymous: false,
                 pageTitle: "首页"
@@ -144,7 +140,7 @@ const routerConfig = new Router({
             },
             {
               path: "/workbench/mission",
-              name: "mission",
+              name: "workbench_mission",
               meta: {
                 allowAnonymous: false,
                 pageTitle: "任务"
@@ -157,8 +153,7 @@ const routerConfig = new Router({
           path: "/document",
           name: "document",
           component: () => import("@/pages/document"),
-          children: [
-            {
+          children: [{
               path: "/document/list",
               name: "document_list",
               meta: {
@@ -215,7 +210,35 @@ const routerConfig = new Router({
             allowAnonymous: false,
             pageTitle: "绩效"
           },
-          component: () => import("@/pages/performance")
+          component: () => import("@/pages/performance"),
+          children: [{
+              path: "/performance/mine",
+              name: "performance_mine",
+              meta: {
+                allowAnonymous: false,
+                pageTitle: "我的绩效"
+              },
+              component: () => import("@/components/workbench/drawerTabs/performance/myPerformance"),
+            },
+            {
+              path: "/performance/history",
+              name: "performance_history",
+              meta: {
+                allowAnonymous: false,
+                pageTitle: "历史绩效"
+              },
+              component: () => import("@/components/workbench/drawerTabs/performance/performances"),
+            },
+            {
+              path: "/performance/create",
+              name: "performance_create",
+              meta: {
+                allowAnonymous: false,
+                pageTitle: "创建绩效"
+              },
+              component: () => import("@/components/workbench/drawerTabs/performance/createPerformance"),
+            }
+          ]
         }
       ]
     },

@@ -12,7 +12,6 @@
           currentEvent.title
         }}</span>
         <div class="organizer">
-          <span class="title-span">发布者:</span>
           <img class="title-img" :src="currentEvent.organizer.avator" alt="" />
           <span class="title-span">{{ currentEvent.organizer.userName }}</span>
         </div>
@@ -80,6 +79,7 @@
                 >{{ currentEvent.isReject ? "已拒绝" : "拒绝" }}</a-button
               >
             </a-popconfirm>
+            <a-button size="small" type='primary'>评论</a-button>
           </a-button-group>
         </div>
       </template>
@@ -186,7 +186,6 @@
         <div class="comment">
           <div class="icon">
             <a-icon type="profile" style="margin-top: 4px" /> 记录 :
-            <a-button size='small' type='primary' class="comment">评论</a-button>
           </div>
           <div class="comment-field">
             <div
@@ -387,6 +386,7 @@ export default {
   cursor: pointer;
 }
 .title-span {
+  height: 100%;
   font-size: 12px;
   margin: 0px 5px;
 }

@@ -1,12 +1,12 @@
 <template>
   <div class='bench-menu'>
-    <div class="menu-item" :class="{'menu-active': this.$store.state.route == 'home'}" @click="jump('home')">
+    <div class="menu-item" :class="{'menu-active': this.$store.state.route == 'workbench_home'}" @click="jump('workbench_home')">
       <span class="item-icon">
         <a-icon type='home'></a-icon>
       </span>
       <span class="item-title">首页</span>
     </div>
-    <div class="menu-item" :class="{'menu-active': this.$store.state.route == 'mission'}" @click="jump('mission')">
+    <div class="menu-item" :class="{'menu-active': this.$store.state.route == 'workbench_mission'}" @click="jump('workbench_mission')">
       <span class="item-icon">
         <a-icon type='bars'></a-icon>
       </span>

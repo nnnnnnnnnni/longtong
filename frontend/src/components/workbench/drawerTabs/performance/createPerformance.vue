@@ -1,10 +1,10 @@
 <template>
-  <div class='myPerformance'>myPerformance</div>
+  <div class='createPerformance'>createPerformance</div>
 </template>
 
 <script>
 export default {
-  name: 'myPerformance',
+  name: 'createPerformance',
   data() {
     return {};
   },

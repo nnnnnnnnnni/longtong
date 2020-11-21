@@ -169,7 +169,7 @@ export default {
   padding-left: 20px;
 }
 .form-item {
-  padding: 10px 0px;
+  padding-bottom: 10px;
 }
 .form-item .form-item-label {
   padding: 0 0 8px;
@@ -186,6 +186,7 @@ export default {
   width: 350px;
 }
 h2 {
+  padding-top: 10px;
   margin: 0px;
   color: rgba(0, 0, 0, 0.85);
   font-weight: 500;

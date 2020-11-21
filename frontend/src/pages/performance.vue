@@ -28,23 +28,22 @@ export default {
 .performance {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
 }
 .container {
   width: 65%;
-  min-width: 1000px;
-  margin: 0 auto;
   height: 100%;
-  overflow: auto;
+  margin: 0 auto;
+  min-width: 1000px;
 }
-.container .performance-menu {
+.performance-menu {
   position: absolute;
-  width: 300px;
+  width: 200px;
   top: 60px;
   bottom: 0;
 }
-.container .performance-container {
-  margin-left: 300px;
+.performance-container {
+  margin-left: 200px;
   height: 100%;
   width: auto;
   box-sizing: border-box;

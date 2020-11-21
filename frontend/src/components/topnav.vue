@@ -28,11 +28,11 @@
         class="tab-item"
         :class="{
           'tab-active':
-            this.$store.state.route == 'home' ||
-            this.$store.state.route == 'mission' ||
+            this.$store.state.route == 'workbench_home' ||
+            this.$store.state.route == 'workbench_mission' ||
             this.$store.state.route == 'project'
         }"
-        @click="jumpPage('home')"
+        @click="jumpPage('workbench_home')"
       >
         <a-icon style="fontSize: 36px; color: #333" type="area-chart" />
       </div>
@@ -58,7 +58,7 @@
         <template slot="title">
           <span>设置</span>
         </template>
-        <div class="profile-item" @click="jumpPage('base')">
+        <div class="profile-item" @click="jumpPage('setting_base')">
           <a-icon type="setting" />
         </div>
       </a-tooltip>
