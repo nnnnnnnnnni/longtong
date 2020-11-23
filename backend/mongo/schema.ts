@@ -6,6 +6,7 @@ import { mission } from "./mission";
 import { document } from "./document";
 import { pan } from "./pan";
 import { approve } from "./approve";
+import { performance } from "./performance";
 
 export default {
   user: user,
@@ -16,4 +17,5 @@ export default {
   document: document,
   pan: pan,
   approve: approve,
+  performance: performance,
 };

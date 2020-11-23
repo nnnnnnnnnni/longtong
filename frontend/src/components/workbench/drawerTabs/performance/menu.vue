@@ -1,8 +1,14 @@
 <template>
   <div class="performance-menu">
     <div class="container">
-      <div class="menu-item">
-        <a-button type="primary" icon="plus" @click="changeTab('performance_create')">创建评审</a-button>
+      <div class="menu-item" @click="changeTab('performance_create')">
+        <div
+          class="text"
+          :class="{ menu_active: this.$route.name == 'performance_create' }"
+        >
+          <a-icon type="plus" />
+          创建评审
+        </div>
       </div>
       <div class="menu-item" @click="changeTab('performance_mine')">
         <div
@@ -39,7 +45,7 @@ export default {
         return;
       }
       this.$router.push({ name: router });
-    },
+    }
   }
 };
 </script>
@@ -51,7 +57,7 @@ export default {
   line-height: 40px;
   font-size: 14px;
   cursor: pointer;
-  color: #666;
+  color: #333;
 }
 .menu-item .text {
   margin: 3px auto;
@@ -65,6 +71,6 @@ export default {
   margin-right: 8px;
 }
 .menu_active {
-  background-color: rgba(0, 0, 0, 0.12);
+  background-color:#76c7fa;
 }
 </style>
