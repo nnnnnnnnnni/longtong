@@ -5,11 +5,18 @@ const questionSchema = new Schema(
   {
     title: String,
     description: String,
-    type: Number,
-    belong: Number,
+    type: {
+      type: Number,
+      enum: [1, 2, 3],
+    },
+    belong: {
+      type: Number,
+      enum: [1, 2, 0],
+      default: 0,
+    },
     score: Number,
     answer: String,
-    text: [String]
+    text: [String],
   },
   {
     timestamps: {

@@ -1,6 +1,4 @@
 import { Ires } from "@/interface/response";
-import { department } from "@/mongo/department";
-import { Idepartment, ObjectId } from "@/mongo/department/interface";
 import { Iperformance } from "@/mongo/performance/interface";
 import { Context } from "koa";
 import db from "../mongo/schema";
@@ -15,7 +13,9 @@ export const create = async (ctx: Context): Promise<Ires> => {
 };
 
 // 获取所有绩效记录
-export const list = async (ctx: Context): Promise<Ires> => {
-  const data: Iperformance[] = await db.performance.find().populate("department").populate("question", "-answer");
-  return {};
+export const data = async (ctx: Context): Promise<Ires> => {
+  const data: Iperformance[] = await db.performance.find().populate("departments").sort({createTime: -1});
+  return {
+    data: data
+  };
 };

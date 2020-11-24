@@ -6,16 +6,16 @@ const performanceSchema = new Schema(
     title: String,
     startTime: Date,
     endTime: Date,
-    departments: {
+    departments: [{
       type: SchemaTypes.ObjectId,
       ref: 'department'
-    },
-    questions: {
+    }],
+    questions: [{
       type: SchemaTypes.ObjectId,
       ref: 'question'
-    },
-    ratio: [String],
-    text: [Number]
+    }],
+    ratio: [Number],
+    text: [String]
   },
   {
     timestamps: {
