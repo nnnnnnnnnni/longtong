@@ -15,7 +15,7 @@
           <div class="performances">
             <div class="performance-item" v-for="item in performances" :key="item._id">
               <div class="info title">{{item.title}}</div>
-              <div class="info dep">{{item.departments[0].name}} {{item.departments.length > 1 ? `等${item.departments.length}个部门`: ''}}</div>
+              <div class="info dep">{{item.departments[0].name}}{{item.departments.length > 1 ? `等 ${item.departments.length} 个部门`: ''}}</div>
               <div class="time">
                 <span class="info time">{{moment(item.startTime).format('YYYY-MM-DD')}}</span> ~ 
                 <span class="info time">{{moment(item.endTime).format('YYYY-MM-DD')}}</span>
@@ -56,6 +56,8 @@
           </a-form-model-item>
         </a-form-model>
       </a-modal>
+
+      <!-- 新增/编辑 题目 -->
     </div>
   </div>
 </template>
@@ -191,7 +193,7 @@ export default {
 }
 .performance-item {
   width: 100%;
-  margin: 2px auto;
+  margin: 5px auto;
   display: flex;
   padding: 5px 10px;
   box-sizing: border-box;
@@ -211,7 +213,14 @@ export default {
 }
 .performance-item .dep {
   width: 150px;
-  text-align: center;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  height: inherit;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 .performance-item .time {
   width: 100%;
