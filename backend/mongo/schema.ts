@@ -7,6 +7,7 @@ import { document } from "./document";
 import { pan } from "./pan";
 import { approve } from "./approve";
 import { performance } from "./performance";
+import { question } from "./question";
 
 export default {
   user: user,
@@ -18,4 +19,5 @@ export default {
   pan: pan,
   approve: approve,
   performance: performance,
+  question: question,
 };

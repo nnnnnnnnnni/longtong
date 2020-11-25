@@ -6,7 +6,7 @@
           <a-button type="primary" size="small" @click="openPormanceModal">创建评审</a-button>
         </div>
         <div class="top-item">
-          <a-button type="primary" size="small">创建题目</a-button>
+          <a-button type="primary" size="small" @click="openQuestionModal">创建题目</a-button>
         </div>
       </div>
       <div class="list">
@@ -58,6 +58,16 @@
       </a-modal>
 
       <!-- 新增/编辑 题目 -->
+      <a-modal :title="openType == 1? '新增': '编辑'" :visible="questionVisible" @ok="handleQuestionOk" @cancel="handleCancel">
+        <a-form-model :model="performanceForm" :label-col="labelCol" :wrapper-col="wrapperCol">
+          <a-form-model-item label="题目标题" required>
+            <a-input v-model="questionForm.title" placeholder='题目标题' />
+          </a-form-model-item>
+          <a-form-model-item label="题目描述" required>
+            <a-textarea v-model="questionForm.description" placeholder='题目描述' />
+          </a-form-model-item>
+        </a-form-model>
+      </a-modal>
     </div>
   </div>
 </template>
@@ -74,6 +84,8 @@ export default {
       openType: 1,
       departments: [],
       performanceVisible: false,
+      questionVisible: false,
+      questionForm: {},
       performanceForm: {
         keys: ['A', 'B', 'C', 'D'],
         text: ['优秀','良好','及格','不及格'],
@@ -119,6 +131,11 @@ export default {
       this.openType = 1;
       this.performanceVisible = true;
     },
+    // 打开 创建问题modal
+    openQuestionModal: function() {
+      this.openType = 1;
+      this.questionVisible = true;
+    },
     // 创建绩效Btn ok
     handlePormanceOk: function() {
       if(!this.performanceForm.title) return this.$message.error('必须：绩效标题');
@@ -135,6 +152,9 @@ export default {
         this.handleCancel();
       })
     },
+    handleQuestionOk: function() {
+
+    },
     // modal cancel
     handleCancel: function() {
       this.performanceForm = {
@@ -143,6 +163,7 @@ export default {
         ratio: [100, 80, 60, 40],
       }
       this.performanceVisible = false;
+      this.questionVisible = false;
     }
   }
 };

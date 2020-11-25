@@ -136,7 +136,6 @@ export default {
   flex: 1 0 auto;
 }
 .approve-item .title {
-  
   text-align: center;
 }
 </style>

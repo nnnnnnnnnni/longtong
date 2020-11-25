@@ -1,10 +1,10 @@
 <template>
   <div class="performance">
     <div class="container">
-      <div class="performance-menu">
+      <div class="performance-menu" v-if="$store.state.user.company.role != 'user'">
         <performance-menu />
       </div>
-      <div class="performance-container">
+      <div class="performance-container" :class="{'ml200': $store.state.user.company.role != 'user'}">
         <router-view />
       </div>
     </div>
@@ -42,8 +42,10 @@ export default {
   top: 60px;
   bottom: 0;
 }
-.performance-container {
+.ml200 {
   margin-left: 200px;
+}
+.performance-container {
   height: 100%;
   width: auto;
   box-sizing: border-box;

@@ -221,15 +221,6 @@ const routerConfig = new Router({
               component: () => import("@/components/workbench/drawerTabs/performance/myPerformance"),
             },
             {
-              path: "/performance/history",
-              name: "performance_history",
-              meta: {
-                allowAnonymous: false,
-                pageTitle: "历史绩效"
-              },
-              component: () => import("@/components/workbench/drawerTabs/performance/performances"),
-            },
-            {
               path: "/performance/create",
               name: "performance_create",
               meta: {

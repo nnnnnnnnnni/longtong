@@ -19,15 +19,6 @@
           我的绩效
         </div>
       </div>
-      <div class="menu-item" @click="changeTab('performance_history')">
-        <div
-          class="text"
-          :class="{ menu_active: this.$route.name == 'performance_history' }"
-        >
-          <a-icon type="line-chart" />
-          历史绩效
-        </div>
-      </div>
     </div>
   </div>
 </template>
