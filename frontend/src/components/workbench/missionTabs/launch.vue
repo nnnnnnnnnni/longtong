@@ -25,7 +25,7 @@
 
 <script>
 import moment from "moment";
-import { getMissionType, getPriority, getStatusType } from "../../../lib/type";
+import { getMissionType, getPriority, getStatusType } from "@/lib/type";
 export default {
   name: "all",
   props: ["activeTab"],

@@ -44,7 +44,7 @@
 
 <script>
 import { parse } from 'querystring';
-import { host } from "../../../lib/config";
+import { host } from "@/lib/config";
 export default {
   name: "list",
   data() {

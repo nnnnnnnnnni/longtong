@@ -4,7 +4,7 @@
 
 <script>
 // https://ld246.com/article/1549638745630#--%E7%AE%80%E4%BB%8B
-import { uploadPath } from "../../lib/config";
+import { uploadPath } from "@/lib/config";
 import Vditor from "vditor";
 import "vditor/dist/index.css";
 export default {

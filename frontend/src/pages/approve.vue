@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import myApprove from '../components/workbench/drawerTabs/approve/myApprove'
-import processing from '../components/workbench/drawerTabs/approve/processing'
-import myStart from '../components/workbench/drawerTabs/approve/myStart'
+import myApprove from '@/components/workbench/drawerTabs/approve/myApprove'
+import processing from '@/components/workbench/drawerTabs/approve/processing'
+import myStart from '@/components/workbench/drawerTabs/approve/myStart'
 export default {
   name: "approve",
   data() {

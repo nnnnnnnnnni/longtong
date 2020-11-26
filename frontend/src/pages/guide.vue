@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import {uploadPath} from '../lib/config'
+import {uploadPath} from '@/lib/config'
 export default {
   name: "guide",
   data() {

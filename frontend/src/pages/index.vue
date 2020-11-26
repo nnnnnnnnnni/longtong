@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { isEmpty } from "../lib/utils";
+import { isEmpty } from "@/lib/utils";
 import topNav from "@/components/topnav";
 export default {
   name: "index",

@@ -297,7 +297,7 @@
 </template>
 
 <script>
-import ltButton from "../../components/common/button";
+import ltButton from "@/components/common/button";
 export default {
   name: "err404",
   data() {

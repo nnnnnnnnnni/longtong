@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import editer from "../../../common/editer";
+import editer from "@/components/common/editer";
 export default {
   name: "add",
   data() {

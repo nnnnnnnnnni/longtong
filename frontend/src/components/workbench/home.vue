@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import * as utils from "../../lib/utils";
-import { getMissionType, getPriority, getStatusType } from "../../lib/type";
+import * as utils from "@/lib/utils";
+import { getMissionType, getPriority, getStatusType } from "@/lib/type";
 import highchart from "highcharts";
 export default {
   name: "home",

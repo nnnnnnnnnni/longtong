@@ -166,7 +166,7 @@
 
 <script>
 import { participantsColumns } from './columns'
-import {ismail} from '../../../lib/utils'
+import {ismail} from '@/lib/utils'
 export default {
   name: "participantsTab",
   props: ['activeTab'],

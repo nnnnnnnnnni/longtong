@@ -199,8 +199,8 @@ import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import editer from "../components/common/editer";
-import drawer from "../components/calendar/drawer";
+import editer from "@/components/common/editer";
+import drawer from "@/components/calendar/drawer";
 import VditorPreview from "vditor/dist/method.min";
 import moment, { locale } from "moment";
 import {
@@ -209,7 +209,7 @@ import {
   getStatusType,
   _missionType as missionTypes,
   _priority as prioritys
-} from "../lib/type";
+} from "@/lib/type";
 export default {
   name: "calendar",
   data() {

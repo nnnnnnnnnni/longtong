@@ -71,8 +71,8 @@
 </template>
 
 <script>
-import {ismail, isPhone, isCode} from '../lib/utils';
-import img from '../assets/logo.png'
+import {ismail, isPhone, isCode} from '@/lib/utils';
+import img from '@/assets/logo.png'
 export default {
   name: "login",
   data() {
