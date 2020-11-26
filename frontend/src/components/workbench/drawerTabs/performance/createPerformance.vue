@@ -14,11 +14,17 @@
           <h3 class="title">审批列表</h3>
           <div class="performances">
             <div class="performance-item" v-for="item in performances" :key="item._id">
-              <div class="info title">{{item.title}}</div>
-              <div class="info dep">{{item.departments[0].name}}{{item.departments.length > 1 ? `等 ${item.departments.length} 个部门`: ''}}</div>
-              <div class="time">
-                <span class="info time">{{moment(item.startTime).format('YYYY-MM-DD')}}</span> ~ 
-                <span class="info time">{{moment(item.endTime).format('YYYY-MM-DD')}}</span>
+              <div class="hang">
+                <div class="info title">{{item.title}}</div>
+                <div class="info dep">{{item.departments[0].name}}{{item.departments.length > 1 ? `等 ${item.departments.length} 个部门`: ''}}</div>
+              </div>
+              <div class="hang">
+                <div class="time">
+                  <span class="info time">{{moment(item.startTime).format('YYYY-MM-DD')}}</span> ~ 
+                  <span class="info time">{{moment(item.endTime).format('YYYY-MM-DD')}}</span>
+                </div>
+                <div class="time question" v-if="item.questions && item.questions.length"> 共 {{item.questions.length}} 道题</div>
+                <div class="time question" v-else>暂无题目</div>
               </div>
             </div>
           </div>
@@ -26,7 +32,11 @@
         <div class="list-item">
           <h3 class="title">题目列表</h3>
           <div class="questions">
-            <p>1123123</p>
+            <div class="question-item" v-for="item in questions" :key="item._id">
+              <div class="item name">{{item.title}}</div>
+              <div class="item type">单选题</div>
+              <div class="item score">{{item.score}}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -66,6 +76,9 @@
           <a-form-model-item label="题目描述" required>
             <a-textarea v-model="questionForm.description" placeholder='题目描述' />
           </a-form-model-item>
+          <a-form-model-item label="题目分值" required>
+            <a-input type='number' v-model="questionForm.score" placeholder='题目分值' />
+          </a-form-model-item>
         </a-form-model>
       </a-modal>
     </div>
@@ -78,6 +91,7 @@ export default {
   name: "createPerformance",
   data() {
     return {
+      targetDom: null,
       moment,
       wrapperCol: { span: 14, offset: 1 },
       labelCol: { span: 6 },
@@ -85,7 +99,10 @@ export default {
       departments: [],
       performanceVisible: false,
       questionVisible: false,
-      questionForm: {},
+      questionForm: {
+        belong: 0,
+        type: 1
+      },
       performanceForm: {
         keys: ['A', 'B', 'C', 'D'],
         text: ['优秀','良好','及格','不及格'],
@@ -98,11 +115,17 @@ export default {
   mounted() {
     this.getDepartments();
     this.getPerformances();
+    this.getQuestions();
   },
   methods: {
     getPerformances: function() {
       this.$get('/performance/data').then(res => {
         this.performances = res.data;
+      })
+    },
+    getQuestions: function() {
+      this.$get('/question/data').then(res => {
+        this.questions = res.data;
       })
     },
     // 禁止的开始时间
@@ -153,7 +176,14 @@ export default {
       })
     },
     handleQuestionOk: function() {
-
+      if(!this.questionForm.title) return this.$message.error('必须：题目标题');
+      if(!this.questionForm.description) return this.$message.error('必须：题目描述');
+      if(!this.questionForm.score) return this.$message.error('必须：题目分值');
+      this.$post('/question/create', this.questionForm).then(res => {
+        this.getQuestions();
+        this.$message.success('创建成功');
+        this.handleCancel();
+      })
     },
     // modal cancel
     handleCancel: function() {
@@ -161,10 +191,14 @@ export default {
         keys: ['A', 'B', 'C', 'D'],
         text: ['优秀','良好','及格','不及格'],
         ratio: [100, 80, 60, 40],
-      }
+      };
+      this.questionForm = {
+        belong: 0,
+        type: 1
+      };
       this.performanceVisible = false;
       this.questionVisible = false;
-    }
+    },
   }
 };
 </script>
@@ -212,41 +246,48 @@ export default {
   padding: 0px 10px 10px 0px;
   box-sizing: border-box;
 }
-.performance-item {
+.performance-item, .question-item {
   width: 100%;
   margin: 5px auto;
   display: flex;
+  flex-direction: column;
   padding: 5px 10px;
   box-sizing: border-box;
   border: 1px solid #eee;
   border-radius: 5px;
   cursor: pointer;
-  flex-wrap: wrap;
-  justify-content: space-between;
   transition: all 0.3s;
+  position: relative;
 }
-.performance-item:hover {
+.performance-item:hover, .question-item:hover {
   border-color: #76c7fa;
+}
+.performance-item .hang {
+  box-sizing: border-box;
+  line-height: 24px;
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 4px 0px;
 }
 .performance-item .title {
   font-size: 16px;
   font-weight: 500;
 }
-.performance-item .dep {
-  width: 150px;
-  text-align: right;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-all;
-  height: inherit;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+.question-item {
+  justify-content: space-between;
+  flex-direction: row;
 }
-.performance-item .time {
-  width: 100%;
-  padding-top: 10px;
-  font-size: 12px;
-
+.question-item .item {
+  width: 33.3%;
+  user-select: none;
+}
+.question-item .type {
+  text-align: center;
+}
+.question-item .score {
+  text-align: right;
 }
 </style>

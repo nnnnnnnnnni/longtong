@@ -192,7 +192,7 @@ export const status = async (ctx: Context): Promise<Ires> => {
   const userId = ctx.user._id;
   const approve: Iapprove = await db.approve.findOne({_id: id});
   if(status == 'disabled') {
-    if(!approve.user != userId) {
+    if(approve.user != userId) {
       return {
         status: 400,
         msg: '权限不足'

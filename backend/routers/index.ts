@@ -9,6 +9,7 @@ import document from "./document";
 import profile from "./profile";
 import approve from "./approve";
 import performance from "./performance";
+import question from "./question";
 import { Iroute, Irouter } from "../interface/router";
 import { Context } from "koa";
 import redis from "../redis";
@@ -44,6 +45,7 @@ export const getAllRouter = (): Irouter => {
   addRouter(approve);
   addRouter(performance);
   addRouter(profile);
+  addRouter(question);
 
   return allRoutes;
 };

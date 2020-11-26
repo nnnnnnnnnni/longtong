@@ -11,7 +11,7 @@ const questionSchema = new Schema(
     },
     belong: {
       type: Number,
-      enum: [1, 2, 0],
+      enum: [1, 2, 0, 3],
       default: 0,
     },
     score: Number,
