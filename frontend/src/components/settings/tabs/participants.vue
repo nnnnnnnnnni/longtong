@@ -3,14 +3,14 @@
     <div class="filters">
       <div class="filter-item">
         <span class="item-title">角色:</span>
-        <a-select v-model="searchOptions.role" placeholder='请选择...' style="width: 100px">
+        <a-select v-model="searchOptions.role" placeholder='请选择...' style="width: 100px" allowClear>
           <a-select-option value='admin'>管理员</a-select-option>
           <a-select-option value='user'>成员</a-select-option>
         </a-select>
       </div>
       <div class="filter-item">
         <span class="item-title">岗位:</span>
-        <a-select showSearch optionFilterProp='children' v-model="searchOptions.job" placeholder='请选择...' style="width: 100px">
+        <a-select showSearch optionFilterProp='children' v-model="searchOptions.job" placeholder='请选择...' style="width: 100px" allowClear>
           <a-select-option v-for="job in jobs" :key="job" :value='job'>
             {{job}}
           </a-select-option>
@@ -18,7 +18,7 @@
       </div>
       <div class="filter-item">
         <span class="item-title">部门:</span>
-        <a-select showSearch optionFilterProp='children' v-model="searchOptions.department" placeholder='请选择...' style="width: 100px">
+        <a-select showSearch optionFilterProp='children' v-model="searchOptions.department" placeholder='请选择...' style="width: 100px" allowClear>
           <a-select-option v-for="department in departments" :key="department.name" :value='department._id'>
             {{department.name}}
           </a-select-option>
@@ -278,7 +278,7 @@ export default {
       if(!this.userForm.department) return this.$message.error('必须：部门');
       if(this.openType == 1) {
         if(!this.userForm.password) return this.$message.error('必须：密码');
-        if(Object.keys(this.avatorFile).length == 0) return this.$message.error('必须：头像');
+        if(Object.keys(this.avatorFile).length) return this.$message.error('必须：头像');
         await this.uploadAvator();
         this.$post('user/addUser', this.userForm).then(res=> {
           if(res.status == 200) {
@@ -290,7 +290,7 @@ export default {
           }
         })
       } else if(this.openType == 2) {
-        if(Object.keys(this.avatorFile).length != 0) await this.uploadAvator();
+        if(Object.keys(this.avatorFile).length) await this.uploadAvator();
         this.$put('user/adminUpdate', this.userForm).then(res=> {
           if(res.status == 200) {
             this.userForm = {companyRole: 'user', departmentRole: 'user'},

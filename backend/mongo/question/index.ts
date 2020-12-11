@@ -1,5 +1,5 @@
 import { Iquestion } from "./interface";
-import { Schema, model, SchemaTypes } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const questionSchema = new Schema(
   {
@@ -11,7 +11,7 @@ const questionSchema = new Schema(
     },
     belong: {
       type: Number,
-      enum: [1, 2, 0, 3],
+      enum: [0, 1, 2, 3],
       default: 0,
     },
     score: Number,

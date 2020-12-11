@@ -1,6 +1,6 @@
 <template>
   <div class="setting-menu">
-    <div class="avator">
+    <div class="avator" @click="visible = true">
       <img :src="this.$store.state.user.avator" />
     </div>
     <div class="username">{{ this.$store.state.user.userName }}</div>

@@ -297,6 +297,7 @@ export const adminUpdate = async (ctx: Context): Promise<any> => {
       { _id: doc._id },
       {
         $set: {
+          avator: doc.avator,
           name: doc.name,
           mail: doc.mail,
           job: doc.job,

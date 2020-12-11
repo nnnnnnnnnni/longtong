@@ -104,6 +104,7 @@ export default {
     getInfo: function() {
       this.$get("/user/userInfo").then(res => {
         this.userInfo = res.data;
+        this.$emit('getUserInfo', res.data);
       });
     }
   }

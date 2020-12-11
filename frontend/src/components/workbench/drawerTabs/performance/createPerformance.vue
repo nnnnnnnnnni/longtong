@@ -13,7 +13,7 @@
         <div class="list-item">
           <h3 class="title">审批列表</h3>
           <div class="performances">
-            <div class="performance-item" v-for="item in performances" :key="item._id">
+            <div class="performance-item" v-for="item in performances" :key="item._id" @click="showDetail(item, 1)">
               <div class="hang">
                 <div class="info title">{{item.title}}</div>
                 <div class="info dep">{{item.departments[0].name}}{{item.departments.length > 1 ? `等 ${item.departments.length} 个部门`: ''}}</div>
@@ -32,10 +32,12 @@
         <div class="list-item">
           <h3 class="title">题目列表</h3>
           <div class="questions">
-            <div class="question-item" v-for="item in questions" :key="item._id">
+            <div class="question-item" v-for="item in questions" :key="item._id" @click="showDetail(item, 2)">
               <div class="item name">{{item.title}}</div>
               <div class="item type">单选题</div>
               <div class="item score">{{item.score}}</div>
+              <div class="nouse" v-if="type == 0"></div>
+              <div class="use" v-if="item.type == 1"></div>
             </div>
           </div>
         </div>
@@ -99,10 +101,7 @@ export default {
       departments: [],
       performanceVisible: false,
       questionVisible: false,
-      questionForm: {
-        belong: 0,
-        type: 1
-      },
+      questionForm: {},
       performanceForm: {
         keys: ['A', 'B', 'C', 'D'],
         text: ['优秀','良好','及格','不及格'],
@@ -118,11 +117,13 @@ export default {
     this.getQuestions();
   },
   methods: {
+    // 获取所有绩效列表
     getPerformances: function() {
       this.$get('/performance/data').then(res => {
         this.performances = res.data;
       })
     },
+    // 获取所有绩效问题列表
     getQuestions: function() {
       this.$get('/question/data').then(res => {
         this.questions = res.data;
@@ -175,6 +176,7 @@ export default {
         this.handleCancel();
       })
     },
+    // 创建问题Btn ok
     handleQuestionOk: function() {
       if(!this.questionForm.title) return this.$message.error('必须：题目标题');
       if(!this.questionForm.description) return this.$message.error('必须：题目描述');
@@ -191,10 +193,6 @@ export default {
         keys: ['A', 'B', 'C', 'D'],
         text: ['优秀','良好','及格','不及格'],
         ratio: [100, 80, 60, 40],
-      };
-      this.questionForm = {
-        belong: 0,
-        type: 1
       };
       this.performanceVisible = false;
       this.questionVisible = false;
@@ -282,6 +280,8 @@ export default {
 }
 .question-item .item {
   width: 33.3%;
+  text-overflow: ellipsis;
+  overflow: hidden;
   user-select: none;
 }
 .question-item .type {
@@ -289,5 +289,20 @@ export default {
 }
 .question-item .score {
   text-align: right;
+}
+.question-item .use {
+  text-align: right;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: green;
+  margin: auto 0px auto 5px;
+}
+.question-item .nouse {
+  text-align: right;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin: auto 0px auto 5px;
 }
 </style>

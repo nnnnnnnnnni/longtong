@@ -6,7 +6,7 @@ import db from "../mongo/schema";
 // 创建题目
 export const create = async (ctx: Context): Promise<Ires> => {
   const doc = ctx.request.body;
-  const new_question: Iquestion = await db.question.create(doc);
+  const new_question: Iquestion = await db.question.create(Object.assign(doc, {type: 1, belong: 0}));
   return {
     data: new_question,
   };
