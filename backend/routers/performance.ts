@@ -7,6 +7,11 @@ const router: Irouter = {
     middleware: performance.create,
     allowAnonymous: false,
   },
+  "/performance/update": {
+    method: "PUT",
+    middleware: performance.update,
+    allowAnonymous: false,
+  },
   "/performance/data": {
     method: "GET",
     middleware: performance.data,

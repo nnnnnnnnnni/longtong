@@ -12,6 +12,17 @@ export const create = async (ctx: Context): Promise<Ires> => {
   };
 };
 
+// 创建绩效操作
+export const update = async (ctx: Context): Promise<Ires> => {
+  const doc = ctx.request.body as Iperformance;
+  const id = doc._id;
+  delete doc._id;
+  const new_p: Iperformance = await db.performance.findOneAndUpdate({_id: id}, {$set: doc});
+  return {
+    data: new_p,
+  };
+};
+
 // 获取所有绩效记录
 export const data = async (ctx: Context): Promise<Ires> => {
   const data: Iperformance[] = await db.performance.find().populate("departments").sort({createTime: -1});
