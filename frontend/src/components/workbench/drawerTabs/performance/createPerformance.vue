@@ -36,15 +36,15 @@
               <div class="item name">{{item.title}}</div>
               <div class="item type">单选题</div>
               <div class="item score">{{item.score}}</div>
-              <div class="nouse" v-if="type == 0"></div>
-              <div class="use" v-if="item.type == 1"></div>
+              <div class="nouse" v-if="item.type == 0"></div>
+              <div class="use" v-else></div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- 新增/编辑 审批 -->
-      <a-modal :title="openType == 1? '新增': '编辑'" :visible="performanceVisible" @ok="handlePormanceOk" @cancel="handleCancel">
+      <a-modal :title="openType == 1? '新增': '编辑'" :visible="performanceVisible" @ok="handlePormanceOk" @cancel="handleCancel" width='800px'>
         <a-form-model :model="performanceForm" :label-col="labelCol" :wrapper-col="wrapperCol">
           <a-form-model-item label="绩效标题" required>
             <a-input v-model="performanceForm.title" placeholder='绩效标题' />
@@ -66,6 +66,9 @@
               <template slot="suffix">%</template>
             </a-input>
           </a-form-model-item>
+          <a-form-model-item label="所含题目" >
+            <a-button type='primary' icon='fullscreen' @click="openSelect(performanceForm)">选择</a-button>
+          </a-form-model-item>
         </a-form-model>
       </a-modal>
 
@@ -83,22 +86,28 @@
           </a-form-model-item>
         </a-form-model>
       </a-modal>
+
+      <select-question :dataSource='dataSource' :visible='selectVisible' @cancel="handleSelectCancel" @change="selectChange" :selected='selected'/>
     </div>
   </div>
 </template>
 
 <script>
+import selectQuestion from '@/components/workbench/drawerTabs/performance/selectQuestion'
 import moment from 'moment';
 export default {
   name: "createPerformance",
   data() {
     return {
+      targetKeys: [],
+      selectedKeys: [],
       targetDom: null,
       moment,
       wrapperCol: { span: 14, offset: 1 },
       labelCol: { span: 6 },
       openType: 1,
       departments: [],
+      selectVisible: false,
       performanceVisible: false,
       questionVisible: false,
       questionForm: {},
@@ -109,7 +118,12 @@ export default {
       },
       performances: [],
       questions: [],
+      dataSource: [],
+      selected: [],
     };
+  },
+  components: {
+    selectQuestion
   },
   mounted() {
     this.getDepartments();
@@ -126,7 +140,16 @@ export default {
     // 获取所有绩效问题列表
     getQuestions: function() {
       this.$get('/question/data').then(res => {
-        this.questions = res.data;
+        this.questions = res.data.map(question => {
+          question.disabled = false;
+          return question
+        });
+      })
+    },
+    // 获取所有部门
+    getDepartments: function() {
+      this.$get('/department/departments').then(res => {
+        this.departments = res.data;
       })
     },
     // 禁止的开始时间
@@ -145,11 +168,6 @@ export default {
       }
       return startValue.valueOf() >= moment(endValue).valueOf();
     },
-    getDepartments: function() {
-      this.$get('/department/departments').then(res => {
-        this.departments = res.data;
-      })
-    },
     // 打开 创建绩效modal
     openPormanceModal: function() {
       this.openType = 1;
@@ -167,25 +185,44 @@ export default {
       if(!this.performanceForm.endTime) return this.$message.error('结束时间');
       if(!this.performanceForm.departments) return this.$message.error('必须：参与部门');
       if(this.performanceForm.text.length <2 || this.performanceForm.ratio.length <2) return this.$message.error('必须：选项长度');
-      this.$post('/performance/create', Object.assign(this.performanceForm, {
-        startTime: moment(moment(this.performanceForm.startTime).format('YYYY-MM-DD 00:00:00')),
-        endTime: moment(moment(this.performanceForm.endTime).format('YYYY-MM-DD 23:59:00'))
-      })).then(res => {
-        this.getPerformances();
-        this.$message.success('创建成功');
-        this.handleCancel();
-      })
+      if(this.openType == 1) {
+        this.$post('/performance/create', Object.assign(this.performanceForm, {
+          startTime: moment(moment(this.performanceForm.startTime).format('YYYY-MM-DD 00:00:00')),
+          endTime: moment(moment(this.performanceForm.endTime).format('YYYY-MM-DD 23:59:00'))
+        })).then(res => {
+          this.getPerformances();
+          this.$message.success('创建成功');
+          this.handleCancel();
+        })
+      } else if (this.openType == 2) {
+        this.$put('/performance/update', Object.assign(this.performanceForm, {
+          startTime: moment(moment(this.performanceForm.startTime).format('YYYY-MM-DD 00:00:00')),
+          endTime: moment(moment(this.performanceForm.endTime).format('YYYY-MM-DD 23:59:00'))
+        })).then(res => {
+          this.getPerformances();
+          this.$message.success('更新成功');
+          this.handleCancel();
+        })
+      }
     },
     // 创建问题Btn ok
     handleQuestionOk: function() {
       if(!this.questionForm.title) return this.$message.error('必须：题目标题');
       if(!this.questionForm.description) return this.$message.error('必须：题目描述');
       if(!this.questionForm.score) return this.$message.error('必须：题目分值');
-      this.$post('/question/create', this.questionForm).then(res => {
-        this.getQuestions();
-        this.$message.success('创建成功');
-        this.handleCancel();
-      })
+      if(this.openType == 1) {
+        this.$post('/question/create', this.questionForm).then(res => {
+          this.getQuestions();
+          this.$message.success('创建成功');
+          this.handleCancel();
+        })
+      } else if (this.openType == 2) {
+        this.$put('/question/update', this.questionForm).then(res => {
+          this.getQuestions();
+          this.$message.success('更新成功');
+          this.handleCancel();
+        })
+      }
     },
     // modal cancel
     handleCancel: function() {
@@ -194,9 +231,45 @@ export default {
         text: ['优秀','良好','及格','不及格'],
         ratio: [100, 80, 60, 40],
       };
+      this.questionForm = {};
       this.performanceVisible = false;
       this.questionVisible = false;
     },
+    // 选择题目cancel
+    handleSelectCancel: function() {
+      this.selectVisible = false;
+      this.performanceVisible = true;
+    },
+    openSelect: function(data) {
+      this.dataSource = [];
+      this.performanceVisible = false;
+      this.selectVisible = true;
+      this.selected = data.questions || [];
+    },
+    // 打开编辑model
+    showDetail: function(data, type) {
+      this.openType = 2;
+      if(type == 1) {
+        this.performanceForm = Object.assign({}, {
+          ...data,
+          departments: data.departments.map(item => item._id),
+          keys: ['A', 'B', 'C', 'D'],
+          text: ['优秀','良好','及格','不及格'],
+          ratio: [100, 80, 60, 40],
+        })
+        this.performanceVisible = true;
+      } else if(type == 2) {
+        this.questionForm = Object.assign({}, data);
+        this.questionVisible = true;
+      }
+    },
+    selectChange: function(e) {
+      this.$get('/question/data',{
+        text: e.target.value
+      }).then(res => {
+        this.dataSource = res.data.slice(0, 6);
+      })
+    }
   }
 };
 </script>
