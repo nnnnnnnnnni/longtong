@@ -312,20 +312,28 @@ export const adminUpdate = async (ctx: Context): Promise<any> => {
     .lean()
     .exec();
   if (oldUser.department.role == "user" && doc.departmentRole == "admin") {
-    await db.department.update({ _id: oldUser.department.info }, { $pull: { members: doc._id } });
-    await db.department.update({ _id: doc.department }, { $addToSet: { admins: doc._id } });
+    await Promise.all([
+      db.department.update({ _id: oldUser.department.info }, { $pull: { members: doc._id } }),
+      db.department.update({ _id: doc.department }, { $addToSet: { admins: doc._id } })
+    ])
   }
   if (oldUser.department.role == "admin" && doc.departmentRole == "user") {
-    await db.department.update({ _id: oldUser.department.info }, { $pull: { admins: doc._id } });
-    await db.department.update({ _id: doc.department }, { $addToSet: { members: doc._id } });
+    Promise.all([
+      db.department.update({ _id: oldUser.department.info }, { $pull: { admins: doc._id } }),
+      db.department.update({ _id: doc.department }, { $addToSet: { members: doc._id } })
+    ])
   }
   if (oldUser.department.role == "admin" && doc.departmentRole == "admin") {
-    await db.department.update({ _id: oldUser.department.info }, { $pull: { admins: doc._id } });
-    await db.department.update({ _id: doc.department }, { $addToSet: { admins: doc._id } });
+    Promise.all([
+      db.department.update({ _id: oldUser.department.info }, { $pull: { admins: doc._id } }),
+      db.department.update({ _id: doc.department }, { $addToSet: { admins: doc._id } })
+    ])
   }
   if (oldUser.department.role == "user" && doc.departmentRole == "user") {
-    await db.department.update({ _id: oldUser.department.info }, { $pull: { members: doc._id } });
-    await db.department.update({ _id: doc.department }, { $addToSet: { members: doc._id } });
+    Promise.all([
+      db.department.update({ _id: oldUser.department.info }, { $pull: { members: doc._id } }),
+      db.department.update({ _id: doc.department }, { $addToSet: { members: doc._id } })
+    ])
   }
   if (oldUser.company.role == "admin" && doc.companyRole == "user") {
     await db.company.update({ _id: companyId }, { $pull: { admins: doc._id }, $addToSet: { members: doc._id } });

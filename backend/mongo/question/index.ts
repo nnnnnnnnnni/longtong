@@ -1,5 +1,5 @@
 import { Iquestion } from "./interface";
-import { Schema, model } from "mongoose";
+import { Schema, model, SchemaTypes } from "mongoose";
 
 const questionSchema = new Schema(
   {
@@ -14,6 +14,11 @@ const questionSchema = new Schema(
       enum: [0, 1, 2, 3],
       default: 0,
     },
+    performances: [{
+      type: SchemaTypes.ObjectId,
+      ref: 'performance',
+      default: []
+    }],
     score: Number,
     answer: String,
     text: [String],

@@ -12,6 +12,11 @@ const router: Irouter = {
     middleware: performance.update,
     allowAnonymous: false,
   },
+  "/performance/departments": {
+    method: "GET",
+    middleware: performance.departments,
+    allowAnonymous: false,
+  },
   "/performance/data": {
     method: "GET",
     middleware: performance.data,

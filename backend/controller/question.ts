@@ -25,12 +25,12 @@ export const update = async (ctx: Context): Promise<Ires> => {
 
 // 获取所有绩效记录
 export const data = async (ctx: Context): Promise<Ires> => {
-  const {text} = ctx.request.query;
+  const { text } = ctx.request.query;
   let params: any = { belong: { $in: [0, 1] } };
   if (text) {
     params = { title: { $regex: text, $options: "i" } };
   }
-  console.log(params)
+  console.log(params);
   const data: Iquestion[] = await db.question.find(params).sort({ createTime: -1 });
   return {
     data: data,

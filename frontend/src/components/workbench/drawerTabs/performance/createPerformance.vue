@@ -11,7 +11,7 @@
       </div>
       <div class="list">
         <div class="list-item">
-          <h3 class="title">审批列表</h3>
+          <div class="list-title"><h3>审批列表</h3></div>
           <div class="performances">
             <div class="performance-item" v-for="item in performances" :key="item._id" @click="showDetail(item, 1)">
               <div class="hang">
@@ -30,13 +30,15 @@
           </div>
         </div>
         <div class="list-item">
-          <h3 class="title">题目列表</h3>
+          <div class="list-title">
+            <h3>题目列表</h3>
+          </div>
           <div class="questions">
             <div class="question-item" v-for="item in questions" :key="item._id" @click="showDetail(item, 2)">
               <div class="item name">{{item.title}}</div>
               <div class="item type">单选题</div>
               <div class="item score">{{item.score}}</div>
-              <div class="nouse" v-if="item.type == 0"></div>
+              <div class="nouse" v-if="item.belong == 0"></div>
               <div class="use" v-else></div>
             </div>
           </div>
@@ -68,6 +70,7 @@
           </a-form-model-item>
           <a-form-model-item label="所含题目" >
             <a-button type='primary' icon='fullscreen' @click="openSelect(performanceForm)">选择</a-button>
+            <span class="space20" v-if="performanceForm.questions">共 {{performanceForm.questions.length}} 道题</span>
           </a-form-model-item>
         </a-form-model>
       </a-modal>
@@ -83,6 +86,9 @@
           </a-form-model-item>
           <a-form-model-item label="题目分值" required>
             <a-input type='number' v-model="questionForm.score" placeholder='题目分值' />
+          </a-form-model-item>
+          <a-form-model-item label="已被引用" v-if="openType == 2">
+            <span class="space10" v-if="questionForm.performances">{{questionForm.performances.length}}</span>
           </a-form-model-item>
         </a-form-model>
       </a-modal>
@@ -148,7 +154,7 @@ export default {
     },
     // 获取所有部门
     getDepartments: function() {
-      this.$get('/department/departments').then(res => {
+      this.$get('/performance/departments').then(res => {
         this.departments = res.data;
       })
     },
@@ -200,6 +206,7 @@ export default {
           endTime: moment(moment(this.performanceForm.endTime).format('YYYY-MM-DD 23:59:00'))
         })).then(res => {
           this.getPerformances();
+          this.getQuestions();
           this.$message.success('更新成功');
           this.handleCancel();
         })
@@ -232,14 +239,17 @@ export default {
         ratio: [100, 80, 60, 40],
       };
       this.questionForm = {};
+      this.selected = [];
       this.performanceVisible = false;
       this.questionVisible = false;
     },
     // 选择题目cancel
     handleSelectCancel: function() {
+      this.performanceForm.questions = this.selected
       this.selectVisible = false;
       this.performanceVisible = true;
     },
+    // 打开选择题目
     openSelect: function(data) {
       this.dataSource = [];
       this.performanceVisible = false;
@@ -263,11 +273,12 @@ export default {
         this.questionVisible = true;
       }
     },
+    // 输入框变化搜索
     selectChange: function(e) {
       this.$get('/question/data',{
         text: e.target.value
       }).then(res => {
-        this.dataSource = res.data.slice(0, 6);
+        this.dataSource = res.data.slice(0, 10);
       })
     }
   }
@@ -301,14 +312,21 @@ export default {
   box-sizing: border-box;
   padding: 10px;
 }
-.container .list .list-item>.title {
+.container .list .list-item .list-title {
   height: 28px;
   line-height: 28px;
-  border: 1px solid #eee;
   text-align: center;
-  width: 100px;
-  border-radius: 10px;
+  width: 100%;
   font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+.container .list .list-item .list-title h3 {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  width: 100px;
+  margin-right: 50px;
+  margin-bottom: 0px;
 }
 .container .list .list-item .performances,
 .container .list .list-item .questions {
@@ -368,7 +386,7 @@ export default {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: green;
+  background-color: red;
   margin: auto 0px auto 5px;
 }
 .question-item .nouse {
@@ -376,6 +394,13 @@ export default {
   width: 6px;
   height: 6px;
   border-radius: 50%;
+  background-color: green;
   margin: auto 0px auto 5px;
+}
+.space10 {
+  margin-left: 10px;
+}
+.space20 {
+  margin-left: 20px;
 }
 </style>

@@ -8,21 +8,28 @@
       <div class="list">
         <div class="select">
           <div class="title">候选列表</div>
-          <div class="item" v-for="item in dataSource" :key="item._id" :class="{disabled: item.belong == 1 || ids.indexOf(item._id) != -1}" @click="select(item)">
-            <div class="top">
-              <div class="item-name">{{ item.title }}</div>
-              <div class="item-score">{{item.score}}</div>
+          <div class="item-container">
+            <div class="item" v-for="item in dataSource" :key="item._id" :class="{disabled: ids.indexOf(item._id) != -1}" @click="select(item)">
+              <div class="top">
+                <div class="item-name">{{ item.title }}</div>
+                <div class="item-score">{{item.score}}</div>
+              </div>
+              <div class="description">{{item.description}}</div>
             </div>
-            <div class="description">{{item.description}}</div>
           </div>
         </div>
         <div class="selected">
           <div class="title">已选列表 {{selected.length}}</div>
-          <div class="item" v-for="(item, index) in selected" :key="item._id" @click="remove(item, index)">
-            <div class="item-name">{{ item.title }}</div>
-            <div class="item-score">{{item.score}}</div>
+          <div class="item-container">
+            <div class="item" v-for="(item, index) in selected" :key="item._id" @click="remove(item, index)">
+              <div class="item-name">{{ item.title }}</div>
+              <div class="item-score">{{item.score}}</div>
+            </div>
           </div>
         </div>
+      </div>
+      <div class="button">
+        <a-button @click="okButton">ok</a-button>
       </div>
     </div>
   </div>
@@ -58,7 +65,12 @@ export default {
         this.$emit("cancel", e);
       }
     });
-    this.selected.forEach((item) => {this.ids.push(item._id)});
+  },
+  watch: {
+    selected: function() {
+      this.ids = [];
+      this.selected.forEach((item) => {this.ids.push(item._id)});
+    }
   },
   methods: {
     _visible: function(e) {
@@ -80,7 +92,7 @@ export default {
       }
     },
     select: function(item) {
-      if(item.belong == 1 || this.ids.indexOf(item._id) != -1) {
+      if(this.ids.indexOf(item._id) != -1) {
         return;
       } else {
         this.selected.unshift(item);
@@ -88,9 +100,11 @@ export default {
       }
     },
     remove: function(data, index) {
-      console.log(index)
       this.selected.splice(index, 1);
       this.ids.splice(index, 1)
+    },
+    okButton: function(e) {
+      this.$emit("cancel", e);
     }
   }
 };
@@ -98,7 +112,8 @@ export default {
 
 <style scoped>
 .disabled {
-  background-color: red;
+  background-color: #a6a6a6 !important;
+  border: #e6e6e6 !important;
   cursor: no-drop !important;
 }
 .select-question {
@@ -118,7 +133,7 @@ export default {
 }
 .container {
   width: 1000px;
-  height: 600px;
+  height: 630px;
   animation: showContainer 0.5s;
   overflow: hidden;
 }
@@ -129,7 +144,7 @@ export default {
   }
   100% {
     width: 1000px;
-    height: 600px;
+    height: 630px;
   }
 }
 .container .input {
@@ -160,6 +175,12 @@ export default {
 .container .list {
   display: flex;
 }
+.container .list .item-container {
+  max-height: 490px;
+  overflow-y: scroll;
+  padding: 0px 10px;
+  box-sizing: border-box;
+}
 .container .list .select {
   width: 70%;
   padding: 10px;
@@ -170,14 +191,15 @@ export default {
   overflow: hidden;
   height: 70px;
   margin: 10px 0px;
-  background-color: #ccc;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s;
 }
 .container .list .select .item:hover {
-  background-color: #ffffff;
+  border: 1px solid #1890ff;
 }
 .container .list .select .item .top {
   display: flex;
@@ -193,7 +215,7 @@ export default {
 .container .list .selected {
   flex: 1;
   padding: 10px;
-  overflow: hidden;
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 .container .list .selected .item {
@@ -204,13 +226,25 @@ export default {
   align-items: center;
   height: 40px;
   margin: 10px 0px;
-  background-color: #ccc;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s;
 }
 .container .list .selected .item:hover {
-  background-color: #ffffff;
+  border: 1px solid #1890ff;
+}
+.button {
+  width: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.button button {
+  width: 100px;
+  color: #1890ff;
+  font-weight: 500;
 }
 </style>

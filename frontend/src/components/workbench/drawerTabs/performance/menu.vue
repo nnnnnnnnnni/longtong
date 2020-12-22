@@ -62,6 +62,7 @@ export default {
   margin-right: 8px;
 }
 .menu_active {
-  background-color:#76c7fa;
+  color: #ffffff;
+  background-color: #1890ff;
 }
 </style>

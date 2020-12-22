@@ -6,8 +6,18 @@
 export default {
   name: 'myPerformance',
   data() {
-    return {};
+    return {
+      data: {}
+    };
   },
+  mounted() {
+    this.getMyPerformance()
+  },
+  methods: {
+    getMyPerformance: function() {
+      
+    }
+  }
 };
 </script>
 
