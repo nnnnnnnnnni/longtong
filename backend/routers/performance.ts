@@ -22,6 +22,11 @@ const router: Irouter = {
     middleware: performance.data,
     allowAnonymous: false,
   },
+  "/performance/mine": {
+    method: "GET",
+    middleware: performance.mine,
+    allowAnonymous: false,
+  },
 };
 
 export default router;

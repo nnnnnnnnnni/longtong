@@ -1,4 +1,4 @@
-import { Iperformance } from "./interface";
+import { IDperformance } from "./interface";
 import { Schema, model, SchemaTypes } from "mongoose";
 
 const performanceSchema = new Schema(
@@ -25,4 +25,4 @@ const performanceSchema = new Schema(
   }
 );
 
-export const performance = model<Iperformance>("performance", performanceSchema);
+export const performance = model<IDperformance>("performance", performanceSchema);

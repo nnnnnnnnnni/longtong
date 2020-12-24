@@ -30,7 +30,6 @@ export const data = async (ctx: Context): Promise<Ires> => {
   if (text) {
     params = { title: { $regex: text, $options: "i" } };
   }
-  console.log(params);
   const data: Iquestion[] = await db.question.find(params).sort({ createTime: -1 });
   return {
     data: data,

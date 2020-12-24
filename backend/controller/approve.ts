@@ -9,7 +9,7 @@ import { Iagree, Iapprove } from "@/mongo/approve/interface";
 export const approveSetting = async (ctx: Context): Promise<Ires> => {
   const departments: Idepartment[] = await db.department.find();
   const companyId = ctx.user.company.info._id;
-  const setting = await db.company.findOne({ _id: companyId }).select("approve");
+  const setting: Icompany = await db.company.findOne({ _id: companyId }).select("approve");
   return {
     data: {
       departments: departments,
@@ -21,7 +21,7 @@ export const approveSetting = async (ctx: Context): Promise<Ires> => {
 // 设置审批信息(admin)
 export const approveUpdate = async (ctx: Context): Promise<Ires> => {
   const doc = ctx.request.body.doc;
-  const companyId = ctx.user.company.info._id;
+  const companyId: ObjectId = ctx.user.company.info._id as ObjectId;
   await db.company.updateOne(
     {
       _id: companyId,
