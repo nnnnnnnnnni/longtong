@@ -1,20 +1,64 @@
 <template>
   <div class="myPerformance">
     <div class="container">
-      <div class="item" v-for="item in data" :key="item._id" :class="{outTime: item.outTime, inTime: !item.outTime}">
+      <div
+        class="item"
+        v-for="item in data"
+        :key="item._id"
+        :class="{ outTime: item.outTime, inTime: !item.outTime }"
+      >
         <div class="title">
           <div class="title-text">{{ item.title }}</div>
-          <div class="title-time">{{ moment(item.startTime).format('YYYY-MM-DD') }} — {{ moment(item.endTime).format('YYYY-MM-DD') }}</div>
+          <div class="title-time">
+            {{ moment(item.startTime).format("YYYY-MM-DD") }} —
+            {{ moment(item.endTime).format("YYYY-MM-DD") }}
+          </div>
         </div>
         <div class="sums">
           <div class="sums-item">
-            <span class="sums-item-text">总题数：</span>{{item.questionNumber}}
+            <span class="sums-item-text">总题数：</span
+            >{{ item.questionNumber }}
           </div>
           <div class="sums-item">
-            <span class="sums-item-text">总分：</span>{{item.scoreSum}}
+            <span class="sums-item-text">总分：</span>{{ item.scoreSum }}
           </div>
           <div class="sums-item">
-            <span class="sums-item-text">参与部门：</span>{{item.departmentNumber}}
+            <span class="sums-item-text">参与部门：</span
+            >{{ item.departmentNumber }}
+          </div>
+        </div>
+        <div class="bottom">
+          <div class="tags">
+            <img v-if="item.isAnswerd" :src="pass" alt="" />
+            <img v-if="!item.isAnswerd" :src="nopass" alt="" />
+            <img v-if="!item.outTime" :src="ing" alt="" />
+            <img v-if="item.outTime" :src="end" alt="" />
+          </div>
+          <div class="button">
+            <a-button
+              type="primary"
+              size="small"
+              :disabled="item.outTime"
+              @click="toInfo(item)"
+              v-if="item.isAdmin"
+              >查看详情</a-button
+            >
+            <a-button
+              type="primary"
+              size="small"
+              :disabled="item.outTime"
+              @click="toInfo(item)"
+              v-else-if="item.isAnswerd"
+              >查看结果</a-button
+            >
+            <a-button
+              type="primary"
+              size="small"
+              :disabled="item.outTime"
+              @click="toDetail(item)"
+              v-else
+              >参加评测</a-button
+            >
           </div>
         </div>
       </div>
@@ -23,13 +67,22 @@
 </template>
 
 <script>
-import moment from 'moment'
+//https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=18116
+import pass from "@/assets/pass.png";
+import nopass from "@/assets/nopass.png";
+import end from "@/assets/end.png";
+import ing from "@/assets/pass.png";
+import moment from "moment";
 export default {
   name: "myPerformance",
   data() {
     return {
       moment,
-      data: {}
+      data: {},
+      pass: pass,
+      nopass: nopass,
+      end: end,
+      ing: ing
     };
   },
   mounted() {
@@ -39,6 +92,15 @@ export default {
     getMyPerformance: function() {
       this.$get("/performance/mine").then(res => {
         this.data = res.data;
+      });
+    },
+    toInfo: function(data) {
+      this.$router.push({ name: "performance_info", params: { id: data._id } });
+    },
+    toDetail: function(data) {
+      this.$router.push({
+        name: "performance_detail",
+        params: { id: data._id }
       });
     }
   }
@@ -54,14 +116,13 @@ export default {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  position: relative;
 }
 .container .item {
+  float: left;
   margin: 10px 0.5%;
   width: 49%;
-  height: 200px;
+  height: 130px;
   box-sizing: border-box;
   border: 1px solid #e6e6e6;
   border-radius: 5px;
@@ -101,5 +162,24 @@ export default {
 }
 .container .item .sums .sums-item {
   flex: 1;
+  text-align: right;
+}
+.container .item .bottom {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.container .item .bottom .tags {
+  display: flex;
+}
+.container .item .bottom .tags img {
+  display: block;
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+}
+.container .item .bottom button {
+  margin-left: 20px;
 }
 </style>

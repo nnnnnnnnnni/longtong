@@ -27,6 +27,21 @@ const router: Irouter = {
     middleware: performance.mine,
     allowAnonymous: false,
   },
+  "/performance/details": {
+    method: "GET",
+    middleware: performance.details,
+    allowAnonymous: false,
+  },
+  "/performance/info": {
+    method: "GET",
+    middleware: performance.info,
+    allowAnonymous: false,
+  },
+  "/performance/submit": {
+    method: "POST",
+    middleware: performance.submit,
+    allowAnonymous: false,
+  },
 };
 
 export default router;

@@ -26,3 +26,4 @@ Vue.use(Dropdown)
 Vue.use(Tree)
 Vue.use(Switch)
 Vue.prototype.$message = message;
+Vue.prototype.$modal = Modal;

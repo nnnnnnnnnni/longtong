@@ -14,6 +14,7 @@ export interface IDperformance extends Document {
 }
 
 export interface Iperformance {
+  _id: ObjectId
   title: string;                          // 绩效名字,
   startTime: Date;                        // 绩效开始时间
   endTime: Date;                          // 绩效结束时间

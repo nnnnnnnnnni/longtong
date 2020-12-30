@@ -4,6 +4,7 @@ import { Ires } from "@/interface/response";
 import { Idepartment } from "@/mongo/department/interface";
 import { Icompany, ObjectId } from "@/mongo/company/interface";
 import { Iagree, Iapprove } from "@/mongo/approve/interface";
+import { Iuser } from "@/mongo/user/interface";
 
 // 获取审批信息(admin)
 export const approveSetting = async (ctx: Context): Promise<Ires> => {
@@ -42,7 +43,7 @@ export const create = async (ctx: Context): Promise<Ires> => {
   const data = ctx.request.body;
   let approvers: ObjectId[] = [];
   let keys: ObjectId[] = [];
-  let cc: ObjectId[] = [];
+  let cc: (ObjectId | Iuser)[] = [];
   let setting: Icompany = await db.company.findOne({ _id: ctx.user.company.info._id });
   const department = ctx.user.department;
   if (!department) {
@@ -133,6 +134,7 @@ export const create = async (ctx: Context): Promise<Ires> => {
       isAgree: false,
     }
   }
+  const _cc: ObjectId[] = cc as ObjectId[]
   await db.approve.create({
     user: ctx.user._id,
     type: data.type,
@@ -142,7 +144,7 @@ export const create = async (ctx: Context): Promise<Ires> => {
     approvers: approvers,
     keys: keys,
     agree: agree,
-    cc: cc,
+    cc: _cc,
     files: [],
   });
   return {

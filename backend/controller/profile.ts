@@ -45,7 +45,8 @@ export const address = async (ctx: Context): Promise<Ires> => {
     .select("upper name admins members")
     .populate("admins", "userName avator mail phone")
     .populate("members", "userName avator mail phone")
-    .lean();
+    .lean()
+    .exec();
   let upperst: string = "";
   const obj: any = {};
   departments.forEach((dep: Idepartment) => {

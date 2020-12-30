@@ -237,6 +237,15 @@ const routerConfig = new Router({
                 pageTitle: "创建绩效"
               },
               component: () => import("@/components/workbench/drawerTabs/performance/detail"),
+            },
+            {
+              path: "/performance/info/:id",
+              name: "performance_info",
+              meta: {
+                allowAnonymous: false,
+                pageTitle: "创建绩效"
+              },
+              component: () => import("@/components/workbench/drawerTabs/performance/info"),
             }
           ]
         }

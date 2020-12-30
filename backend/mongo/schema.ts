@@ -8,6 +8,8 @@ import { pan } from "./pan";
 import { approve } from "./approve";
 import { performance } from "./performance";
 import { question } from "./question";
+import { answer } from "./answer";
+import { score } from "./score";
 
 export default {
   user: user,
@@ -20,4 +22,6 @@ export default {
   approve: approve,
   performance: performance,
   question: question,
+  answer: answer,
+  score: score,
 };
