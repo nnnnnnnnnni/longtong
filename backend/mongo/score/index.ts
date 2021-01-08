@@ -11,19 +11,6 @@ const scoreSchema: Schema = new Schema(
       type: SchemaTypes.ObjectId,
       ref: "performance",
     },
-    marks: [
-      {
-        user: {
-          type: SchemaTypes.ObjectId,
-          ref: "user",
-        },
-        score: Number,
-        createAt: {
-          type: Date,
-          default: Date.now
-        }
-      },
-    ],
     score: Number,
   },
   {

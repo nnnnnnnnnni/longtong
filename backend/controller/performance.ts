@@ -1,10 +1,8 @@
 import { Ires } from "@/interface/response";
-import { answer } from "@/mongo/answer";
+import { Ianswer } from "@/mongo/answer/interface";
 import { Idepartment, ObjectId } from "@/mongo/department/interface";
 import { IDperformance, Iperformance } from "@/mongo/performance/interface";
 import { Iquestion } from "@/mongo/question/interface";
-import { IDscore, IMark, Iscore } from "@/mongo/score/interface";
-import { Iuser } from "@/mongo/user/interface";
 import { Context } from "koa";
 import db from "../mongo/schema";
 
@@ -90,13 +88,15 @@ export const data = async (ctx: Context): Promise<Ires> => {
 export const mine = async (ctx: Context): Promise<Ires> => {
   const user = ctx.user;
   const params: any = {};
-  let isAdmin: boolean = true;
+  let isAdmin: boolean = user.company.role != "user";
+  let isDepartmentAdmin: boolean = true;
   if (user.department) {
     params.departments = { $elemMatch: { $eq: user.department.info._id } };
     if (user.department.role == "user") {
-      isAdmin = false;
+      isDepartmentAdmin = false;
     }
   }
+
   const data: Iperformance[] = await db.performance
     .find(params)
     .populate("departments", "name")
@@ -105,11 +105,13 @@ export const mine = async (ctx: Context): Promise<Ires> => {
     .sort({ createTime: -1 })
     .lean()
     .exec();
+  const performanceIds: ObjectId[] = [];
   const resData: any = data.map((item: Iperformance) => {
     let outTime: boolean = false;
     let questionNumber: number = item.questions.length;
     let departmentNumber: number = item.departments.length;
     let scoreSum: number = 0;
+    performanceIds.push(item._id);
     item.questions.forEach((question: Iquestion) => {
       scoreSum += question.score;
     });
@@ -123,82 +125,66 @@ export const mine = async (ctx: Context): Promise<Ires> => {
       departmentNumber: departmentNumber,
       questionNumber: questionNumber,
       scoreSum: scoreSum,
-      isAdmin: isAdmin,
-      isAnswerd: false,
+      isAdmin: isAdmin || isDepartmentAdmin,
     };
   });
+
+  const answers: any[] = await db.answer.aggregate([{ $match: { user: ObjectId(user._id), performance: { $in: performanceIds } } }, { $group: { _id: "$performance", total: { $sum: 1 } } }]);
+
+  const answersObj: any = {};
+  answers.forEach((item: any) => {
+    answersObj[item._id] = item.total;
+  });
+
+  resData.map((item: any) => {
+    item.isAnswerd = answersObj[item._id] == item.questionNumber;
+    return item;
+  });
+
   return {
     data: resData,
   };
 };
 
-// 详情
-export const details = async (ctx: Context): Promise<Ires> => {
+// 评测绩效详情
+export const detail = async (ctx: Context): Promise<Ires> => {
   const user = ctx.user;
   const { id } = ctx.request.query;
-
-  // 所有需要评测的同部门同等级人
-  const department: Idepartment = await db.department
-    .findOne({
-      _id: user.department.info._id,
-    })
-    .select("members")
-    .populate("members", "userName");
-  const colleagues: any[] = department.members.filter((_user: Iuser) => {
-    return _user._id != user._id;
-  });
-  const colleagueIds: Iuser[] = department.members.map((user: Iuser) => {
-    return user._id;
-  });
 
   // 绩效题目详情
   const performance: Iperformance = await db.performance.findOne({ _id: id }).select("title questions ratio text").populate("questions", "title score answer description type");
 
-  // 评测了所有人的绩效列表
-  const scores: IDscore[] = await db.score.find({ performance: id, user: { $in: colleagueIds }, "marks.user": user._id }).select("-marks");
-
-  // 评测完成数 == 需要完成数，则直接返回
-  if (scores.length == colleagues.length) {
-    return {
-      msg: "已经评测完成",
-      status: 401,
-    };
-  }
-
-  const scoreObj: any = {};
-  scores.forEach((score: Iscore) => {
-    scoreObj[score.user.toString()] = score;
+  const answers: Ianswer[] = await db.answer.find({ performance: id, user: user._id });
+  const answersObj: any = {};
+  answers.forEach((answer: Ianswer) => {
+    answersObj[(answer.question as ObjectId).toHexString()] = Number(answer.answer);
   });
-  const _colleagues = colleagues.map((item: any) => {
-    return {
-      ...item._doc,
-      isFinished: scoreObj.hasOwnProperty(item._id),
-    };
+
+  console.log(answersObj);
+
+  const questionAnswers: any[] = performance.questions.map((item: Iquestion) => {
+    return answersObj[item._id.toHexString()];
   });
 
   return {
     data: {
-      colleagues: _colleagues,
       performance: performance,
+      answers: questionAnswers,
+      isFinished: answers.length == performance.questions.length,
     },
   };
-};
-
-export const info = async (ctx: Context): Promise<Ires> => {
-  return {};
 };
 
 // 提交评测
 export const submit = async (ctx: Context): Promise<any> => {
   const _user = ctx.user;
-  const { answers, user, id } = ctx.request.body;
+  const { answers, id } = ctx.request.body;
 
   const performance: IDperformance = await db.performance.findOne({ _id: id }).populate("questions", "score");
-  const ratios: Array<number> = performance.ratio;
-  const questions: Array<Iquestion> = performance.questions as Iquestion[];
+  const ratios: number[] = performance.ratio;
+  const questions: Iquestion[] = performance.questions as Iquestion[];
 
-  let sum: number = 0,
-    oldSum: number = 0;
+  let sum: number = 0;
   // 检查答案的正确性
   answers.forEach((answer: number, index: number) => {
     sum += (Number(questions[index].score) * Number(answer)) / 100;
@@ -217,44 +203,33 @@ export const submit = async (ctx: Context): Promise<any> => {
     };
   }
 
-  const oldSocre: Iscore = await db.score.findOne({
-    user: user,
-    performance: id,
-  });
-  const marks: IMark[] = oldSocre?.marks;
-  marks?.forEach((item: IMark) => {
-    oldSum += item.score;
-  });
-
   // 创建答案
-  await Promise.all(
-    answers.map((answer: number, index: number) => {
-      db.answer.create({
+  answers.map(async (answer: string, index: number) => {
+    await db.answer.findOneAndUpdate(
+      {
         user: _user._id,
         performance: id,
         question: questions[index]._id,
-        colleague: user,
+      },
+      {
         score: (Number(questions[index].score) * Number(answer)) / 100,
-        answer: String(answer),
-      })
-    })
-  );
+        answer: answer,
+      },
+      {
+        upsert: true,
+      }
+    );
+  });
 
   // 更新得分
   await db.score.updateOne(
     {
-      user: user,
+      user: _user,
       performance: id,
     },
     {
       $set: {
-        score: Number(((oldSum + sum) / ((marks?.length || 0) + 1)).toFixed(2)),
-      },
-      $addToSet: {
-        marks: {
-          user: _user._id,
-          score: sum,
-        },
+        score: sum,
       },
     },
     {
@@ -267,4 +242,77 @@ export const submit = async (ctx: Context): Promise<any> => {
   };
 };
 
-// 获取对某一个人的评测
+// 获取评测信息
+export const info = async (ctx: Context): Promise<Ires> => {
+  const { id } = ctx.request.query;
+  const user = ctx.user;
+  let sum: number = 0
+
+  const aggregateData: any = await db.answer.aggregate([
+    { $match: { performance: ObjectId(id) } },
+    {
+      $group: {
+        _id: "$question",
+        sum: { $sum: 1 },
+        average: { $avg: "$score" },
+      },
+    },
+    { $lookup: { from: "questions", localField: "_id", foreignField: "_id", as: "question" } },
+    { $unwind: "$question" },
+  ]);
+
+  
+  const params: any = {
+    performance: ObjectId(id),
+  };
+  if (user.department?.role == "user") {
+    params.user = ObjectId(user._id);
+  }
+  const answers: any = await db.answer.aggregate([
+    { $match: params },
+    {
+      $group: {
+        _id: "$user",
+        sum: { $sum: 1 },
+        sumScore: { $sum: "$score" },
+        average: { $avg: "$score" },
+      },
+    },
+    { $lookup: { from: "users", localField: "_id", foreignField: "_id", as: "user" } },
+    { $unwind: "$user" },
+    {
+      $project: {
+        _id: 1,
+        sum: 1,
+        sumScore: 1,
+        average: 1,
+        name: '$user.userName',
+        avator: '$user.avator',
+      }
+    }
+  ]);
+
+  const x: number[] = [];
+  const yAverage: number[] = [];
+  const ysumScore: number[] = [];
+  aggregateData.forEach((item: any, index: number) => {
+    x.push(index + 1);
+    yAverage.push(item.average);
+    ysumScore.push(item.question.score);
+    sum += item.question.score
+  });
+
+  const performance: Iperformance = await db.performance.findOne({ _id: id });
+
+  return {
+    data: {
+      sum,
+      performance,
+      aggregateData,
+      x,
+      yAverage,
+      ysumScore,
+      answers,
+    },
+  };
+};

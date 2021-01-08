@@ -5,9 +5,8 @@
         class="item"
         v-for="item in data"
         :key="item._id"
-        :class="{ outTime: item.outTime, inTime: !item.outTime }"
       >
-        <div class="title">
+        <div class="title" :class="{ outTime: item.outTime, inTime: !item.outTime }">
           <div class="title-text">{{ item.title }}</div>
           <div class="title-time">
             {{ moment(item.startTime).format("YYYY-MM-DD") }} —
@@ -29,35 +28,26 @@
         </div>
         <div class="bottom">
           <div class="tags">
-            <img v-if="item.isAnswerd" :src="pass" alt="" />
-            <img v-if="!item.isAnswerd" :src="nopass" alt="" />
             <img v-if="!item.outTime" :src="ing" alt="" />
             <img v-if="item.outTime" :src="end" alt="" />
+            <img v-if="item.isAnswerd" :src="pass" alt="" />
+            <img v-if="!item.isAnswerd" :src="nopass" alt="" />
           </div>
           <div class="button">
             <a-button
               type="primary"
               size="small"
               :disabled="item.outTime"
-              @click="toInfo(item)"
-              v-if="item.isAdmin"
-              >查看详情</a-button
-            >
-            <a-button
-              type="primary"
-              size="small"
-              :disabled="item.outTime"
-              @click="toInfo(item)"
-              v-else-if="item.isAnswerd"
-              >查看结果</a-button
-            >
-            <a-button
-              type="primary"
-              size="small"
-              :disabled="item.outTime"
               @click="toDetail(item)"
-              v-else
+              v-if="!item.outTime && !item.isAnswerd && !item.isAdmin"
               >参加评测</a-button
+            >
+            <a-button
+              type="primary"
+              size="small"
+              @click="toInfo(item)"
+              v-else
+              >查看详情</a-button
             >
           </div>
         </div>
@@ -71,7 +61,7 @@
 import pass from "@/assets/pass.png";
 import nopass from "@/assets/nopass.png";
 import end from "@/assets/end.png";
-import ing from "@/assets/pass.png";
+import ing from "@/assets/ing.png";
 import moment from "moment";
 export default {
   name: "myPerformance",
@@ -172,6 +162,7 @@ export default {
 }
 .container .item .bottom .tags {
   display: flex;
+  filter: grayscale(0) !important;
 }
 .container .item .bottom .tags img {
   display: block;

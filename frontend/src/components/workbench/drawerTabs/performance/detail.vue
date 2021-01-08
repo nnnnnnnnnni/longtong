@@ -1,18 +1,8 @@
 <template>
   <div class='detail'>
     <div class="title">
-      {{performance.title}}
-      <div class="select">
-        <a-select style="width: 120px" v-model="selected" @change='selectChange'>
-          <a-select-option v-for="item in colleagues" :key="item._id" :value='item._id' :class="selectClass">
-            <span class="name">{{item.userName}}</span>
-            <span class="status" v-if="item.isFinished">
-              <a-icon type="check-circle" theme="twoTone" two-tone-color="#52c41a" />
-            </span>
-          </a-select-option>
-        </a-select>
-      </div>
-    </div>
+      <router-link class="back" :to='{name: "performance_mine"}'>返回</router-link>
+      {{performance.title}}</div>
     <div class="questions">
       <div class="question" v-for="(item, index) in performance.questions" :key="item._id">
         <div class="question-item question-id">
@@ -22,7 +12,7 @@
         <div class="question-item question-desc">{{item.description}}</div>
         <div class="question-item question-options">
           <a-radio-group v-model="answers[index]">
-            <a-radio v-for="(ratio, d) in performance.ratio" :key="ratio" :value="ratio">
+            <a-radio v-for="(ratio, d) in performance.ratio" :key="ratio" :value="ratio" :disabled="!isChecking">
               {{performance.text[d]}}
             </a-radio>
           </a-radio-group>
@@ -30,6 +20,7 @@
       </div>
     </div>
     <div class="button">
+      <a-button block size='large' class="ledt" type='primary' v-if="!isChecking" @click="toInfo">查看</a-button>
       <a-button block size='large' type='primary' :disabled='!isChecking' @click="submit">提交</a-button>
     </div>
   </div>
@@ -40,21 +31,17 @@ export default {
   name: 'detail',
   data() {
     return {
-      selectClass: 'options',
       id: this.$route.params.id,
       performance: {
         text: [],
         tatio: [],
       },
-      colleagues: [],
-      preSelected: '',
-      selected: '',
       isChecking: true,
       answers: [],
     };
   },
   mounted() {
-    this.getDetails();
+    this.getDetail();
   },
   computed: {
     _answers: function() {
@@ -63,37 +50,20 @@ export default {
   },
   methods: {
     // 获取绩效所有基础信息
-    getDetails: function() {
-      this.$get('/performance/details', {
+    getDetail: function() {
+      this.$get('/performance/detail', {
         id: this.id
       }).then(res => {
-        if(res.status == 401) {
-          this.$message.error(res.msg);
+        if(res.status == 400) {
+          this.$message.info('正在跳转')
           setTimeout(() => {
-            
-          }, 3000);
-        } else {
-          this.performance = res.data.performance;
-          this.colleagues = res.data.colleagues;
-          this.selected = this.colleagues[0]._id;
-          this.preSelected = this.selected;
-          this.isChecking = !this.colleagues[0].isFinished;
-          this.getDetail(this.selected);
+            this.$router.push({name: 'performance_info', params: {id: this.id}})
+          }, 2000);
         }
+        this.performance = res.data.performance;
+        this.answers = res.data.answers;
+        this.isChecking = !res.data.isFinished;
       })
-    },
-    // 获取对某人的评测
-    getDetail: function(id) {
-
-    },
-    // 切换评测人
-    selectChange: function(data) {
-      if(this.isChecking) {
-        this.selected = this.preSelected;
-        return this.$message.error('请先提交当前评测')
-      }
-      this.preSelected = data;
-      this.getDetail(data);
     },
     submit: function() {
       if(this.performance.questions.length != this._answers.length) {
@@ -106,12 +76,11 @@ export default {
           this.$message.loading({content: '提交中......请稍后', key: 'uplading'})
           this.$post('/performance/submit', {
             answers: this.answers,
-            user: this.selected,
             id: this.id
           }).then(res => {
             if(res.status == 200) {
-              this.$message.success({content: '提交成功！', key: 'uplading'})
-              this.getDetails();
+              this.$message.success({content: '提交成功！', key: 'uplading'});
+              this.getDetail();
             }
           }).catch(err => {
             this.$message.success({content: '失败', key: 'uplading'})
@@ -119,7 +88,9 @@ export default {
         },
         onCancel() {},
       });
-      
+    },
+    toInfo: function() {
+      this.$router.push({name: 'performance_info', params: {id: this.id}});
     }
   }
 };
@@ -144,10 +115,19 @@ export default {
   width: 100%;
   position: relative;
 }
-.title .select {
+.title .back {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
   position: absolute;
-  right: 10px;
-  top: 2px;
+  left: 10px;
+  top: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.title .back:hover {
+  text-decoration: underline;
 }
 .options {
   display: flex;
@@ -155,7 +135,7 @@ export default {
 }
 .questions {
   width: 100%;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 .questions .question {
   display: flex;
@@ -205,5 +185,8 @@ export default {
   width: 100%;
   align-items: center;
   justify-content: center;
+}
+.button .ledt {
+  margin-right: 20px;
 }
 </style>

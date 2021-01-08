@@ -27,9 +27,9 @@ const router: Irouter = {
     middleware: performance.mine,
     allowAnonymous: false,
   },
-  "/performance/details": {
+  "/performance/detail": {
     method: "GET",
-    middleware: performance.details,
+    middleware: performance.detail,
     allowAnonymous: false,
   },
   "/performance/info": {

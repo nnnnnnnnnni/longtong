@@ -15,10 +15,6 @@ const answerSchema: Schema = new Schema(
       type: SchemaTypes.ObjectId,
       ref: "question",
     },
-    colleague: {
-      type: SchemaTypes.ObjectId,
-      ref: "user",
-    },
     score: Number,
     answer: String,
   },
@@ -30,6 +26,6 @@ const answerSchema: Schema = new Schema(
   }
 );
 
-answerSchema.index({user: 1, performance: 1, question: 1, colleague: 1})
+answerSchema.index({user: 1, performance: 1, question: 1})
 
 export const answer = model<IDanswer>("answer", answerSchema);
