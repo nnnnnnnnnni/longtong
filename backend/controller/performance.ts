@@ -304,7 +304,7 @@ export const info = async (ctx: Context): Promise<Ires> => {
     ypercent.push(Number((item.average / item.question.score).toFixed(2)))
   });
 
-  const performance: Iperformance = await db.performance.findOne({ _id: id });
+  const performance: Iperformance = await db.performance.findOne({ _id: id }).populate('department', 'name');
 
   return {
     data: {
