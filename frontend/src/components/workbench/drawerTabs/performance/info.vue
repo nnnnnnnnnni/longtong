@@ -8,10 +8,13 @@
           {{ moment(performance.startTime).format("YYYY-MM-DD") }} —
           {{ moment(performance.endTime).format("YYYY-MM-DD") }}
         </div>
-        <div class="sub-item sum">总分： {{sum}}</div>
+        <div class="sub-item sum">总分： {{ sum }}</div>
       </div>
     </div>
-    <div class="chart" id="chart"></div>
+    <div class="chart">
+      <div id="chart1" class="chart-item"></div>
+      <div id="chart2" class="chart-item"></div>
+    </div>
     <div class="user"></div>
     <div class="table"></div>
   </div>
@@ -28,7 +31,7 @@ export default {
       id: this.$route.params.id,
       performance: {},
       aggregateData: [],
-      sum: 0,
+      sum: 0
     };
   },
   mounted() {
@@ -43,15 +46,25 @@ export default {
         this.aggregateData = res.data.aggregateData;
         this.sum = res.data.sum;
         this.drawLineChart(
-          "chart",
+          "chart1",
           "",
           res.data.x,
-          res.data.yAverage,
-          res.data.ysumScore
+          [
+            {name: '总分', color: '#f5222d', marker: {symbol: "circle"}, data: res.data.yAverage},
+            {name: '平均分', color: '', marker: {symbol: "circle"}, data: res.data.ySumScore},
+          ]
+        );
+        this.drawLineChart(
+          "chart2",
+          "",
+          res.data.x,
+          [
+            {name: '正确率', color: '', marker: {symbol: "circle"}, data: res.data.ypercent},
+          ]
         );
       });
     },
-    drawLineChart(container, title, dataX, dataY1, dataY2) {
+    drawLineChart(container, title, dataX, dataY) {
       const chart = highchart.chart(container, {
         chart: {
           type: "spline"
@@ -90,23 +103,7 @@ export default {
           crosshairs: true,
           shared: true
         },
-        series: [
-          {
-            name: "总分",
-            color: "#f5222d",
-            marker: {
-              symbol: "circle"
-            },
-            data: dataY2
-          },
-          {
-            name: "平均分",
-            marker: {
-              symbol: "circle"
-            },
-            data: dataY1
-          }
-        ]
+        series: dataY
       });
     }
   }
@@ -146,5 +143,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.chart-item {
+  width: 50%;
 }
 </style>

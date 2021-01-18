@@ -294,12 +294,14 @@ export const info = async (ctx: Context): Promise<Ires> => {
 
   const x: number[] = [];
   const yAverage: number[] = [];
-  const ysumScore: number[] = [];
+  const ySumScore: number[] = [];
+  const ypercent: number[] = [];
   aggregateData.forEach((item: any, index: number) => {
     x.push(index + 1);
     yAverage.push(item.average);
-    ysumScore.push(item.question.score);
+    ySumScore.push(item.question.score);
     sum += item.question.score
+    ypercent.push(Number((item.average / item.question.score).toFixed(2)))
   });
 
   const performance: Iperformance = await db.performance.findOne({ _id: id });
@@ -311,8 +313,9 @@ export const info = async (ctx: Context): Promise<Ires> => {
       aggregateData,
       x,
       yAverage,
-      ysumScore,
+      ySumScore,
       answers,
+      ypercent
     },
   };
 };

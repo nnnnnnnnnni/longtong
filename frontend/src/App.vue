@@ -55,4 +55,7 @@ td._center {
 .vditor-reset table {
   margin: 0 auto;
 }
+.highcharts-container, .highcharts-root {
+  width: 100% !important;
+}
 </style>
