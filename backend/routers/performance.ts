@@ -42,6 +42,11 @@ const router: Irouter = {
     middleware: performance.submit,
     allowAnonymous: false,
   },
+  "/performance/question": {
+    method: "GET",
+    middleware: performance.question,
+    allowAnonymous: false,
+  },
 };
 
 export default router;

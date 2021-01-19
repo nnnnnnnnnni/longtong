@@ -15,8 +15,21 @@
       <div id="chart1" class="chart-item"></div>
       <div id="chart2" class="chart-item"></div>
     </div>
-    <div class="user"></div>
-    <div class="table"></div>
+    <div class="department">
+      <div class="dep-item" v-for="item in performance.departments" :key='item._id'>
+        <a-button :type="currentDep._id == item._id? 'primary': ''" @click="clickCurrentDep(item)">{{item.name}}</a-button>
+      </div>
+    </div>
+    <div class="user">
+      <div class="user-item" v-for="item in currentDep.members" :key='item._id'>
+        <a-button :type="currentUser._id == item._id? 'primary': ''" @click="clickCurrentUser(item)">
+          {{item.userName}}
+        </a-button>
+      </div>
+    </div>
+    <div class="table">
+      <div class="td"></div>
+    </div>
   </div>
 </template>
 
@@ -28,10 +41,13 @@ export default {
   data() {
     return {
       moment,
+      currentDep: {},
       id: this.$route.params.id,
+      currentUser: {},
       performance: {},
       aggregateData: [],
-      sum: 0
+      sum: 0,
+      questionInfo: []
     };
   },
   mounted() {
@@ -43,6 +59,9 @@ export default {
         id: this.id
       }).then(res => {
         this.performance = res.data.performance;
+        this.currentDep = res.data.performance.departments[0];
+        this.currentUser = this.currentDep.members[0];
+        this.getQuestionInfo(this.currentUser._id)
         this.aggregateData = res.data.aggregateData;
         this.sum = res.data.sum;
         this.drawLineChart(
@@ -63,6 +82,14 @@ export default {
           ]
         );
       });
+    },
+    getQuestionInfo: function(user) {
+      this.$get('/performance/question', {
+        performanceId: this.id,
+        userId: user,
+      }).then(res => {
+
+      })
     },
     drawLineChart(container, title, dataX, dataY) {
       const chart = highchart.chart(container, {
@@ -105,6 +132,18 @@ export default {
         },
         series: dataY
       });
+    },
+    clickCurrentDep: function(data) {
+      if(data._id == this.currentDep._id) {
+        return;
+      } else {
+        this.currentDep = data;
+        this.clickCurrentUser(data.members[0])
+      }
+    },
+    clickCurrentUser: function(data) {
+      this.currentUser = data;
+      this.getQuestionInfo(this.currentUser._id)
     }
   }
 };
@@ -146,5 +185,14 @@ export default {
 }
 .chart-item {
   width: 50%;
+}
+.department, .user {
+  display: flex;
+}
+.department .dep-item, .user-item {
+  margin: 0px 10px;
+}
+.user {
+  margin-top: 10px;
 }
 </style>

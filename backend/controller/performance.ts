@@ -1,4 +1,5 @@
 import { Ires } from "@/interface/response";
+import { answer } from "@/mongo/answer";
 import { Ianswer } from "@/mongo/answer/interface";
 import { Idepartment, ObjectId } from "@/mongo/department/interface";
 import { IDperformance, Iperformance } from "@/mongo/performance/interface";
@@ -304,7 +305,11 @@ export const info = async (ctx: Context): Promise<Ires> => {
     ypercent.push(Number((item.average / item.question.score).toFixed(2)))
   });
 
-  const performance: Iperformance = await db.performance.findOne({ _id: id }).populate('department', 'name');
+  const performance: Iperformance = await db.performance.findOne({ _id: id })
+  .populate({path: 'departments', select: 'name', populate: {
+    path: 'members',
+    select: 'userName avator'
+  }})
 
   return {
     data: {
@@ -319,3 +324,26 @@ export const info = async (ctx: Context): Promise<Ires> => {
     },
   };
 };
+
+// 某用户答题详情
+export const question = async (ctx: Context): Promise<Ires> => {
+  const { performanceId, userId } = ctx.request.query;
+  const performance: Iperformance = await db.performance.findOne({_id: performanceId});
+  const questions: ObjectId[] = performance.questions as ObjectId[];
+  const answers: Ianswer[] = await db.answer.find({user: userId, performance: performanceId }).populate('question')
+
+  const answerObj: any = {};
+  answers.forEach((answer: Ianswer) => {
+    const question = answer.question as Iquestion
+    answerObj[question._id.toHexString()] = answer;
+  })
+
+  const questionInfos = questions.map((question: ObjectId) => {
+    const id: string = question.toHexString();
+    return answerObj[id]
+  })
+
+  return {
+    data: questionInfos
+  }
+}
