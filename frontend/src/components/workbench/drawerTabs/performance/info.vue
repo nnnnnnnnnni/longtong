@@ -27,8 +27,17 @@
         </a-button>
       </div>
     </div>
-    <div class="table">
-      <div class="td"></div>
+    <div class="question" v-if="questionInfo.length">
+      <div class="question-item" v-for="(item, index) in questionInfo" :key="item._id">
+        <div class="ques-item item-index">{{index +1 }}</div>
+        <div class="ques-item item-title">{{item.question.title}}</div>
+        <div class="ques-item item-desc">{{item.question.description}}</div>
+        <div class="ques-item item-scored">{{item.score}}</div>
+        <div class="ques-item item-score">{{item.question.score}}</div>
+      </div>
+    </div>
+    <div class="question" v-else>
+      <a-empty description='暂无自评'></a-empty>
     </div>
   </div>
 </template>
@@ -88,7 +97,7 @@ export default {
         performanceId: this.id,
         userId: user,
       }).then(res => {
-
+        this.questionInfo = res.data
       })
     },
     drawLineChart(container, title, dataX, dataY) {
@@ -194,5 +203,37 @@ export default {
 }
 .user {
   margin-top: 10px;
+}
+.question {
+  width: 100%;
+  margin: 10px 10px;
+}
+.question-item {
+  display: flex;
+  margin: 10px 10px;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  min-height: 50px;
+  padding: 10px 0px;
+}
+.question-item .ques-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.question-item .item-index {
+  width: 50px;
+}
+.question-item .item-title {
+  width: 200px;
+}
+.question-item .item-desc {
+  width: 50%;
+}
+.question-item .item-scored {
+  flex: 1;
+}
+.question-item .item-score {
+  flex: 1;
 }
 </style>

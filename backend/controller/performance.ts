@@ -338,10 +338,13 @@ export const question = async (ctx: Context): Promise<Ires> => {
     answerObj[question._id.toHexString()] = answer;
   })
 
-  const questionInfos = questions.map((question: ObjectId) => {
-    const id: string = question.toHexString();
-    return answerObj[id]
-  })
+  let questionInfos: any = []
+  if(answers.length != 0) {
+    questionInfos = questions.map((question: ObjectId) => {
+      const id: string = question.toHexString();
+      return answerObj[id]
+    })
+  }
 
   return {
     data: questionInfos
