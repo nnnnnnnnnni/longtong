@@ -38,4 +38,4 @@ app.use(async (ctx: Context, next: Next) => {
 });
 
 console.log(`APP HAS STARTING AT PORT: ${Config.port}`);
-app.listen(Config.port);
+export const server = app.listen(Config.port);
